@@ -117,7 +117,7 @@
                         <i class="fa-solid fa-user-circle text-ozgold-400"></i> Masuk / Daftar
                     </button>
                     
-                    <div id="nav-admin-menu" class="relative group hidden-view">
+                    <div id="nav-admin-menu" class="relative group hidden-view z-[300]">
                         <button class="text-xs px-4 py-2 rounded-full bg-ozgold-600 hover:bg-ozgold-500 text-white font-bold transition-colors flex items-center gap-2">
                             <i class="fa-solid fa-user-shield"></i> Admin Panel <i class="fa-solid fa-chevron-down text-[10px]"></i>
                         </button>
@@ -159,8 +159,14 @@
                 <button onclick="switchSection('defozite-saving'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">OZSaving</button>
             </div>
             <div class="border-t border-white/10 pt-2">
-                <button type="button" id="mobile-login-btn" onclick="window.openAuthModal(); toggleMobileMenu();" class="w-full bg-white/10 text-white font-medium py-2 rounded-lg text-xs mt-2">Masuk / Daftar</button>
-                <button type="button" id="mobile-logout-btn" onclick="window.logoutAdmin(); toggleMobileMenu();" class="hidden-view w-full bg-red-500/20 text-red-400 font-medium py-2 rounded-lg text-xs mt-2">Keluar (Logout)</button>
+                <button type="button" id="mobile-login-btn" onclick="window.openAuthModal(); toggleMobileMenu();" class="w-full bg-white/10 text-white font-medium py-2 rounded-lg text-xs mt-2 transition-colors">Masuk / Daftar</button>
+                
+                <div id="mobile-admin-panel" class="hidden-view mt-2 space-y-2">
+                    <p class="text-[10px] text-ozgold-400 uppercase font-bold tracking-widest px-1"><i class="fa-solid fa-user-shield"></i> Admin Panel</p>
+                    <button type="button" onclick="window.openAdminPostModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-bullhorn text-ozgold-400 w-4"></i> Kelola Postingan</button>
+                    <button type="button" onclick="window.openAdminUsersModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-users-gear text-ozgold-400 w-4"></i> Kelola Nasabah (Akun)</button>
+                    <button type="button" id="mobile-logout-btn" onclick="window.logoutUser(); toggleMobileMenu();" class="w-full text-left bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold py-2 px-3 rounded-lg text-xs transition-colors mt-2"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar (Logout)</button>
+                </div>
             </div>
         </div>
     </header>
@@ -649,21 +655,25 @@
 
         window.updateUIAuth = () => {
             const isAdmin = window.currentUser && window.currentUser.role === 'admin';
-            window.isAdmin = isAdmin; // Sync with old logic
+            window.isAdmin = isAdmin;
 
             if(window.currentUser) {
                 document.getElementById('nav-login-btn').classList.add('hidden-view');
+                document.getElementById('mobile-login-btn').classList.add('hidden-view'); // Mobile
                 if(isAdmin) {
                     document.getElementById('nav-admin-menu').classList.remove('hidden-view');
+                    document.getElementById('mobile-admin-panel').classList.remove('hidden-view'); // Mobile
                     document.getElementById('btn-add-ozf').classList.remove('hidden-view');
                     document.getElementById('btn-add-def').classList.remove('hidden-view');
                 } else {
-                    document.getElementById('nav-admin-menu').classList.add('hidden-view'); // Nasabah no admin panel
-                    // You could add a Nasabah Menu here in the future
+                    document.getElementById('nav-admin-menu').classList.add('hidden-view'); 
+                    document.getElementById('mobile-admin-panel').classList.add('hidden-view'); // Mobile
                 }
             } else {
                 document.getElementById('nav-login-btn').classList.remove('hidden-view');
+                document.getElementById('mobile-login-btn').classList.remove('hidden-view'); // Mobile
                 document.getElementById('nav-admin-menu').classList.add('hidden-view');
+                document.getElementById('mobile-admin-panel').classList.add('hidden-view'); // Mobile
                 document.getElementById('btn-add-ozf').classList.add('hidden-view');
                 document.getElementById('btn-add-def').classList.add('hidden-view');
             }
@@ -1015,8 +1025,8 @@
             } catch (error) {
                 console.error("Firebase init error:", error);
                 document.getElementById('loading-text').innerText = "Gagal memuat sistem.";
-                setTimeout(() => document.getElementById('loading-overlay').classList.add('hidden-view'), 2000);
             }
+        }
         }
 
         // --- 4. LOGIKA OZ FINANCE (Realtime DB) ---
