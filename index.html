@@ -86,6 +86,12 @@
                         <button onclick="switchSection('oz-finance-customers')" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors flex items-center gap-2">
                             <i class="fa-solid fa-users text-ozgold-400"></i> Data Pelanggan
                         </button>
+                        <button onclick="switchSection('oz-pinjam')" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-hand-holding-dollar text-ozgold-400"></i> OZPinjam
+                        </button>
+                        <button onclick="switchSection('oz-kredit')" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-credit-card text-ozgold-400"></i> OZKredit
+                        </button>
                     </div>
                 </div>
 
@@ -98,6 +104,9 @@
                         <button onclick="switchSection('defozite-home')" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors">Ringkasan defOZite</button>
                         <button onclick="switchSection('defozite-customers')" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors flex items-center gap-2">
                             <i class="fa-solid fa-users text-ozgold-400"></i> Data Pelanggan
+                        </button>
+                        <button onclick="switchSection('defozite-saving')" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-piggy-bank text-ozgold-400"></i> OZSaving
                         </button>
                     </div>
                 </div>
@@ -135,11 +144,14 @@
                 <p class="text-xs text-slate-400 uppercase font-semibold mb-1">OZ Finance</p>
                 <button onclick="switchSection('oz-finance-home'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">Ringkasan Finance</button>
                 <button onclick="switchSection('oz-finance-customers'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">Data Pelanggan</button>
+                <button onclick="switchSection('oz-pinjam'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">OZPinjam</button>
+                <button onclick="switchSection('oz-kredit'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">OZKredit</button>
             </div>
             <div class="border-t border-white/10 pt-2">
                 <p class="text-xs text-slate-400 uppercase font-semibold mb-1">defOZite</p>
                 <button onclick="switchSection('defozite-home'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">Ringkasan defOZite</button>
                 <button onclick="switchSection('defozite-customers'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">Data Pelanggan</button>
+                <button onclick="switchSection('defozite-saving'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">OZSaving</button>
             </div>
             <div class="border-t border-white/10 pt-2">
                 <button type="button" id="mobile-login-btn" onclick="window.openLoginModal(); toggleMobileMenu();" class="w-full bg-white/10 text-white font-medium py-2 rounded-lg text-xs mt-2">Login Admin</button>
@@ -254,6 +266,33 @@
                 </div>
             </div>
         </section>
+    
+
+        <!-- PLACEHOLDER SECTIONS FOR NEW MENUS -->
+        <section id="section-oz-pinjam" class="hidden-section space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4 text-center py-20">
+                <i class="fa-solid fa-hand-holding-dollar text-6xl text-ozgold-400/50 mb-4"></i>
+                <h2 class="text-2xl font-bold">Modul OZPinjam</h2>
+                <p class="text-slate-400 text-sm">Fitur manajemen pinjaman sedang dalam tahap pengembangan.</p>
+            </div>
+        </section>
+
+        <section id="section-oz-kredit" class="hidden-section space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4 text-center py-20">
+                <i class="fa-solid fa-credit-card text-6xl text-ozgold-400/50 mb-4"></i>
+                <h2 class="text-2xl font-bold">Modul OZKredit</h2>
+                <p class="text-slate-400 text-sm">Fitur manajemen kredit sedang dalam tahap pengembangan.</p>
+            </div>
+        </section>
+
+        <section id="section-defozite-saving" class="hidden-section space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4 text-center py-20">
+                <i class="fa-solid fa-piggy-bank text-6xl text-ozgold-400/50 mb-4"></i>
+                <h2 class="text-2xl font-bold">Modul OZSaving</h2>
+                <p class="text-slate-400 text-sm">Fitur manajemen tabungan OZSaving sedang dalam tahap pengembangan.</p>
+            </div>
+        </section>
+
     </main>
 
     <!-- ==============================================
@@ -379,7 +418,7 @@
     <script>
         // --- 1. UI Navigation Logic ---
         function switchSection(sectionId) {
-            const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-defozite-home', 'section-defozite-customers'];
+            const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-oz-pinjam', 'section-oz-kredit', 'section-defozite-home', 'section-defozite-customers', 'section-defozite-saving'];
             sections.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.classList.add('hidden-section');
