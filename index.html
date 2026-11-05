@@ -59,23 +59,22 @@
 <body class="flex flex-col min-h-screen">
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[200] flex flex-col items-center justify-center transition-opacity duration-300">
+    <div id="loading-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] flex flex-col items-center justify-center transition-opacity duration-300">
         <i class="fa-solid fa-circle-notch fa-spin text-5xl text-ozgold-400 mb-4"></i>
         <p id="loading-text" class="text-white font-bold text-sm tracking-widest uppercase">Memuat Database...</p>
     </div>
 
-    <!-- NAVBAR (Tanpa Login) -->
-    
-    <!-- NAVBAR (Tanpa Login) -->
-    <header class="sticky top-0 z-50 glass-panel border-b border-white/10">
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-[100] glass-panel border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchSection('beranda')">
                 <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&dl=0" alt="OZ Logo" class="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(253,224,38,0.5)]">
                 <span class="text-xl font-bold tracking-tight">OZ<span class="text-gradient-gold">digi</span></span>
             </div>
 
+            <!-- Single Clean Navigation -->
             <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
-                <button onclick="switchSection('beranda')" class="text-ozgold-400 font-semibold transition-colors hover:text-ozgold-400">Beranda</button>
+                <button onclick="switchSection('beranda')" class="text-ozgold-400 font-semibold transition-colors hover:text-ozgold-300">Beranda</button>
                 
                 <!-- OZ Finance Dropdown -->
                 <div class="relative group">
@@ -105,7 +104,7 @@
 
                 <!-- Admin Auth Buttons -->
                 <div class="border-l border-white/20 pl-6 flex items-center gap-3">
-                    <button type="button" id="nav-login-btn" onclick="window.openLoginModal()" class="text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2 cursor-pointer relative z-50">
+                    <button type="button" id="nav-login-btn" onclick="window.openLoginModal()" class="text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2">
                         <i class="fa-solid fa-lock text-ozgold-400"></i> Login Admin
                     </button>
                     
@@ -125,7 +124,7 @@
                 </div>
             </nav>
 
-            <button onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white text-xl">
+            <button type="button" onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white text-xl">
                 <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
             </button>
         </div>
@@ -142,11 +141,15 @@
                 <button onclick="switchSection('defozite-home'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">Ringkasan defOZite</button>
                 <button onclick="switchSection('defozite-customers'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">Data Pelanggan</button>
             </div>
-        </header>
-
+            <div class="border-t border-white/10 pt-2">
+                <button type="button" id="mobile-login-btn" onclick="window.openLoginModal(); toggleMobileMenu();" class="w-full bg-white/10 text-white font-medium py-2 rounded-lg text-xs mt-2">Login Admin</button>
+                <button type="button" id="mobile-logout-btn" onclick="window.logoutAdmin(); toggleMobileMenu();" class="hidden-view w-full bg-red-500/20 text-red-400 font-medium py-2 rounded-lg text-xs mt-2">Keluar (Logout)</button>
+            </div>
+        </div>
+    </header>
 
     <!-- MAIN CONTENT AREA -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         
         <!-- SECTION 1: BERANDA -->
         <section id="section-beranda" class="space-y-12">
@@ -157,9 +160,7 @@
             </div>
         </section>
 
-        <!-- ==============================================
-             MODULE 1: OZ FINANCE (Realtime DB)
-             ============================================== -->
+        <!-- MODULE 1: OZ FINANCE (Realtime DB) -->
         <section id="section-oz-finance-home" class="hidden-section space-y-6">
             <div class="glass-panel p-6 rounded-2xl space-y-4">
                 <div class="flex justify-between items-center border-b border-white/10 pb-4">
@@ -189,13 +190,12 @@
                             <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="text" id="ozf-search-input" placeholder="Cari Nama/WA..." class="w-full glass-input rounded-xl py-2 pl-9 pr-4 text-xs" onkeyup="window.ozfSearch()">
                         </div>
-                        <button id="btn-add-ozf" onclick="window.ozfOpenAddModal()" class="hidden-view bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 whitespace-nowrap">
+                        <button type="button" id="btn-add-ozf" onclick="window.ozfOpenAddModal()" class="hidden-view bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 whitespace-nowrap">
                             <i class="fa-solid fa-plus"></i> Nasabah Baru
                         </button>
                     </div>
                 </div>
                 
-                <!-- OZ Finance Grid Container (Dipindah dari ozfinance.html) -->
                 <div class="relative group/carousel w-full">
                     <div id="ozf-dashboard-grid" class="flex flex-row overflow-x-auto snap-x snap-mandatory gap-4 md:gap-6 no-scrollbar pb-2">
                         <div class="text-center w-full py-8 text-slate-400 text-sm">Memuat data dari Realtime Database...</div>
@@ -205,9 +205,7 @@
         </section>
 
 
-        <!-- ==============================================
-             MODULE 2: defOZite (Firestore)
-             ============================================== -->
+        <!-- MODULE 2: defOZite (Firestore) -->
         <section id="section-defozite-home" class="hidden-section space-y-6">
             <div class="glass-panel p-6 rounded-2xl space-y-4">
                 <div class="flex justify-between items-center border-b border-white/10 pb-4">
@@ -245,13 +243,12 @@
                             <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="text" id="def-search-input" placeholder="Cari anggota..." class="w-full glass-input rounded-xl py-2 pl-9 pr-4 text-xs" onkeyup="window.defSearch()">
                         </div>
-                        <button id="btn-add-def" onclick="window.defOpenAddModal()" class="hidden-view bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 whitespace-nowrap">
+                        <button type="button" id="btn-add-def" onclick="window.defOpenAddModal()" class="hidden-view bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 whitespace-nowrap">
                             <i class="fa-solid fa-plus"></i> Anggota Baru
                         </button>
                     </div>
                 </div>
 
-                <!-- defOZite List Container (Dipindah dari defosite_2.html) -->
                 <div id="def-customer-list" class="space-y-3">
                     <div class="text-center w-full py-8 text-slate-400 text-sm">Memuat data dari Firestore...</div>
                 </div>
@@ -260,15 +257,66 @@
     </main>
 
     <!-- ==============================================
-         MODALS UNTUK OZ FINANCE
+         MODALS UNTUK AUTENTIKASI ADMIN
          ============================================== -->
-    <div id="ozf-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[250] flex items-center justify-center hidden-view p-4">
+    <!-- Modal Login (Z-INDEX SUPER TINGGI) -->
+    <div id="login-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-sm p-6 space-y-4 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[510]">
+            <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-lock text-ozgold-400 mr-2"></i> Login Admin</h3>
+                <button type="button" onclick="window.closeLoginModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <form onsubmit="event.preventDefault(); window.processLogin(); return false;" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Email Admin</label>
+                    <input type="email" id="login-email" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" placeholder="admin@oznet.com" required>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Password</label>
+                    <input type="password" id="login-pwd" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" placeholder="••••••••" required>
+                </div>
+                <div id="login-error" class="text-red-400 text-xs font-medium bg-red-500/10 py-2 rounded-lg text-center hidden-view">Kredensial tidak valid!</div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-3 rounded-xl shadow-lg">Masuk Panel Admin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Pengaturan Admin (Ubah Email & Password) -->
+    <div id="admin-settings-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-sm p-6 space-y-4 rounded-2xl bg-gray-900 border border-ozgold-500/20 relative z-[510]">
+            <div class="flex justify-between items-center mb-2 border-b border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-user-shield text-ozgold-400 mr-2"></i> Pengaturan Admin</h3>
+                <button type="button" onclick="window.closeAdminSettingsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <form onsubmit="event.preventDefault(); window.saveAdminSettings(); return false;" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Email Admin Baru</label>
+                    <input type="email" id="settings-email" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" required>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Password Baru</label>
+                    <input type="password" id="settings-pwd" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" required>
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="window.closeAdminSettingsModal()" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm font-medium">Batal</button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white rounded-xl text-sm font-bold shadow-lg">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ==============================================
+         MODALS UNTUK OZ FINANCE & DEFOZITE (CRUD)
+         ============================================== -->
+    <div id="ozf-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center hidden-view p-4">
         <div class="glass-panel w-full max-w-md rounded-2xl p-6 bg-gray-900 custom-scroll max-h-[95vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3 sticky top-0 bg-gray-900 z-10">
                 <h3 id="ozf-modal-title" class="text-lg font-bold text-white"><i class="fa-solid fa-pen-to-square text-ozgold-400 mr-2"></i> Edit Data OZ Finance</h3>
                 <button type="button" onclick="window.ozfCloseModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-times text-xl"></i></button>
             </div>
-            <!-- (Form di-copy persis dari ozfinance.html tapi diubah ID supaya unik) -->
             <form id="ozf-data-form" onsubmit="event.preventDefault(); window.ozfSubmitData(); return false;" class="space-y-4">
                 <input type="hidden" id="ozf-form-id">
                 <div class="grid grid-cols-2 gap-4">
@@ -296,11 +344,7 @@
         </div>
     </div>
 
-    <!-- ==============================================
-         MODALS UNTUK DEFOZITE
-         ============================================== -->
-    <!-- Modal Add/Edit Nasabah defOZite -->
-    <div id="def-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[250] hidden-view flex items-center justify-center p-4">
+    <div id="def-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 space-y-3 rounded-2xl bg-gray-900">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
                 <h3 class="text-lg font-bold text-white" id="def-modal-title">Form defOZite</h3>
@@ -322,13 +366,18 @@
     </div>
 
     <!-- Notification Toast -->
-    <div id="toast-notif" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-ozgold-500/50 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none z-[300]">Notifikasi</div>
+    <div id="toast-notif" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-ozgold-500/50 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none z-[600]">Notifikasi</div>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-white/10 py-6 mt-12 text-center text-xs text-slate-500">
+        <p>&copy; 2026 <span class="text-ozgold-400 font-semibold">OZdigi Ecosystem</span>. All rights reserved.</p>
+    </footer>
 
     <!-- ==============================================
          JAVASCRIPT INITIALIZATION & LOGIC
          ============================================== -->
     <script>
-        // --- 1. UI Navigation Logic (oz.html) ---
+        // --- 1. UI Navigation Logic ---
         function switchSection(sectionId) {
             const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-defozite-home', 'section-defozite-customers'];
             sections.forEach(id => {
@@ -360,10 +409,10 @@
         };
 
         
-        // --- 1.5 ADMIN AUTHENTICATION LOGIC ---
+        // --- 2. ADMIN AUTHENTICATION LOGIC ---
         window.isAdmin = false;
         
-        // Cek LocalStorage untuk kredensial, set default jika belum ada
+        // Default Credentials
         const defaultAdminEmail = 'admin@oznet.com';
         const defaultAdminPwd = 'admin';
         
@@ -401,18 +450,30 @@
         };
 
         window.updateAdminUI = () => {
+            // Update Desktop UI
             if(window.isAdmin) {
                 document.getElementById('nav-login-btn').classList.add('hidden-view');
                 document.getElementById('nav-admin-menu').classList.remove('hidden-view');
+                
                 document.getElementById('btn-add-ozf').classList.remove('hidden-view');
                 document.getElementById('btn-add-def').classList.remove('hidden-view');
+                
+                // Update Mobile UI
+                document.getElementById('mobile-login-btn').classList.add('hidden-view');
+                document.getElementById('mobile-logout-btn').classList.remove('hidden-view');
             } else {
                 document.getElementById('nav-login-btn').classList.remove('hidden-view');
                 document.getElementById('nav-admin-menu').classList.add('hidden-view');
+                
                 document.getElementById('btn-add-ozf').classList.add('hidden-view');
                 document.getElementById('btn-add-def').classList.add('hidden-view');
+                
+                // Update Mobile UI
+                document.getElementById('mobile-login-btn').classList.remove('hidden-view');
+                document.getElementById('mobile-logout-btn').classList.add('hidden-view');
             }
-            // Re-render dashboards to show/hide edit buttons
+            
+            // Render ulang dashboard untuk memperbarui state tombol edit (ikon pensil)
             if (document.getElementById('ozf-search-input')) window.ozfSearch();
             if (document.getElementById('def-search-input')) window.defSearch();
         };
@@ -438,8 +499,7 @@
             }
         };
 
-        // --- 2. FIREBASE MULTI-APP INITIALIZATION ---
-        // Config OZ Finance (Realtime DB) [cite: 11]
+        // --- 3. FIREBASE MULTI-APP INITIALIZATION ---
         const ozFinanceConfig = {
             apiKey: "AIzaSyBkHkY6dAYWppYWRFPRum2bwx2Dgnk8pV4",
             authDomain: "ozfinance-5fb9c.firebaseapp.com",
@@ -447,7 +507,6 @@
             projectId: "ozfinance-5fb9c",
         };
 
-        // Config defOZite (Firestore) [cite: 8]
         const defoziteConfig = {
             apiKey: "AIzaSyA6JMLpQ88mpCB6MP9Ul1O_ULU76uhSbhc",
             authDomain: "defozite-75ac1.firebaseapp.com",
@@ -457,7 +516,6 @@
         let ozApp, ozDbRef;
         let defApp, defDb;
 
-        // States
         window.ozfData = [];
         window.defData = [];
 
@@ -481,7 +539,7 @@
             }
         }
 
-        // --- 3. LOGIKA OZ FINANCE (Realtime DB) ---
+        // --- 4. LOGIKA OZ FINANCE (Realtime DB) ---
         function loadOzfData() {
             ozDbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -597,7 +655,7 @@
         };
 
 
-        // --- 4. LOGIKA DEFOZITE (Firestore) ---
+        // --- 5. LOGIKA DEFOZITE (Firestore) ---
         function loadDefData() {
             defDb.collection("customers").orderBy("createdAt", "desc").onSnapshot(snap => {
                 window.defData = []; let totS = 0, totL = 0;
@@ -635,7 +693,7 @@
                             <p class="font-bold text-red-400 text-sm">${window.formatRp(c.loanBalance||0)}</p>
                         </div>
                     </div>
-                    ${window.isAdmin ? `<button onclick="window.defOpenEditModal('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-ozgold-500 text-slate-400 hover:text-gray-900 transition-colors flex items-center justify-center shrink-0 self-end md:self-center absolute top-4 right-4 md:relative md:top-0 md:right-0"><i class="fa-solid fa-pen text-xs"></i></button>` : ''}
+                    ${window.isAdmin ? `<button type="button" onclick="window.defOpenEditModal('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-ozgold-500 text-slate-400 hover:text-gray-900 transition-colors flex items-center justify-center shrink-0 self-end md:self-center absolute top-4 right-4 md:relative md:top-0 md:right-0"><i class="fa-solid fa-pen text-xs"></i></button>` : ''}
                 </div>`).join('');
         }
 
