@@ -1,12 +1,22 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OZNET Ecosystem - Beranda & Menu</title>
+    <title>OZdigi Ecosystem - Integrated Dashboard</title>
+    
+    <!-- CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- FIREBASE COMPAT SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <!-- Untuk OZ Finance -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <!-- Untuk defOZite -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -29,35 +39,42 @@
             color: #F8FAFC;
             min-height: 100vh;
         }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-        .text-gradient-gold {
-            background: linear-gradient(to right, #FBBF24, #F59E0B, #D97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .glass-panel { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); }
+        .glass-card { background: rgba(31, 41, 55, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        .glass-card:hover { transform: translateY(-3px); border-color: rgba(255, 204, 0, 0.3); background: rgba(31, 41, 55, 0.8); }
+        .glass-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
+        .glass-input:focus { border-color: #F59E0B; outline: none; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); }
+        .text-gradient-gold { background: linear-gradient(to right, #FBBF24, #F59E0B, #D97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         .hidden-section { display: none !important; }
+        .hidden-view { display: none !important; }
+        
+        .progress-fill { transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 204, 0, 0.2); border-radius: 10px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <!-- NAVBAR -->
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[200] flex flex-col items-center justify-center transition-opacity duration-300">
+        <i class="fa-solid fa-circle-notch fa-spin text-5xl text-ozgold-400 mb-4"></i>
+        <p id="loading-text" class="text-white font-bold text-sm tracking-widest uppercase">Memuat Database...</p>
+    </div>
+
+    <!-- NAVBAR (Tanpa Login) -->
     <header class="sticky top-0 z-50 glass-panel border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Brand Logo -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchSection('beranda')">
                 <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&dl=0" alt="OZ Logo" class="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(253,224,38,0.5)]">
-                <span class="text-xl font-bold tracking-tight">OZ<span class="text-gradient-gold">NET</span></span>
+                <span class="text-xl font-bold tracking-tight">OZ<span class="text-gradient-gold">digi</span></span>
             </div>
 
-            <!-- Navigation Menu (No Login) -->
             <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
-                <button onclick="switchSection('beranda')" id="nav-beranda" class="text-ozgold-400 font-semibold transition-colors hover:text-ozgold-400">Beranda</button>
+                <button onclick="switchSection('beranda')" class="text-ozgold-400 font-semibold transition-colors hover:text-ozgold-400">Beranda</button>
                 
                 <!-- OZ Finance Dropdown -->
                 <div class="relative group">
@@ -86,13 +103,11 @@
                 </div>
             </nav>
 
-            <!-- Mobile Menu Toggle -->
             <button onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white text-xl">
                 <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
             </button>
         </div>
 
-        <!-- Mobile Menu Drawer -->
         <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-white/10 px-6 py-4 space-y-3">
             <button onclick="switchSection('beranda'); toggleMobileMenu();" class="block w-full text-left py-2 font-medium text-ozgold-400">Beranda</button>
             <div class="border-t border-white/10 pt-2">
@@ -114,45 +129,15 @@
         <!-- SECTION 1: BERANDA -->
         <section id="section-beranda" class="space-y-12">
             <div class="text-center space-y-4 max-w-3xl mx-auto py-12">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-ozgold-500/10 text-ozgold-400 border border-ozgold-500/20">OZNET Ecosystem Dashboard</span>
-                <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">Selamat Datang di <span class="text-gradient-gold">OZNET</span></h1>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-ozgold-500/10 text-ozgold-400 border border-ozgold-500/20">OZdigi Ecosystem Dashboard</span>
+                <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">Selamat Datang di <span class="text-gradient-gold">OZdigi</span></h1>
                 <p class="text-slate-400 text-sm sm:text-base">Platform digital terintegrasi untuk pengelolaan keuangan, pembiayaan, tabungan, dan infrastruktur layanan digital Anda.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Card OZ Finance -->
-                <div class="glass-panel p-6 rounded-2xl space-y-4 hover:border-ozgold-500/30 transition-all">
-                    <div class="w-12 h-12 rounded-xl bg-ozgold-500/20 flex items-center justify-center text-ozgold-400 text-xl font-bold">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
-                    <h3 class="text-xl font-bold">OZ Finance</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Kelola data pembiayaan, angsuran nasabah, tenor, dan riwayat pembayaran cicilan dengan sistem yang transparan.</p>
-                    <div class="pt-2 flex gap-3">
-                        <button onclick="switchSection('oz-finance-home')" class="text-xs px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 font-medium">Ringkasan</button>
-                        <button onclick="switchSection('oz-finance-customers')" class="text-xs px-4 py-2 rounded-xl bg-ozgold-600 hover:bg-ozgold-500 text-white font-medium flex items-center gap-1.5">
-                            Data Pelanggan <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Card defOZite -->
-                <div class="glass-panel p-6 rounded-2xl space-y-4 hover:border-ozgold-500/30 transition-all">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl font-bold">
-                        <i class="fa-solid fa-vault"></i>
-                    </div>
-                    <h3 class="text-xl font-bold">defOZite</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Sistem pengelolaan simpan pinjam dan tabungan profesional dengan pemantauan saldo secara real-time.</p>
-                    <div class="pt-2 flex gap-3">
-                        <button onclick="switchSection('defozite-home')" class="text-xs px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 font-medium">Ringkasan</button>
-                        <button onclick="switchSection('defozite-customers')" class="text-xs px-4 py-2 rounded-xl bg-ozgold-600 hover:bg-ozgold-500 text-white font-medium flex items-center gap-1.5">
-                            Data Pelanggan <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
         </section>
 
-        <!-- SECTION 2: OZ FINANCE - RINGKASAN -->
+        <!-- ==============================================
+             MODULE 1: OZ FINANCE (Realtime DB)
+             ============================================== -->
         <section id="section-oz-finance-home" class="hidden-section space-y-6">
             <div class="glass-panel p-6 rounded-2xl space-y-4">
                 <div class="flex justify-between items-center border-b border-white/10 pb-4">
@@ -160,185 +145,174 @@
                         <h2 class="text-2xl font-bold">OZ Finance Dashboard</h2>
                         <p class="text-xs text-slate-400">Ringkasan data pembiayaan & cicilan nasabah</p>
                     </div>
-                    <button onclick="switchSection('oz-finance-customers')" class="text-xs px-4 py-2 rounded-xl bg-ozgold-600 text-white font-medium">Lihat Data Pelanggan</button>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="glass-panel p-4 rounded-xl bg-darkblue-900/40">
-                        <p class="text-xs text-slate-400">Total Pelanggan</p>
-                        <p class="text-xl font-bold text-white mt-1">24 Orang</p>
-                    </div>
-                    <div class="glass-panel p-4 rounded-xl bg-darkblue-900/40">
-                        <p class="text-xs text-slate-400">Total Tagihan Aktif</p>
-                        <p class="text-xl font-bold text-ozgold-400 mt-1">Rp 45.500.000</p>
-                    </div>
-                    <div class="glass-panel p-4 rounded-xl bg-darkblue-900/40">
-                        <p class="text-xs text-slate-400">Status Sistem</p>
-                        <p class="text-xl font-bold text-emerald-400 mt-1">Aktif & Stabil</p>
+                        <p class="text-xs text-slate-400">Total Nasabah OZ Finance</p>
+                        <p class="text-xl font-bold text-white mt-1" id="ozf-total-nasabah">0 Orang</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 3: OZ FINANCE - DATA PELANGGAN (SUB MENU) -->
         <section id="section-oz-finance-customers" class="hidden-section space-y-6">
-            <div class="glass-panel p-6 rounded-2xl space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-4">
                     <div>
-                        <h2 class="text-2xl font-bold">OZ Finance - Data Pelanggan</h2>
-                        <p class="text-xs text-slate-400">Daftar nasabah cicilan dan status pembayaran</p>
+                        <h2 class="text-2xl font-bold"><i class="fa-solid fa-wallet text-ozgold-400 mr-2"></i> Data Pelanggan OZ Finance</h2>
+                        <p class="text-xs text-slate-400">Manajemen cicilan dan pembiayaan</p>
                     </div>
-                    <div class="relative w-full sm:w-64">
-                        <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="text" placeholder="Cari pelanggan..." class="w-full bg-darkblue-900/80 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-xs text-white focus:outline-none focus:border-ozgold-500">
+                    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="ozf-search-input" placeholder="Cari Nama/WA..." class="w-full glass-input rounded-xl py-2 pl-9 pr-4 text-xs" onkeyup="window.ozfSearch()">
+                        </div>
+                        <button onclick="window.ozfOpenAddModal()" class="bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 whitespace-nowrap">
+                            <i class="fa-solid fa-plus"></i> Nasabah Baru
+                        </button>
                     </div>
                 </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="border-b border-white/10 text-slate-400">
-                                <th class="pb-3 font-semibold">Nama Pelanggan</th>
-                                <th class="pb-3 font-semibold">No. WhatsApp</th>
-                                <th class="pb-3 font-semibold">Jenis Barang / Item</th>
-                                <th class="pb-3 font-semibold">Tagihan/Bulan</th>
-                                <th class="pb-3 font-semibold">Tenor</th>
-                                <th class="pb-3 font-semibold">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5 text-slate-300">
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="py-3 font-bold text-white">Budi Santoso</td>
-                                <td class="py-3">081234567890</td>
-                                <td class="py-3">Smartphone Redmi Note</td>
-                                <td class="py-3 text-ozgold-400 font-semibold">Rp 350.000</td>
-                                <td class="py-3">6/12 Bln</td>
-                                <td class="py-3"><span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400">Aktif</span></td>
-                            </tr>
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="py-3 font-bold text-white">Siti Aminah</td>
-                                <td class="py-3">08568080847</td>
-                                <td class="py-3">Infinix Hot Series</td>
-                                <td class="py-3 text-ozgold-400 font-semibold">Rp 275.000</td>
-                                <td class="py-3">10/10 Bln</td>
-                                <td class="py-3"><span class="px-2 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-400">Lunas</span></td>
-                            </tr>
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="py-3 font-bold text-white">Ahmad Fauzy</td>
-                                <td class="py-3">081294275779</td>
-                                <td class="py-3">Modem MABU NET</td>
-                                <td class="py-3 text-ozgold-400 font-semibold">Rp 150.000</td>
-                                <td class="py-3">3/6 Bln</td>
-                                <td class="py-3"><span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400">Aktif</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                
+                <!-- OZ Finance Grid Container (Dipindah dari ozfinance.html) -->
+                <div class="relative group/carousel w-full">
+                    <div id="ozf-dashboard-grid" class="flex flex-row overflow-x-auto snap-x snap-mandatory gap-4 md:gap-6 no-scrollbar pb-2">
+                        <div class="text-center w-full py-8 text-slate-400 text-sm">Memuat data dari Realtime Database...</div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 4: DEFOZITE - RINGKASAN -->
+
+        <!-- ==============================================
+             MODULE 2: defOZite (Firestore)
+             ============================================== -->
         <section id="section-defozite-home" class="hidden-section space-y-6">
             <div class="glass-panel p-6 rounded-2xl space-y-4">
                 <div class="flex justify-between items-center border-b border-white/10 pb-4">
                     <div>
                         <h2 class="text-2xl font-bold">defOZite Dashboard</h2>
-                        <p class="text-xs text-slate-400">Ringkasan sistem simpan pinjam dan tabungan korespondensi</p>
+                        <p class="text-xs text-slate-400">Ringkasan sistem simpan pinjam koperasi</p>
                     </div>
-                    <button onclick="switchSection('defozite-customers')" class="text-xs px-4 py-2 rounded-xl bg-ozgold-600 text-white font-medium">Lihat Data Pelanggan</button>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="glass-panel p-4 rounded-xl bg-darkblue-900/40">
                         <p class="text-xs text-slate-400">Total Tabungan Koperasi</p>
-                        <p class="text-xl font-bold text-emerald-400 mt-1">Rp 18.250.000</p>
+                        <p class="text-xl font-bold text-emerald-400 mt-1" id="def-total-savings">Rp 0</p>
                     </div>
                     <div class="glass-panel p-4 rounded-xl bg-darkblue-900/40">
                         <p class="text-xs text-slate-400">Total Pinjaman Keluar</p>
-                        <p class="text-xl font-bold text-red-400 mt-1">Rp 12.000.000</p>
+                        <p class="text-xl font-bold text-red-400 mt-1" id="def-total-loans">Rp 0</p>
                     </div>
                     <div class="glass-panel p-4 rounded-xl bg-darkblue-900/40">
-                        <p class="text-xs text-slate-400">Jumlah Anggota</p>
-                        <p class="text-xl font-bold text-white mt-1">15 Orang</p>
+                        <p class="text-xs text-slate-400">Total Anggota</p>
+                        <p class="text-xl font-bold text-white mt-1" id="def-total-customers">0 Orang</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 5: DEFOZITE - DATA PELANGGAN (SUB MENU) -->
         <section id="section-defozite-customers" class="hidden-section space-y-6">
-            <div class="glass-panel p-6 rounded-2xl space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
+            <div class="glass-panel p-6 rounded-2xl space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-4">
                     <div>
-                        <h2 class="text-2xl font-bold">defOZite - Data Pelanggan</h2>
-                        <p class="text-xs text-slate-400">Daftar saldo tabungan dan pinjaman anggota defOZite</p>
+                        <h2 class="text-2xl font-bold"><i class="fa-solid fa-vault text-ozgold-400 mr-2"></i> Data Pelanggan defOZite</h2>
+                        <p class="text-xs text-slate-400">Manajemen buku tabungan dan status pinjaman</p>
                     </div>
-                    <div class="relative w-full sm:w-64">
-                        <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="text" placeholder="Cari nasabah defOZite..." class="w-full bg-darkblue-900/80 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-xs text-white focus:outline-none focus:border-ozgold-500">
+                    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="def-search-input" placeholder="Cari anggota..." class="w-full glass-input rounded-xl py-2 pl-9 pr-4 text-xs" onkeyup="window.defSearch()">
+                        </div>
+                        <button onclick="window.defOpenAddModal()" class="bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 whitespace-nowrap">
+                            <i class="fa-solid fa-plus"></i> Anggota Baru
+                        </button>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="border-b border-white/10 text-slate-400">
-                                <th class="pb-3 font-semibold">Nama Anggota</th>
-                                <th class="pb-3 font-semibold">No. WhatsApp</th>
-                                <th class="pb-3 font-semibold">Saldo Tabungan</th>
-                                <th class="pb-3 font-semibold">Sisa Pinjaman</th>
-                                <th class="pb-3 font-semibold">Status Akun</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5 text-slate-300">
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="py-3 font-bold text-white">Rian Hidayat</td>
-                                <td class="py-3">081987654321</td>
-                                <td class="py-3 text-emerald-400 font-semibold">Rp 2.500.000</td>
-                                <td class="py-3 text-red-400 font-semibold">Rp 0</td>
-                                <td class="py-3"><span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400">Aktif</span></td>
-                            </tr>
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="py-3 font-bold text-white">Dewi Lestari</td>
-                                <td class="py-3">081377889900</td>
-                                <td class="py-3 text-emerald-400 font-semibold">Rp 4.150.000</td>
-                                <td class="py-3 text-red-400 font-semibold">Rp 1.500.000</td>
-                                <td class="py-3"><span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400">Aktif</span></td>
-                            </tr>
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="py-3 font-bold text-white">Hendra Gunawan</td>
-                                <td class="py-3">087811223344</td>
-                                <td class="py-3 text-emerald-400 font-semibold">Rp 850.000</td>
-                                <td class="py-3 text-red-400 font-semibold">Rp 3.000.000</td>
-                                <td class="py-3"><span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400">Aktif</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- defOZite List Container (Dipindah dari defosite_2.html) -->
+                <div id="def-customer-list" class="space-y-3">
+                    <div class="text-center w-full py-8 text-slate-400 text-sm">Memuat data dari Firestore...</div>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- FOOTER -->
-    <footer class="glass-panel border-t border-white/10 py-6 mt-12 text-center text-xs text-slate-500">
-        <p>&copy; 2026 <span class="text-ozgold-400 font-semibold">OZNET Ecosystem</span>. All rights reserved.</p>
-    </footer>
+    <!-- ==============================================
+         MODALS UNTUK OZ FINANCE
+         ============================================== -->
+    <div id="ozf-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center hidden-view p-4">
+        <div class="glass-panel w-full max-w-md rounded-2xl p-6 bg-gray-900 custom-scroll max-h-[95vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3 sticky top-0 bg-gray-900 z-10">
+                <h3 id="ozf-modal-title" class="text-lg font-bold text-white"><i class="fa-solid fa-pen-to-square text-ozgold-400 mr-2"></i> Edit Data OZ Finance</h3>
+                <button type="button" onclick="window.ozfCloseModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <!-- (Form di-copy persis dari ozfinance.html tapi diubah ID supaya unik) -->
+            <form id="ozf-data-form" onsubmit="event.preventDefault(); window.ozfSubmitData(); return false;" class="space-y-4">
+                <input type="hidden" id="ozf-form-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs text-gray-400 mb-1">Nama Asli Nasabah</label><input type="text" id="ozf-form-name" class="w-full glass-input rounded-lg px-3 py-2 text-sm" required></div>
+                    <div><label class="block text-xs text-gray-400 mb-1">No. WA</label><input type="number" id="ozf-form-wa" class="w-full glass-input rounded-lg px-3 py-2 text-sm" placeholder="08123..."></div>
+                </div>
+                <div><label class="block text-xs text-gray-400 mb-1">Jenis Cicilan / Item</label><input type="text" id="ozf-form-item" class="w-full glass-input rounded-lg px-3 py-2 text-sm" required></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs text-gray-400 mb-1">Tagihan/Bln (Rp)</label><input type="number" id="ozf-form-tagihan" class="w-full glass-input rounded-lg px-3 py-2 text-sm" required></div>
+                    <div><label class="block text-xs text-gray-400 mb-1">Jatuh Tempo (Tgl)</label><input type="text" id="ozf-form-jatuh-tempo" class="w-full glass-input rounded-lg px-3 py-2 text-sm" placeholder="Cth: 15" required></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs text-gray-400 mb-1">Total Tenor (Bln)</label><input type="number" id="ozf-form-total-bulan" class="w-full glass-input rounded-lg px-3 py-2 text-sm" required></div>
+                    <div><label class="block text-xs text-gray-400 mb-1">Sudah Lunas (Bln)</label><input type="number" id="ozf-form-lunas" class="w-full bg-gray-800 border border-ozgold-500/50 rounded-lg px-3 py-2 text-ozgold-400 font-bold text-sm" required></div>
+                </div>
+                <div class="pt-2 border-t border-gray-800">
+                    <label class="block text-xs text-gray-400 mb-1">Riwayat Pembayaran</label>
+                    <textarea id="ozf-form-history" rows="3" class="w-full glass-input rounded-lg px-3 py-2 text-xs custom-scroll"></textarea>
+                </div>
+                <div class="pt-4 flex gap-3 sticky bottom-0 bg-gray-900 pb-2">
+                    <button type="button" onclick="window.ozfCloseModal()" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-sm font-medium">Batal</button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white rounded-xl text-sm font-bold shadow-lg">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <!-- JAVASCRIPT LOGIC FOR NAVIGATION -->
+    <!-- ==============================================
+         MODALS UNTUK DEFOZITE
+         ============================================== -->
+    <!-- Modal Add/Edit Nasabah defOZite -->
+    <div id="def-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden-view flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-sm p-6 space-y-3 rounded-2xl bg-gray-900">
+            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
+                <h3 class="text-lg font-bold text-white" id="def-modal-title">Form defOZite</h3>
+                <button type="button" onclick="window.defCloseModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <input type="hidden" id="def-c-id">
+            <div><label class="block text-[11px] text-slate-400 mb-1">Nama Lengkap</label><input type="text" id="def-c-name" class="w-full glass-input rounded-xl py-2 px-3 text-xs"></div>
+            <div><label class="block text-[11px] text-slate-400 mb-1">No WhatsApp</label><input type="tel" id="def-c-phone" class="w-full glass-input rounded-xl py-2 px-3 text-xs"></div>
+            <div><label class="block text-[11px] text-slate-400 mb-1">Alamat</label><textarea id="def-c-address" class="w-full glass-input rounded-xl py-2 px-3 text-xs h-16 resize-none"></textarea></div>
+            <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Status</label>
+                <select id="def-c-status" class="w-full glass-input rounded-xl py-2 px-3 text-xs">
+                    <option value="true" class="bg-darkblue-900">Aktif</option>
+                    <option value="false" class="bg-darkblue-900">Tidak Aktif</option>
+                </select>
+            </div>
+            <div class="pt-2"><button onclick="window.defSubmitData()" class="w-full bg-ozgold-600 text-white text-xs font-bold py-3 rounded-xl shadow-lg">Simpan Anggota</button></div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-notif" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-ozgold-500/50 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none z-[300]">Notifikasi</div>
+
+    <!-- ==============================================
+         JAVASCRIPT INITIALIZATION & LOGIC
+         ============================================== -->
     <script>
+        // --- 1. UI Navigation Logic (oz.html) ---
         function switchSection(sectionId) {
-            const sections = [
-                'section-beranda', 
-                'section-oz-finance-home', 
-                'section-oz-finance-customers', 
-                'section-defozite-home', 
-                'section-defozite-customers'
-            ];
-            
+            const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-defozite-home', 'section-defozite-customers'];
             sections.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.classList.add('hidden-section');
             });
-
             const target = document.getElementById('section-' + sectionId);
             if(target) {
                 target.classList.remove('hidden-section');
@@ -350,13 +324,266 @@
             const menu = document.getElementById('mobile-menu');
             const icon = document.getElementById('mobile-menu-icon');
             if(menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                icon.className = 'fa-solid fa-xmark';
+                menu.classList.remove('hidden'); icon.className = 'fa-solid fa-xmark';
             } else {
-                menu.classList.add('hidden');
-                icon.className = 'fa-solid fa-bars';
+                menu.classList.add('hidden'); icon.className = 'fa-solid fa-bars';
             }
         }
+
+        window.formatRp = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+        window.showToast = (msg) => { 
+            const t = document.getElementById('toast-notif'); 
+            t.innerText = msg; t.classList.remove('opacity-0'); 
+            setTimeout(() => t.classList.add('opacity-0'), 3000); 
+        };
+
+        // --- 2. FIREBASE MULTI-APP INITIALIZATION ---
+        // Config OZ Finance (Realtime DB) [cite: 11]
+        const ozFinanceConfig = {
+            apiKey: "AIzaSyBkHkY6dAYWppYWRFPRum2bwx2Dgnk8pV4",
+            authDomain: "ozfinance-5fb9c.firebaseapp.com",
+            databaseURL: "https://ozfinance-5fb9c-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "ozfinance-5fb9c",
+        };
+
+        // Config defOZite (Firestore) [cite: 8]
+        const defoziteConfig = {
+            apiKey: "AIzaSyA6JMLpQ88mpCB6MP9Ul1O_ULU76uhSbhc",
+            authDomain: "defozite-75ac1.firebaseapp.com",
+            projectId: "defozite-75ac1",
+        };
+
+        let ozApp, ozDbRef;
+        let defApp, defDb;
+
+        // States
+        window.ozfData = [];
+        window.defData = [];
+
+        function initDatabases() {
+            try {
+                // Initialize App 1 (OZ Finance)
+                ozApp = firebase.initializeApp(ozFinanceConfig, "OZFinanceApp");
+                ozDbRef = ozApp.database().ref('ozfinance_data');
+                
+                // Initialize App 2 (defOZite)
+                defApp = firebase.initializeApp(defoziteConfig, "defOZiteApp");
+                defDb = defApp.firestore();
+
+                loadOzfData();
+                loadDefData();
+
+                setTimeout(() => document.getElementById('loading-overlay').classList.add('hidden-view'), 1500);
+            } catch (error) {
+                console.error("Firebase init error:", error);
+                document.getElementById('loading-text').innerText = "Gagal memuat sistem.";
+            }
+        }
+
+        // --- 3. LOGIKA OZ FINANCE (Realtime DB) ---
+        function loadOzfData() {
+            ozDbRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                window.ozfData = data ? Object.values(data) : [];
+                renderOzfDashboard();
+            });
+        }
+
+        window.getProgressColor = (p) => p === 0 ? 'from-red-600 to-orange-500' : p < 50 ? 'from-orange-500 to-yellow-500' : p < 80 ? 'from-yellow-500 to-yellow-400' : p < 100 ? 'from-yellow-400 to-yellow-300' : 'from-green-500 to-green-400';
+        window.toggleDetails = function(id) { const el = document.getElementById(id); if (el) el.classList.toggle('hidden'); };
+
+        function renderOzfDashboard(filterQuery = "") {
+            let filtered = window.ozfData;
+            if(filterQuery) {
+                filtered = filtered.filter(d => (d.name && d.name.toLowerCase().includes(filterQuery.toLowerCase())) || (d.wa && String(d.wa).includes(filterQuery)));
+            }
+
+            const groupedData = filtered.reduce((acc, curr) => {
+                if(!curr || !curr.name) return acc;
+                let key = String(curr.name).trim().toUpperCase();
+                if(!acc[key]) acc[key] = { name: curr.name, customName: curr.customName || curr.name, items: [], photo: curr.photo };
+                acc[key].items.push(curr); return acc;
+            }, {});
+            
+            const customers = Object.values(groupedData);
+            document.getElementById('ozf-total-nasabah').textContent = `${customers.length} Orang`;
+
+            let htmlContent = '';
+            customers.forEach(c => {
+                let itemsHtml = ''; let totalTagihan = 0;
+                let avatarSrc = c.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.customName)}&background=fde047&color=000`;
+                
+                c.items.forEach(item => {
+                    totalTagihan += parseInt(item.tagihan) || 0;
+                    const progress = (item.lunas / (item.totalBulan || 1)) * 100; 
+                    const isLunas = progress >= 100;
+                    
+                    itemsHtml += `
+                    <div class="bg-gray-900/50 rounded-xl p-3 border border-white/5 relative group/item transition-colors hover:bg-gray-800/80 cursor-pointer w-full" onclick="window.toggleDetails('ozf-det-${item.id}')">
+                        <button type="button" onclick="event.stopPropagation(); window.ozfOpenEditModal('${item.id}')" class="absolute top-3 right-3 text-gray-500 hover:text-ozgold-400 z-10"><i class="fa-solid fa-pen-to-square text-sm"></i></button>
+                        <div class="pr-8 mb-2"><h3 class="text-ozgold-400 text-sm font-bold flex items-center gap-1.5"><i class="fa-solid ${isLunas ? 'fa-check-circle text-green-500' : 'fa-box-open'}"></i> ${item.item || '-'}</h3></div>
+                        <div class="flex justify-between text-xs mb-2"><span class="text-gray-400"><i class="fa-regular fa-calendar mr-1"></i> Tgl ${item.jatuhTempo || '-'}</span><span class="text-white font-medium">${window.formatRp(item.tagihan)}/bln</span></div>
+                        <div class="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden shadow-inner"><div class="h-full bg-gradient-to-r ${window.getProgressColor(progress)} rounded-full" style="width: ${progress > 100 ? 100 : progress}%"></div></div>
+                        <div id="ozf-det-${item.id}" class="hidden mt-3 pt-3 border-t border-white/10 space-y-1.5 text-xs text-left">
+                            <div class="flex justify-between text-gray-300"><span>Status:</span><span class="${isLunas ? 'text-green-500' : 'text-ozgold-400'} font-bold">${isLunas ? 'LUNAS' : item.lunas + '/' + item.totalBulan + ' BLN'}</span></div>
+                            <div class="mt-2 p-2 bg-black/40 rounded border border-white/5 text-[10px] text-gray-400 whitespace-pre-line leading-relaxed"><div class="font-bold text-gray-300 mb-1">Riwayat Pembayaran:</div>${item.history ? item.history : '-'}</div>
+                        </div>
+                    </div>`;
+                });
+                
+                htmlContent += `
+                <div class="glass-card rounded-2xl flex flex-col relative overflow-hidden w-full md:w-[350px] flex-shrink-0 snap-center">
+                    <div class="p-4 border-b border-ozgold-500/20 bg-black/20 flex items-center gap-3">
+                        <img src="${avatarSrc}" class="w-10 h-10 rounded-full object-cover border border-ozgold-500/30">
+                        <div><h2 class="text-base font-bold text-white leading-tight">${c.customName}</h2><p class="text-xs text-gray-400">${c.items.length} Item</p></div>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col gap-3 custom-scroll max-h-[50vh] overflow-y-auto">${itemsHtml}</div>
+                    <div class="p-4 border-t border-white/5 bg-gray-900/60 flex justify-between items-center mt-auto"><span class="text-xs text-gray-400 font-medium">Tagihan/Bln</span><span class="text-sm font-bold text-ozgold-400">${window.formatRp(totalTagihan)}</span></div>
+                </div>`;
+            });
+
+            if(customers.length === 0) htmlContent = `<div class="w-full text-center py-10 text-gray-500">Tidak ada data nasabah.</div>`;
+            document.getElementById('ozf-dashboard-grid').innerHTML = htmlContent;
+        }
+
+        window.ozfSearch = () => renderOzfDashboard(document.getElementById('ozf-search-input').value);
+
+        window.ozfOpenAddModal = () => {
+            document.getElementById('ozf-modal-title').innerHTML = '<i class="fa-solid fa-user-plus text-ozgold-400 mr-2"></i> Tambah Nasabah OZ Finance';
+            document.getElementById('ozf-data-form').reset(); document.getElementById('ozf-form-id').value = '';
+            document.getElementById('ozf-form-lunas').value = '0';
+            document.getElementById('ozf-form-modal').classList.remove('hidden-view');
+        };
+
+        window.ozfOpenEditModal = (id) => {
+            const item = window.ozfData.find(d => String(d.id) === String(id));
+            if(!item) return;
+            document.getElementById('ozf-modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-ozgold-400 mr-2"></i> Edit Data OZ Finance';
+            document.getElementById('ozf-form-id').value = item.id;
+            document.getElementById('ozf-form-name').value = item.name;
+            document.getElementById('ozf-form-item').value = item.item;
+            document.getElementById('ozf-form-tagihan').value = item.tagihan;
+            document.getElementById('ozf-form-jatuh-tempo').value = item.jatuhTempo;
+            document.getElementById('ozf-form-total-bulan').value = item.totalBulan;
+            document.getElementById('ozf-form-lunas').value = item.lunas;
+            document.getElementById('ozf-form-wa').value = item.wa || '';
+            document.getElementById('ozf-form-history').value = item.history || '';
+            document.getElementById('ozf-form-modal').classList.remove('hidden-view');
+        };
+        window.ozfCloseModal = () => document.getElementById('ozf-form-modal').classList.add('hidden-view');
+
+        window.ozfSubmitData = () => {
+            const idVal = document.getElementById('ozf-form-id').value;
+            const name = document.getElementById('ozf-form-name').value.trim();
+            const wa = document.getElementById('ozf-form-wa').value.trim();
+            const item = document.getElementById('ozf-form-item').value.trim();
+            const tagihan = parseInt(document.getElementById('ozf-form-tagihan').value) || 0;
+            const jatuhTempo = document.getElementById('ozf-form-jatuh-tempo').value.trim();
+            const totalBulan = parseInt(document.getElementById('ozf-form-total-bulan').value) || 1;
+            const lunas = parseInt(document.getElementById('ozf-form-lunas').value) || 0;
+            const history = document.getElementById('ozf-form-history').value.trim();
+
+            let newData = [...window.ozfData];
+            if (idVal) {
+                const idx = newData.findIndex(d => String(d.id) === String(idVal));
+                if(idx !== -1) newData[idx] = { ...newData[idx], name, wa, item, tagihan, jatuhTempo, totalBulan, lunas, history };
+            } else {
+                newData.push({ id: Date.now(), name, wa, item, tagihan, totalBulan, lunas, jatuhTempo, history });
+            }
+
+            const dataObj = {}; newData.forEach(d => dataObj[d.id] = d);
+            ozDbRef.set(dataObj).then(() => { window.showToast("Data OZ Finance Tersimpan!"); window.ozfCloseModal(); }).catch(e => alert(e.message));
+        };
+
+
+        // --- 4. LOGIKA DEFOZITE (Firestore) ---
+        function loadDefData() {
+            defDb.collection("customers").orderBy("createdAt", "desc").onSnapshot(snap => {
+                window.defData = []; let totS = 0, totL = 0;
+                snap.forEach(doc => { 
+                    const d = doc.data(); window.defData.push({ id: doc.id, ...d }); 
+                    totS += (d.savingsBalance || 0); totL += (d.loanBalance || 0);
+                });
+                document.getElementById('def-total-savings').innerText = window.formatRp(totS);
+                document.getElementById('def-total-loans').innerText = window.formatRp(totL);
+                document.getElementById('def-total-customers').innerText = `${window.defData.length} Orang`;
+                renderDefCustomerList();
+            });
+        }
+
+        function renderDefCustomerList(query="") {
+            let custs = window.defData;
+            if(query) custs = custs.filter(c => c.name.toLowerCase().includes(query.toLowerCase()) || (c.phone && c.phone.includes(query)));
+            
+            let list = document.getElementById('def-customer-list');
+            if(!custs.length) { list.innerHTML = `<p class="text-center text-slate-500 text-xs py-4">Belum ada anggota defOZite.</p>`; return; }
+            
+            list.innerHTML = custs.map(c => `
+                <div class="glass-card p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-ozgold-500/30">
+                    <div class="flex-1">
+                        <p class="font-bold text-white flex items-center gap-2">${c.name} <span class="text-[9px] px-2 py-0.5 rounded-full ${c.isActive !== false ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">${c.isActive !== false ? 'Aktif' : 'Nonaktif'}</span></p>
+                        <p class="text-[11px] text-slate-400 mt-1"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> ${c.phone||'-'}</p>
+                    </div>
+                    <div class="flex gap-4 w-full md:w-auto border-t md:border-t-0 border-white/10 pt-3 md:pt-0">
+                        <div class="flex-1 md:text-right">
+                            <span class="text-[10px] text-slate-400">Tabungan</span>
+                            <p class="font-bold text-emerald-400 text-sm">${window.formatRp(c.savingsBalance||0)}</p>
+                        </div>
+                        <div class="flex-1 md:text-right">
+                            <span class="text-[10px] text-slate-400">Pinjaman</span>
+                            <p class="font-bold text-red-400 text-sm">${window.formatRp(c.loanBalance||0)}</p>
+                        </div>
+                    </div>
+                    <button onclick="window.defOpenEditModal('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-ozgold-500 text-slate-400 hover:text-gray-900 transition-colors flex items-center justify-center shrink-0 self-end md:self-center absolute top-4 right-4 md:relative md:top-0 md:right-0">
+                        <i class="fa-solid fa-pen text-xs"></i>
+                    </button>
+                </div>`).join('');
+        }
+
+        window.defSearch = () => renderDefCustomerList(document.getElementById('def-search-input').value);
+
+        window.defOpenAddModal = () => {
+            document.getElementById('def-modal-title').innerText = 'Tambah Anggota defOZite';
+            document.getElementById('def-c-id').value = '';
+            document.getElementById('def-c-name').value = ''; document.getElementById('def-c-phone').value = ''; document.getElementById('def-c-address').value = '';
+            document.getElementById('def-form-modal').classList.remove('hidden-view');
+        };
+
+        window.defOpenEditModal = (id) => {
+            const c = window.defData.find(x => x.id === id); if(!c) return;
+            document.getElementById('def-modal-title').innerText = 'Edit Anggota defOZite';
+            document.getElementById('def-c-id').value = c.id;
+            document.getElementById('def-c-name').value = c.name || '';
+            document.getElementById('def-c-phone').value = c.phone || '';
+            document.getElementById('def-c-address').value = c.address || '';
+            document.getElementById('def-c-status').value = c.isActive !== false ? 'true' : 'false';
+            document.getElementById('def-form-modal').classList.remove('hidden-view');
+        };
+
+        window.defCloseModal = () => document.getElementById('def-form-modal').classList.add('hidden-view');
+
+        window.defSubmitData = async () => {
+            const id = document.getElementById('def-c-id').value;
+            const name = document.getElementById('def-c-name').value.trim();
+            const phone = document.getElementById('def-c-phone').value.trim();
+            const address = document.getElementById('def-c-address').value.trim();
+            const isActive = document.getElementById('def-c-status').value === 'true';
+
+            if(!name || !phone) return alert("Nama dan WhatsApp wajib diisi!");
+            
+            try {
+                if(id) {
+                    await defDb.collection("customers").doc(id).update({ name, phone, address, isActive });
+                } else {
+                    await defDb.collection("customers").add({ name, phone, address, savingsBalance: 0, loanBalance: 0, isActive: true, createdAt: defApp.firestore.FieldValue.serverTimestamp() });
+                }
+                window.showToast("Data defOZite Tersimpan!");
+                window.defCloseModal();
+            } catch(e) { alert("Gagal menyimpan ke Firestore: " + e.message); }
+        };
+
+        // Mulai sistem saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', initDatabases);
     </script>
 </body>
 </html>
