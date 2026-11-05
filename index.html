@@ -1015,8 +1015,8 @@
             } catch (error) {
                 console.error("Firebase init error:", error);
                 document.getElementById('loading-text').innerText = "Gagal memuat sistem.";
+                setTimeout(() => document.getElementById('loading-overlay').classList.add('hidden-view'), 2000);
             }
-        }
         }
 
         // --- 4. LOGIKA OZ FINANCE (Realtime DB) ---
