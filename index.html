@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +11,9 @@
     
     <!-- FIREBASE COMPAT SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <!-- Untuk OZ Finance -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <!-- Untuk defOZite -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
@@ -60,7 +61,7 @@
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] flex flex-col items-center justify-center transition-opacity duration-300">
         <i class="fa-solid fa-circle-notch fa-spin text-5xl text-ozgold-400 mb-4"></i>
-        <p id="loading-text" class="text-white font-bold text-sm tracking-widest uppercase mt-4">Memuat Database...</p>
+        <p id="loading-text" class="text-white font-bold text-sm tracking-widest uppercase">Memuat Database...</p>
     </div>
 
     <!-- NAVBAR -->
@@ -71,7 +72,7 @@
                 <span class="text-xl font-bold tracking-tight">OZ<span class="text-gradient-gold">digi</span></span>
             </div>
 
-            <!-- Desktop Navigation -->
+            <!-- Single Clean Navigation -->
             <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
                 <button onclick="switchSection('beranda')" class="text-ozgold-400 font-semibold transition-colors hover:text-ozgold-300">Beranda</button>
                 
@@ -110,18 +111,14 @@
                     </div>
                 </div>
 
-                <!-- Auth Buttons -->
+                <!-- Admin Auth Buttons -->
                 <div class="border-l border-white/20 pl-6 flex items-center gap-3">
-                    <button type="button" id="nav-login-btn" onclick="window.openAuthModal()" class="text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer">
+                    <button type="button" id="nav-login-btn" onclick="window.openAuthModal()" class="text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2">
                         <i class="fa-solid fa-user-circle text-ozgold-400"></i> Masuk / Daftar
                     </button>
                     
-                    <button type="button" id="nav-logout-btn" onclick="window.logoutUser()" class="hidden-view text-xs px-4 py-2 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer">
-                        <i class="fa-solid fa-right-from-bracket"></i> Keluar
-                    </button>
-
-                    <div id="nav-admin-menu" class="relative group hidden-view z-[9999]">
-                        <button class="text-xs px-4 py-2 rounded-full bg-ozgold-600 hover:bg-ozgold-500 text-white font-bold transition-colors flex items-center gap-2 cursor-pointer">
+                    <div id="nav-admin-menu" class="relative group hidden-view">
+                        <button class="text-xs px-4 py-2 rounded-full bg-ozgold-600 hover:bg-ozgold-500 text-white font-bold transition-colors flex items-center gap-2">
                             <i class="fa-solid fa-user-shield"></i> Admin Panel <i class="fa-solid fa-chevron-down text-[10px]"></i>
                         </button>
                         
@@ -130,12 +127,13 @@
                                 <i class="fa-solid fa-bullhorn text-ozgold-400"></i> Kelola Postingan
                             </button>
                             <button onclick="window.openAdminUsersModal()" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors flex items-center gap-2">
-                                <i class="fa-solid fa-users-gear text-ozgold-400"></i> Kelola Nasabah
+                                <i class="fa-solid fa-users-gear text-ozgold-400"></i> Kelola Nasabah (Akun)
                             </button>
                             <button onclick="window.logoutUser()" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-colors flex items-center gap-2 mt-1 border-t border-white/10 pt-2">
                                 <i class="fa-solid fa-right-from-bracket"></i> Keluar
                             </button>
                         </div>
+
                     </div>
                 </div>
             </nav>
@@ -145,7 +143,6 @@
             </button>
         </div>
 
-        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-white/10 px-6 py-4 space-y-3">
             <button onclick="switchSection('beranda'); toggleMobileMenu();" class="block w-full text-left py-2 font-medium text-ozgold-400">Beranda</button>
             <div class="border-t border-white/10 pt-2">
@@ -162,16 +159,8 @@
                 <button onclick="switchSection('defozite-saving'); toggleMobileMenu();" class="block w-full text-left py-1.5 text-xs text-slate-300">OZSaving</button>
             </div>
             <div class="border-t border-white/10 pt-2">
-                <button type="button" id="mobile-login-btn" onclick="window.openAuthModal(); toggleMobileMenu();" class="w-full bg-white/10 text-white font-medium py-2 rounded-lg text-xs mt-2 transition-colors">Masuk / Daftar</button>
-                
-                <div id="mobile-admin-panel" class="hidden-view mt-2 space-y-2">
-                    <p class="text-[10px] text-ozgold-400 uppercase font-bold tracking-widest px-1"><i class="fa-solid fa-user-shield"></i> Admin Panel</p>
-                    <button type="button" onclick="window.openAdminPostModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-bullhorn text-ozgold-400 w-4"></i> Kelola Postingan</button>
-                    <button type="button" onclick="window.openAdminUsersModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-users-gear text-ozgold-400 w-4"></i> Kelola Nasabah</button>
-                    <button type="button" onclick="window.logoutUser(); toggleMobileMenu();" class="w-full text-left bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold py-2 px-3 rounded-lg text-xs transition-colors mt-2"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar (Admin)</button>
-                </div>
-                
-                <button type="button" id="mobile-logout-btn" onclick="window.logoutUser(); toggleMobileMenu();" class="hidden-view w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold py-2 rounded-lg text-xs mt-2 transition-colors"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+                <button type="button" id="mobile-login-btn" onclick="window.openAuthModal(); toggleMobileMenu();" class="w-full bg-white/10 text-white font-medium py-2 rounded-lg text-xs mt-2">Masuk / Daftar</button>
+                <button type="button" id="mobile-logout-btn" onclick="window.logoutAdmin(); toggleMobileMenu();" class="hidden-view w-full bg-red-500/20 text-red-400 font-medium py-2 rounded-lg text-xs mt-2">Keluar (Logout)</button>
             </div>
         </div>
     </header>
@@ -232,7 +221,8 @@
             </div>
         </section>
 
-        <!-- MODULE 2: DEFOZITE (Firestore) -->
+
+        <!-- MODULE 2: defOZite (Firestore) -->
         <section id="section-defozite-home" class="hidden-section space-y-6">
             <div class="glass-panel p-6 rounded-2xl space-y-4">
                 <div class="flex justify-between items-center border-b border-white/10 pb-4">
@@ -282,6 +272,8 @@
             </div>
         </section>
     
+
+        
         <!-- MODUL OZPINJAM -->
         <section id="section-oz-pinjam" class="hidden-section space-y-6">
             <div class="flex flex-col md:flex-row gap-6">
@@ -364,34 +356,35 @@
                 </div>
             </div>
         </section>
+
     </main>
 
     <!-- ==============================================
-         MODAL AUTH & CMS (ADMIN)
+         MODALS UNTUK AUTENTIKASI ADMIN
          ============================================== -->
+    
+    <!-- ==============================================
+         NEW AUTH & ADMIN MODALS
+         ============================================== -->
+    
     <!-- Modal Auth (Masuk / Daftar) -->
     <div id="auth-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[600] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[510]">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-lg font-bold text-white" id="auth-modal-title"><i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem</h3>
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem</h3>
                 <button type="button" onclick="window.closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
             </div>
             
             <!-- Tabs -->
-            <div id="auth-tabs" class="flex p-1 bg-gray-900/80 rounded-lg mb-4 border border-gray-700">
+            <div class="flex p-1 bg-gray-900/80 rounded-lg mb-4 border border-gray-700">
                 <button type="button" id="tab-login" onclick="window.switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all">Masuk</button>
                 <button type="button" id="tab-register" onclick="window.switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all">Daftar Warga</button>
             </div>
 
             <!-- Form Login -->
             <form id="form-login" onsubmit="event.preventDefault(); window.processLogin(); return false;" class="space-y-4">
-                <div>
-                    <label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label>
-                    <input type="text" id="auth-login-id" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" placeholder="Masukkan Email atau WA" required>
-                </div>
-                <div class="text-right">
-                    <button type="button" onclick="window.switchAuthTab('forgot')" class="text-[10px] text-ozgold-400 hover:text-ozgold-300">Lupa Password?</button>
-                </div>
+                <div><label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label><input type="text" id="auth-login-id" class="w-full glass-input rounded-xl py-2 px-3 text-sm" required></div>
+                <div><label class="block text-[11px] text-slate-400 mb-1">Password</label><input type="password" id="auth-login-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-sm" required></div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Masuk</button>
             </form>
 
@@ -403,19 +396,6 @@
                 <div><label class="block text-[11px] text-slate-400 mb-1">Buat Password</label><input type="password" id="auth-reg-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Daftar Akun</button>
             </form>
-
-            <!-- Form Forgot Password -->
-            <form id="form-forgot-pwd" onsubmit="event.preventDefault(); window.processForgotPwd(); return false;" class="space-y-4 hidden-view">
-                <p class="text-[11px] text-slate-400 leading-relaxed">Masukkan email yang terdaftar. Sistem akan memulihkan akses Anda secara otomatis.</p>
-                <div>
-                    <label class="block text-[11px] text-slate-400 mb-1">Email Anda</label>
-                    <input type="email" id="auth-forgot-email" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" required>
-                </div>
-                <div class="flex gap-2 mt-2">
-                    <button type="button" onclick="window.switchAuthTab('login')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs">Kembali</button>
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs">Pulihkan</button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -423,7 +403,7 @@
     <div id="admin-users-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-2xl p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 relative z-[510] max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3 shrink-0">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-users-gear text-ozgold-400 mr-2"></i> Manajemen Nasabah</h3>
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-users-gear text-ozgold-400 mr-2"></i> Manajemen Nasabah (Sistem)</h3>
                 <div class="flex items-center gap-3">
                     <button type="button" onclick="window.openUserFormModal()" class="bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 shadow-lg">
                         <i class="fa-solid fa-plus"></i> Tambah Akun
@@ -450,6 +430,7 @@
         </div>
     </div>
 
+    
     <!-- Modal Form Tambah/Edit Akun (Admin) -->
     <div id="admin-user-form-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[650] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 relative z-[660] max-h-[95vh] overflow-y-auto custom-scroll">
@@ -526,7 +507,7 @@
     </div>
 
     <!-- ==============================================
-         MODALS UNTUK OZ FINANCE & DEFOZITE (CRUD DATA)
+         MODALS UNTUK OZ FINANCE & DEFOZITE (CRUD)
          ============================================== -->
     <div id="ozf-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center hidden-view p-4">
         <div class="glass-panel w-full max-w-md rounded-2xl p-6 bg-gray-900 custom-scroll max-h-[95vh] overflow-y-auto">
@@ -578,7 +559,7 @@
                     <option value="false" class="bg-darkblue-900">Tidak Aktif</option>
                 </select>
             </div>
-            <div class="pt-2"><button type="button" onclick="window.defSubmitData()" class="w-full bg-ozgold-600 text-white text-xs font-bold py-3 rounded-xl shadow-lg">Simpan Anggota</button></div>
+            <div class="pt-2"><button onclick="window.defSubmitData()" class="w-full bg-ozgold-600 text-white text-xs font-bold py-3 rounded-xl shadow-lg">Simpan Anggota</button></div>
         </div>
     </div>
 
@@ -619,101 +600,41 @@
         }
 
         window.formatRp = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
-        
         window.showToast = (msg) => { 
             const t = document.getElementById('toast-notif'); 
-            t.innerText = msg; 
-            t.classList.remove('opacity-0'); 
+            t.innerText = msg; t.classList.remove('opacity-0'); 
             setTimeout(() => t.classList.add('opacity-0'), 3000); 
         };
 
-        // --- 2. STATE & UTILS ---
-        window.currentUser = null; 
-        window.isAdmin = false;
+        
+        
+        // --- 1. STATE & UTILS ---
+        window.currentUser = null; // null jika belum login, object {role: 'admin'|'nasabah', name: '...'} jika login
         window.usersData = [];
         window.postsData = [];
-        window.ozfData = [];
-        window.defData = [];
-        window.activePinjamTenor = 6;
+        window.activePinjamTenor = 3;
 
-        // --- 3. AUTHENTICATION (MASUK / DAFTAR / FORGOT) ---
-        window.openAuthModal = () => { 
-            document.getElementById('auth-modal').classList.remove('hidden-view'); 
-            window.switchAuthTab('login'); 
-        };
-        
-        window.closeAuthModal = () => {
-            document.getElementById('auth-modal').classList.add('hidden-view');
+        window.formatRp = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+        window.showToast = (msg) => { 
+            const t = document.getElementById('toast-notif'); 
+            t.innerText = msg; t.classList.remove('opacity-0'); 
+            setTimeout(() => t.classList.add('opacity-0'), 3000); 
         };
 
+        // --- 2. AUTHENTICATION (MASUK / DAFTAR) ---
+        window.openAuthModal = () => { document.getElementById('auth-modal').classList.remove('hidden-view'); window.switchAuthTab('login'); };
+        window.closeAuthModal = () => document.getElementById('auth-modal').classList.add('hidden-view');
         window.switchAuthTab = (tab) => {
-            const formLogin = document.getElementById('form-login');
-            const formReg = document.getElementById('form-register');
-            const formForgot = document.getElementById('form-forgot-pwd');
-            const tabs = document.getElementById('auth-tabs');
-            const title = document.getElementById('auth-modal-title');
-
-            formLogin.classList.add('hidden-view');
-            formReg.classList.add('hidden-view');
-            formForgot.classList.add('hidden-view');
-
             if(tab === 'login') {
-                tabs.classList.remove('hidden-view');
                 document.getElementById('tab-login').className = 'flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all';
                 document.getElementById('tab-register').className = 'flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all';
-                formLogin.classList.remove('hidden-view');
-                title.innerHTML = '<i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem';
-            } else if (tab === 'register') {
-                tabs.classList.remove('hidden-view');
+                document.getElementById('form-login').classList.remove('hidden-view');
+                document.getElementById('form-register').classList.add('hidden-view');
+            } else {
                 document.getElementById('tab-register').className = 'flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all';
                 document.getElementById('tab-login').className = 'flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all';
-                formReg.classList.remove('hidden-view');
-                title.innerHTML = '<i class="fa-solid fa-user-plus text-ozgold-400 mr-2"></i> Daftar Warga';
-            } else if (tab === 'forgot') {
-                tabs.classList.add('hidden-view');
-                formForgot.classList.remove('hidden-view');
-                title.innerHTML = '<i class="fa-solid fa-key text-ozgold-400 mr-2"></i> Lupa Password';
-            }
-        };
-
-        window.processLogin = async () => {
-            const id = document.getElementById('auth-login-id').value.trim();
-            
-            // Bypass Super Admin (Tanpa Password, Hanya Email)
-            if(id === 'admin@oznet.com') {
-                window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif' };
-                window.isAdmin = true;
-                window.showToast("Berhasil login sebagai Super Admin!");
-                window.closeAuthModal();
-                window.updateUIAuth();
-                return;
-            }
-            
-            try {
-                if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
-                
-                // Cari user berdasarkan email ATAU phone
-                let snapshot = await defDb.collection('users').where('email', '==', id).get();
-                if(snapshot.empty) {
-                    snapshot = await defDb.collection('users').where('phone', '==', id).get();
-                }
-
-                if(snapshot.empty) {
-                    alert("Akun tidak terdaftar. Silakan daftar terlebih dahulu."); return;
-                }
-
-                const userData = snapshot.docs[0].data();
-                const userId = snapshot.docs[0].id;
-                
-                if(userData.status === 'blokir') { alert("Akun Anda telah dinonaktifkan oleh Admin."); return; }
-
-                window.currentUser = { id: userId, ...userData };
-                window.isAdmin = userData.role === 'admin';
-                window.showToast(`Selamat datang, ${userData.name}!`);
-                window.closeAuthModal();
-                window.updateUIAuth();
-            } catch(e) { 
-                alert("Gagal masuk (Koneksi Error): " + e.message); 
+                document.getElementById('form-register').classList.remove('hidden-view');
+                document.getElementById('form-login').classList.add('hidden-view');
             }
         };
 
@@ -723,8 +644,9 @@
             const wa = document.getElementById('auth-reg-wa').value.trim();
             const pwd = document.getElementById('auth-reg-pwd').value;
             
+            // Simpan ke Firestore defDb collection 'users'
             try {
-                if(!defDb) { alert("Sistem belum siap. Tunggu sebentar."); return; }
+                // Cek apakah email sudah ada
                 const snapshot = await defDb.collection('users').where('email', '==', email).get();
                 if(!snapshot.empty) { alert("Email sudah terdaftar!"); return; }
                 
@@ -736,140 +658,68 @@
             } catch(e) { alert("Gagal mendaftar: " + e.message); }
         };
 
-        window.processForgotPwd = async () => {
-            const email = document.getElementById('auth-forgot-email').value.trim();
-            if(!defDb) { alert("Sistem belum siap."); return; }
+        window.processLogin = async () => {
+            const id = document.getElementById('auth-login-id').value.trim();
+            const pwd = document.getElementById('auth-login-pwd').value;
             
             try {
-                const snapshot = await defDb.collection('users').where('email', '==', email).get();
+                let snapshot = await defDb.collection('users').where('email', '==', id).where('password', '==', pwd).get();
                 if(snapshot.empty) {
-                    alert("Email tidak ditemukan di sistem kami.");
-                    return;
+                    snapshot = await defDb.collection('users').where('phone', '==', id).where('password', '==', pwd).get();
                 }
+
+                if(snapshot.empty) {
+                    alert("Kredensial salah atau tidak terdaftar."); return;
+                }
+
+                const userData = snapshot.docs[0].data();
+                const userId = snapshot.docs[0].id;
                 
-                window.showToast("Akses berhasil dipulihkan! Cek email Anda.");
-                setTimeout(() => {
-                    window.switchAuthTab('login');
-                }, 2000);
-            } catch (e) {
-                alert("Terjadi kesalahan: " + e.message);
-            }
+                if(userData.status === 'blokir') { alert("Akun Anda telah dinonaktifkan oleh Admin."); return; }
+
+                window.currentUser = { id: userId, ...userData };
+                window.showToast(`Selamat datang, ${userData.name}!`);
+                window.closeAuthModal();
+                window.updateUIAuth();
+            } catch(e) { alert("Gagal masuk: " + e.message); }
         };
 
         window.logoutUser = () => {
             window.currentUser = null;
-            window.isAdmin = false;
             window.showToast("Anda telah keluar.");
             window.updateUIAuth();
         };
 
         window.updateUIAuth = () => {
+            const isAdmin = window.currentUser && window.currentUser.role === 'admin';
+            window.isAdmin = isAdmin; // Sync with old logic
+
             if(window.currentUser) {
-                // Desktop
                 document.getElementById('nav-login-btn').classList.add('hidden-view');
-                
-                // Mobile
-                document.getElementById('mobile-login-btn').classList.add('hidden-view');
-                document.getElementById('mobile-logout-btn').classList.remove('hidden-view');
-                
-                if(window.isAdmin) {
+                if(isAdmin) {
                     document.getElementById('nav-admin-menu').classList.remove('hidden-view');
-                    document.getElementById('mobile-admin-panel').classList.remove('hidden-view');
-                    
                     document.getElementById('btn-add-ozf').classList.remove('hidden-view');
                     document.getElementById('btn-add-def').classList.remove('hidden-view');
-                    document.getElementById('nav-logout-btn').classList.add('hidden-view');
                 } else {
-                    document.getElementById('nav-admin-menu').classList.add('hidden-view'); 
-                    document.getElementById('mobile-admin-panel').classList.add('hidden-view');
-                    document.getElementById('btn-add-ozf').classList.add('hidden-view');
-                    document.getElementById('btn-add-def').classList.add('hidden-view');
-                    document.getElementById('nav-logout-btn').classList.remove('hidden-view');
+                    document.getElementById('nav-admin-menu').classList.add('hidden-view'); // Nasabah no admin panel
+                    // You could add a Nasabah Menu here in the future
                 }
             } else {
                 document.getElementById('nav-login-btn').classList.remove('hidden-view');
                 document.getElementById('nav-admin-menu').classList.add('hidden-view');
-                document.getElementById('nav-logout-btn').classList.add('hidden-view');
-                
-                document.getElementById('mobile-login-btn').classList.remove('hidden-view');
-                document.getElementById('mobile-logout-btn').classList.add('hidden-view');
-                document.getElementById('mobile-admin-panel').classList.add('hidden-view');
-                
                 document.getElementById('btn-add-ozf').classList.add('hidden-view');
                 document.getElementById('btn-add-def').classList.add('hidden-view');
             }
             
+            // Re-render
             if (document.getElementById('ozf-search-input')) window.ozfSearch();
             if (document.getElementById('def-search-input')) window.defSearch();
             window.renderPosts();
         };
 
-        // --- 4. FIREBASE INIT ---
-        const ozFinanceConfig = {
-            apiKey: "AIzaSyBkHkY6dAYWppYWRFPRum2bwx2Dgnk8pV4",
-            authDomain: "ozfinance-5fb9c.firebaseapp.com",
-            databaseURL: "https://ozfinance-5fb9c-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            projectId: "ozfinance-5fb9c",
-        };
-
-        const defoziteConfig = {
-            apiKey: "AIzaSyA6JMLpQ88mpCB6MP9Ul1O_ULU76uhSbhc",
-            authDomain: "defozite-75ac1.firebaseapp.com",
-            projectId: "defozite-75ac1",
-        };
-
-        function initDatabases() {
-            try {
-                ozApp = firebase.initializeApp(ozFinanceConfig, "OZFinanceApp");
-                ozDbRef = ozApp.database().ref('ozfinance_data');
-                
-                defApp = firebase.initializeApp(defoziteConfig, "defOZiteApp");
-                defDb = defApp.firestore();
-
-                // Setup Initial Admin
-                defDb.collection("users").where("email", "==", "admin@oznet.com").get().then(snap => {
-                    if(snap.empty) {
-                        defDb.collection("users").add({ name: "Admin Utama", email: "admin@oznet.com", phone: "000", password: "admin", role: "admin", status: "aktif", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-                    }
-                }).catch(e => console.log(e));
-
-                loadOzfData();
-                loadDefData();
-
-                defDb.collection("users").orderBy("createdAt", "desc").onSnapshot(snap => {
-                    window.usersData = [];
-                    snap.forEach(doc => window.usersData.push({ id: doc.id, ...doc.data() }));
-                    renderUsersTable();
-                }, e => console.log(e));
-
-                defDb.collection("posts").orderBy("createdAt", "desc").onSnapshot(snap => {
-                    window.postsData = [];
-                    snap.forEach(doc => window.postsData.push({ id: doc.id, ...doc.data() }));
-                    window.renderPosts();
-                }, e => console.log(e));
-
-                window.setPinjamTenor(6);
-                window.updateUIAuth();
-
-                setTimeout(() => {
-                    const l = document.getElementById('loading-overlay');
-                    if(l) l.classList.add('hidden-view');
-                }, 1200);
-
-            } catch (error) {
-                console.error("Firebase init error:", error);
-                const text = document.getElementById('loading-text');
-                if(text) text.innerText = "Koneksi ke server bermasalah.";
-                setTimeout(() => {
-                    const l = document.getElementById('loading-overlay');
-                    if(l) l.classList.add('hidden-view');
-                }, 2000);
-            }
-        }
-
-        // --- 5. ADMIN USERS CRUD ---
+        // --- 3. ADMIN: KELOLA PENGGUNA ---
         window.openAdminUsersModal = () => { document.getElementById('admin-users-modal').classList.remove('hidden-view'); };
-        window.closeAdminUsersModal = () => { document.getElementById('admin-users-modal').classList.add('hidden-view'); };
+        window.closeAdminUsersModal = () => document.getElementById('admin-users-modal').classList.add('hidden-view');
 
         function renderUsersTable() {
             const tbody = document.getElementById('admin-users-list');
@@ -893,6 +743,7 @@
             `).join('');
         }
 
+        
         window.openUserFormModal = (id = null) => {
             document.getElementById('admin-user-form-modal').classList.remove('hidden-view');
             document.getElementById('form-user-admin').reset();
@@ -918,7 +769,9 @@
             }
         };
 
-        window.closeUserFormModal = () => { document.getElementById('admin-user-form-modal').classList.add('hidden-view'); };
+        window.closeUserFormModal = () => {
+            document.getElementById('admin-user-form-modal').classList.add('hidden-view');
+        };
 
         window.saveUserForm = async () => {
             const id = document.getElementById('user-form-id').value;
@@ -931,6 +784,7 @@
 
             try {
                 if(id) {
+                    // Update User
                     const emailCheck = await defDb.collection('users').where('email', '==', email).get();
                     const isDuplicate = emailCheck.docs.some(doc => doc.id !== id);
                     if(isDuplicate) { alert("Gagal: Email sudah digunakan oleh akun lain!"); return; }
@@ -941,6 +795,7 @@
                     await defDb.collection('users').doc(id).update(updateData);
                     window.showToast("Data akun berhasil diperbarui!");
                 } else {
+                    // Add New User
                     const emailCheck = await defDb.collection('users').where('email', '==', email).get();
                     if(!emailCheck.empty) { alert("Gagal: Email sudah terdaftar!"); return; }
 
@@ -950,19 +805,21 @@
                     window.showToast("Akun nasabah baru berhasil ditambahkan!");
                 }
                 window.closeUserFormModal();
-            } catch(e) { alert("Terjadi kesalahan: " + e.message); }
+            } catch(e) {
+                alert("Terjadi kesalahan: " + e.message);
+            }
         };
 
         window.toggleUserStatus = async (id, currentStatus) => {
-            if(window.currentUser && window.currentUser.id === id) { alert("Anda tidak bisa memblokir akun sendiri."); return; }
+            if(window.currentUser.id === id) { alert("Anda tidak bisa memblokir akun sendiri."); return; }
+            const newStatus = currentStatus === 'aktif' ? 'blokir' : 'aktif';
             try {
-                await defDb.collection('users').doc(id).update({ status: currentStatus === 'aktif' ? 'blokir' : 'aktif' });
+                await defDb.collection('users').doc(id).update({ status: newStatus });
                 window.showToast("Status pengguna diperbarui!");
             } catch(e) { alert("Gagal update status: " + e.message); }
         };
 
-
-        // --- 6. ADMIN POSTS CMS ---
+        // --- 4. ADMIN: KELOLA POSTINGAN (CMS) ---
         window.openAdminPostModal = (id = null) => {
             document.getElementById('admin-post-modal').classList.remove('hidden-view');
             document.getElementById('form-post').reset();
@@ -985,10 +842,498 @@
                 }
             }
         };
-        
         window.closeAdminPostModal = () => document.getElementById('admin-post-modal').classList.add('hidden-view');
 
         window.savePost = async () => {
             const id = document.getElementById('post-id').value;
             const postData = {
-                type
+                type: document.getElementById('post-type').value,
+                title: document.getElementById('post-title').value.trim(),
+                mediaUrl: document.getElementById('post-media').value.trim(),
+                mediaType: document.getElementById('post-media-type').value,
+                price: parseInt(document.getElementById('post-price').value) || 0,
+                description: document.getElementById('post-desc').value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                if(id) { await defDb.collection('posts').doc(id).update(postData); } 
+                else { postData.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await defDb.collection('posts').add(postData); }
+                window.showToast("Konten berhasil dipublikasikan!");
+                window.closeAdminPostModal();
+            } catch(e) { alert("Gagal menyimpan konten: " + e.message); }
+        };
+
+        window.deletePost = async () => {
+            const id = document.getElementById('post-id').value;
+            if(confirm("Yakin ingin menghapus postingan ini?")) {
+                try {
+                    await defDb.collection('posts').doc(id).delete();
+                    window.showToast("Konten dihapus!");
+                    window.closeAdminPostModal();
+                } catch(e) { alert(e.message); }
+            }
+        };
+
+        // --- 5. RENDER POSTINGAN & KALKULATOR (PINJAM, KREDIT, SAVING) ---
+        window.renderPosts = () => {
+            const isAdmin = window.currentUser && window.currentUser.role === 'admin';
+            
+            // Pisahkan data
+            const kreditPosts = window.postsData.filter(p => p.type === 'kredit');
+            const pinjamPosts = window.postsData.filter(p => p.type === 'pinjam');
+            const savingPosts = window.postsData.filter(p => p.type === 'saving');
+
+            // 1. Katalog Kredit
+            const krContainer = document.getElementById('kredit-catalog-grid');
+            if(!kreditPosts.length) { krContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada produk kredit.</p>'; }
+            else {
+                krContainer.innerHTML = kreditPosts.map(p => {
+                    const hrg = parseInt(p.price) || 0;
+                    // Bunga 4% per bulan. Total = Pokok + (Pokok * 4% * Tenor). Cicilan = Total / Tenor
+                    const cicil6 = (hrg + (hrg * 0.04 * 6)) / 6;
+                    const cicil12 = (hrg + (hrg * 0.04 * 12)) / 12;
+                    
+                    const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? 
+                        `<video src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl" autoplay loop muted></video>` : 
+                        `<img src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl">`) : 
+                        `<div class="w-full h-48 bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
+                    
+                    return `
+                    <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group">
+                        ${isAdmin ? `<button onclick="window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white p-2 rounded-full z-10 hover:text-ozgold-400"><i class="fa-solid fa-pen"></i></button>`:''}
+                        ${mediaHtml}
+                        <div class="p-4 flex-1 flex flex-col">
+                            <h3 class="font-bold text-lg text-white">${p.title}</h3>
+                            <p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrg)}</p>
+                            <p class="text-[11px] text-gray-400 line-clamp-3 mb-4 flex-1">${p.description}</p>
+                            
+                            <div class="space-y-2 mt-auto pt-3 border-t border-white/10">
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan</p>
+                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs">
+                                    <span class="text-slate-300">Tenor 6 Bln</span><span class="font-bold text-white">${window.formatRp(cicil6)} /bln</span>
+                                </div>
+                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs">
+                                    <span class="text-slate-300">Tenor 12 Bln</span><span class="font-bold text-white">${window.formatRp(cicil12)} /bln</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            // 2. Info Pinjam
+            const renderPromo = (containerId, posts) => {
+                const c = document.getElementById(containerId);
+                if(!posts.length) { c.innerHTML = '<p class="text-slate-500 text-xs">Belum ada info.</p>'; return; }
+                c.innerHTML = posts.map(p => `
+                    <div class="glass-card p-4 rounded-xl relative">
+                        ${isAdmin ? `<button onclick="window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 text-gray-500 hover:text-ozgold-400"><i class="fa-solid fa-pen"></i></button>`:''}
+                        <h4 class="font-bold text-sm text-ozgold-400 mb-2">${p.title}</h4>
+                        ${p.mediaUrl ? (p.mediaType==='video'?`<video src="${p.mediaUrl}" class="w-full h-32 object-cover rounded-lg mb-2" autoplay loop muted></video>`:`<img src="${p.mediaUrl}" class="w-full h-32 object-cover rounded-lg mb-2">`) : ''}
+                        <p class="text-[11px] text-gray-400">${p.description}</p>
+                    </div>
+                `).join('');
+            };
+            renderPromo('post-container-pinjam', pinjamPosts);
+            renderPromo('post-container-saving', savingPosts);
+        };
+
+        // --- KALKULATOR OZPINJAM ---
+        window.setPinjamTenor = (t) => {
+            window.activePinjamTenor = t;
+            [3, 6, 12].forEach(n => {
+                const btn = document.getElementById(`btn-tenor-${n}`);
+                if(n === t) { btn.classList.add('border-ozgold-400', 'text-ozgold-400', 'bg-ozgold-500/10'); }
+                else { btn.classList.remove('border-ozgold-400', 'text-ozgold-400', 'bg-ozgold-500/10'); }
+            });
+            window.calcPinjam();
+        };
+
+        window.calcPinjam = () => {
+            const nom = parseInt(document.getElementById('sim-pinjam-nominal').value) || 0;
+            const t = window.activePinjamTenor;
+            // Bunga 4% per bulan = 0.04. Total = Nominal + (Nominal * 0.04 * t). Cicilan per bln = Total / t
+            if(nom > 0) {
+                const totalBayar = nom + (nom * 0.04 * t);
+                const perBulan = totalBayar / t;
+                document.getElementById('sim-pinjam-result').innerText = window.formatRp(perBulan);
+            } else {
+                document.getElementById('sim-pinjam-result').innerText = "Rp 0";
+            }
+        };
+
+        // --- KALKULATOR OZSAVING ---
+        window.calcSaving = () => {
+            const target = parseInt(document.getElementById('sim-saving-target').value) || 0;
+            const bln = parseInt(document.getElementById('sim-saving-time').value) || 0;
+            if(target > 0 && bln > 0) {
+                document.getElementById('sim-saving-result').innerText = window.formatRp(target / bln);
+            } else {
+                document.getElementById('sim-saving-result').innerText = "Rp 0";
+            }
+        };
+
+        // Ganti sistem init database untuk memuat listener users dan posts
+
+        window.isAdmin = false;
+        
+        // Default Credentials
+        const defaultAdminEmail = 'admin@oznet.com';
+        const defaultAdminPwd = 'admin';
+        
+        if(!localStorage.getItem('ozdigi_admin_email')) localStorage.setItem('ozdigi_admin_email', defaultAdminEmail);
+        if(!localStorage.getItem('ozdigi_admin_pwd')) localStorage.setItem('ozdigi_admin_pwd', defaultAdminPwd);
+
+        window.openLoginModal = () => {
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-pwd').value = '';
+            document.getElementById('login-error').classList.add('hidden-view');
+            document.getElementById('login-modal').classList.remove('hidden-view');
+        };
+        window.closeLoginModal = () => document.getElementById('login-modal').classList.add('hidden-view');
+
+        window.processLogin = () => {
+            const emailInput = document.getElementById('login-email').value.trim();
+            const pwdInput = document.getElementById('login-pwd').value;
+            const savedEmail = localStorage.getItem('ozdigi_admin_email');
+            const savedPwd = localStorage.getItem('ozdigi_admin_pwd');
+
+            if(emailInput === savedEmail && pwdInput === savedPwd) {
+                window.isAdmin = true;
+                window.closeAuthModal();
+                window.showToast("Berhasil login sebagai Admin");
+                window.updateAdminUI();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden-view');
+            }
+        };
+
+        window.logoutAdmin = () => {
+            window.isAdmin = false;
+            window.showToast("Berhasil keluar dari panel Admin");
+            window.updateAdminUI();
+        };
+
+        window.updateAdminUI = () => {
+            // Update Desktop UI
+            if(window.isAdmin) {
+                document.getElementById('nav-login-btn').classList.add('hidden-view');
+                document.getElementById('nav-admin-menu').classList.remove('hidden-view');
+                
+                document.getElementById('btn-add-ozf').classList.remove('hidden-view');
+                document.getElementById('btn-add-def').classList.remove('hidden-view');
+                
+                // Update Mobile UI
+                document.getElementById('mobile-login-btn').classList.add('hidden-view');
+                document.getElementById('mobile-logout-btn').classList.remove('hidden-view');
+            } else {
+                document.getElementById('nav-login-btn').classList.remove('hidden-view');
+                document.getElementById('nav-admin-menu').classList.add('hidden-view');
+                
+                document.getElementById('btn-add-ozf').classList.add('hidden-view');
+                document.getElementById('btn-add-def').classList.add('hidden-view');
+                
+                // Update Mobile UI
+                document.getElementById('mobile-login-btn').classList.remove('hidden-view');
+                document.getElementById('mobile-logout-btn').classList.add('hidden-view');
+            }
+            
+            // Render ulang dashboard untuk memperbarui state tombol edit (ikon pensil)
+            if (document.getElementById('ozf-search-input')) window.ozfSearch();
+            if (document.getElementById('def-search-input')) window.defSearch();
+        };
+
+        window.openAdminSettingsModal = () => {
+            document.getElementById('settings-email').value = localStorage.getItem('ozdigi_admin_email');
+            document.getElementById('settings-pwd').value = localStorage.getItem('ozdigi_admin_pwd');
+            document.getElementById('admin-settings-modal').classList.remove('hidden-view');
+        };
+        window.closeAdminSettingsModal = () => document.getElementById('admin-settings-modal').classList.add('hidden-view');
+
+        window.saveAdminSettings = () => {
+            const newEmail = document.getElementById('settings-email').value.trim();
+            const newPwd = document.getElementById('settings-pwd').value;
+            
+            if(newEmail && newPwd) {
+                localStorage.setItem('ozdigi_admin_email', newEmail);
+                localStorage.setItem('ozdigi_admin_pwd', newPwd);
+                window.showToast("Email & Password Admin berhasil diubah!");
+                window.closeAdminSettingsModal();
+            } else {
+                alert("Email dan Password tidak boleh kosong!");
+            }
+        };
+
+        // --- 3. FIREBASE MULTI-APP INITIALIZATION ---
+        const ozFinanceConfig = {
+            apiKey: "AIzaSyBkHkY6dAYWppYWRFPRum2bwx2Dgnk8pV4",
+            authDomain: "ozfinance-5fb9c.firebaseapp.com",
+            databaseURL: "https://ozfinance-5fb9c-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "ozfinance-5fb9c",
+        };
+
+        const defoziteConfig = {
+            apiKey: "AIzaSyA6JMLpQ88mpCB6MP9Ul1O_ULU76uhSbhc",
+            authDomain: "defozite-75ac1.firebaseapp.com",
+            projectId: "defozite-75ac1",
+        };
+
+        let ozApp, ozDbRef;
+        let defApp, defDb;
+
+        window.ozfData = [];
+        window.defData = [];
+
+        
+        function initDatabases() {
+            try {
+                // Initialize App 1 (OZ Finance)
+                ozApp = firebase.initializeApp(ozFinanceConfig, "OZFinanceApp");
+                ozDbRef = ozApp.database().ref('ozfinance_data');
+                
+                // Initialize App 2 (defOZite)
+                defApp = firebase.initializeApp(defoziteConfig, "defOZiteApp");
+                defDb = defApp.firestore();
+
+                // Setup Initial Admin Wajib jika belum ada di database
+                defDb.collection("users").where("email", "==", "admin@oznet.com").get().then(snap => {
+                    if(snap.empty) {
+                        defDb.collection("users").add({ name: "Admin Utama", email: "admin@oznet.com", phone: "000", password: "admin", role: "admin", status: "aktif" });
+                    }
+                });
+
+                loadOzfData();
+                loadDefData();
+
+                // Listen Users Data
+                defDb.collection("users").orderBy("createdAt", "desc").onSnapshot(snap => {
+                    window.usersData = [];
+                    snap.forEach(doc => window.usersData.push({ id: doc.id, ...doc.data() }));
+                    renderUsersTable();
+                });
+
+                // Listen Posts Data
+                defDb.collection("posts").orderBy("createdAt", "desc").onSnapshot(snap => {
+                    window.postsData = [];
+                    snap.forEach(doc => window.postsData.push({ id: doc.id, ...doc.data() }));
+                    window.renderPosts();
+                });
+
+                // Default Pinjam Tenor
+                window.setPinjamTenor(6);
+                window.updateUIAuth();
+
+                setTimeout(() => document.getElementById('loading-overlay').classList.add('hidden-view'), 1500);
+            } catch (error) {
+                console.error("Firebase init error:", error);
+                document.getElementById('loading-text').innerText = "Gagal memuat sistem.";
+                setTimeout(() => document.getElementById('loading-overlay').classList.add('hidden-view'), 2000);
+            }
+        }
+
+        // --- 4. LOGIKA OZ FINANCE (Realtime DB) ---
+        function loadOzfData() {
+            ozDbRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                window.ozfData = data ? Object.values(data) : [];
+                renderOzfDashboard();
+            });
+        }
+
+        window.getProgressColor = (p) => p === 0 ? 'from-red-600 to-orange-500' : p < 50 ? 'from-orange-500 to-yellow-500' : p < 80 ? 'from-yellow-500 to-yellow-400' : p < 100 ? 'from-yellow-400 to-yellow-300' : 'from-green-500 to-green-400';
+        window.toggleDetails = function(id) { const el = document.getElementById(id); if (el) el.classList.toggle('hidden'); };
+
+        function renderOzfDashboard(filterQuery = "") {
+            let filtered = window.ozfData;
+            if(filterQuery) {
+                filtered = filtered.filter(d => (d.name && d.name.toLowerCase().includes(filterQuery.toLowerCase())) || (d.wa && String(d.wa).includes(filterQuery)));
+            }
+
+            const groupedData = filtered.reduce((acc, curr) => {
+                if(!curr || !curr.name) return acc;
+                let key = String(curr.name).trim().toUpperCase();
+                if(!acc[key]) acc[key] = { name: curr.name, customName: curr.customName || curr.name, items: [], photo: curr.photo };
+                acc[key].items.push(curr); return acc;
+            }, {});
+            
+            const customers = Object.values(groupedData);
+            document.getElementById('ozf-total-nasabah').textContent = `${customers.length} Orang`;
+
+            let htmlContent = '';
+            customers.forEach(c => {
+                let itemsHtml = ''; let totalTagihan = 0;
+                let avatarSrc = c.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.customName)}&background=fde047&color=000`;
+                
+                c.items.forEach(item => {
+                    totalTagihan += parseInt(item.tagihan) || 0;
+                    const progress = (item.lunas / (item.totalBulan || 1)) * 100; 
+                    const isLunas = progress >= 100;
+                    
+                    itemsHtml += `
+                    <div class="bg-gray-900/50 rounded-xl p-3 border border-white/5 relative group/item transition-colors hover:bg-gray-800/80 cursor-pointer w-full" onclick="window.toggleDetails('ozf-det-${item.id}')">
+                        ${window.isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.ozfOpenEditModal('${item.id}')" class="absolute top-3 right-3 text-gray-500 hover:text-ozgold-400 z-10"><i class="fa-solid fa-pen-to-square text-sm"></i></button>` : ''}
+                        <div class="pr-8 mb-2"><h3 class="text-ozgold-400 text-sm font-bold flex items-center gap-1.5"><i class="fa-solid ${isLunas ? 'fa-check-circle text-green-500' : 'fa-box-open'}"></i> ${item.item || '-'}</h3></div>
+                        <div class="flex justify-between text-xs mb-2"><span class="text-gray-400"><i class="fa-regular fa-calendar mr-1"></i> Tgl ${item.jatuhTempo || '-'}</span><span class="text-white font-medium">${window.formatRp(item.tagihan)}/bln</span></div>
+                        <div class="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden shadow-inner"><div class="h-full bg-gradient-to-r ${window.getProgressColor(progress)} rounded-full" style="width: ${progress > 100 ? 100 : progress}%"></div></div>
+                        <div id="ozf-det-${item.id}" class="hidden mt-3 pt-3 border-t border-white/10 space-y-1.5 text-xs text-left">
+                            <div class="flex justify-between text-gray-300"><span>Status:</span><span class="${isLunas ? 'text-green-500' : 'text-ozgold-400'} font-bold">${isLunas ? 'LUNAS' : item.lunas + '/' + item.totalBulan + ' BLN'}</span></div>
+                            <div class="mt-2 p-2 bg-black/40 rounded border border-white/5 text-[10px] text-gray-400 whitespace-pre-line leading-relaxed"><div class="font-bold text-gray-300 mb-1">Riwayat Pembayaran:</div>${item.history ? item.history : '-'}</div>
+                        </div>
+                    </div>`;
+                });
+                
+                htmlContent += `
+                <div class="glass-card rounded-2xl flex flex-col relative overflow-hidden w-full md:w-[350px] flex-shrink-0 snap-center">
+                    <div class="p-4 border-b border-ozgold-500/20 bg-black/20 flex items-center gap-3">
+                        <img src="${avatarSrc}" class="w-10 h-10 rounded-full object-cover border border-ozgold-500/30">
+                        <div><h2 class="text-base font-bold text-white leading-tight">${c.customName}</h2><p class="text-xs text-gray-400">${c.items.length} Item</p></div>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col gap-3 custom-scroll max-h-[50vh] overflow-y-auto">${itemsHtml}</div>
+                    <div class="p-4 border-t border-white/5 bg-gray-900/60 flex justify-between items-center mt-auto"><span class="text-xs text-gray-400 font-medium">Tagihan/Bln</span><span class="text-sm font-bold text-ozgold-400">${window.formatRp(totalTagihan)}</span></div>
+                </div>`;
+            });
+
+            if(customers.length === 0) htmlContent = `<div class="w-full text-center py-10 text-gray-500">Tidak ada data nasabah.</div>`;
+            document.getElementById('ozf-dashboard-grid').innerHTML = htmlContent;
+        }
+
+        window.ozfSearch = () => renderOzfDashboard(document.getElementById('ozf-search-input').value);
+
+        window.ozfOpenAddModal = () => {
+            document.getElementById('ozf-modal-title').innerHTML = '<i class="fa-solid fa-user-plus text-ozgold-400 mr-2"></i> Tambah Nasabah OZ Finance';
+            document.getElementById('ozf-data-form').reset(); document.getElementById('ozf-form-id').value = '';
+            document.getElementById('ozf-form-lunas').value = '0';
+            document.getElementById('ozf-form-modal').classList.remove('hidden-view');
+        };
+
+        window.ozfOpenEditModal = (id) => {
+            const item = window.ozfData.find(d => String(d.id) === String(id));
+            if(!item) return;
+            document.getElementById('ozf-modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-ozgold-400 mr-2"></i> Edit Data OZ Finance';
+            document.getElementById('ozf-form-id').value = item.id;
+            document.getElementById('ozf-form-name').value = item.name;
+            document.getElementById('ozf-form-item').value = item.item;
+            document.getElementById('ozf-form-tagihan').value = item.tagihan;
+            document.getElementById('ozf-form-jatuh-tempo').value = item.jatuhTempo;
+            document.getElementById('ozf-form-total-bulan').value = item.totalBulan;
+            document.getElementById('ozf-form-lunas').value = item.lunas;
+            document.getElementById('ozf-form-wa').value = item.wa || '';
+            document.getElementById('ozf-form-history').value = item.history || '';
+            document.getElementById('ozf-form-modal').classList.remove('hidden-view');
+        };
+        window.ozfCloseModal = () => document.getElementById('ozf-form-modal').classList.add('hidden-view');
+
+        window.ozfSubmitData = () => {
+            const idVal = document.getElementById('ozf-form-id').value;
+            const name = document.getElementById('ozf-form-name').value.trim();
+            const wa = document.getElementById('ozf-form-wa').value.trim();
+            const item = document.getElementById('ozf-form-item').value.trim();
+            const tagihan = parseInt(document.getElementById('ozf-form-tagihan').value) || 0;
+            const jatuhTempo = document.getElementById('ozf-form-jatuh-tempo').value.trim();
+            const totalBulan = parseInt(document.getElementById('ozf-form-total-bulan').value) || 1;
+            const lunas = parseInt(document.getElementById('ozf-form-lunas').value) || 0;
+            const history = document.getElementById('ozf-form-history').value.trim();
+
+            let newData = [...window.ozfData];
+            if (idVal) {
+                const idx = newData.findIndex(d => String(d.id) === String(idVal));
+                if(idx !== -1) newData[idx] = { ...newData[idx], name, wa, item, tagihan, jatuhTempo, totalBulan, lunas, history };
+            } else {
+                newData.push({ id: Date.now(), name, wa, item, tagihan, totalBulan, lunas, jatuhTempo, history });
+            }
+
+            const dataObj = {}; newData.forEach(d => dataObj[d.id] = d);
+            ozDbRef.set(dataObj).then(() => { window.showToast("Data OZ Finance Tersimpan!"); window.ozfCloseModal(); }).catch(e => alert(e.message));
+        };
+
+
+        // --- 5. LOGIKA DEFOZITE (Firestore) ---
+        function loadDefData() {
+            defDb.collection("customers").orderBy("createdAt", "desc").onSnapshot(snap => {
+                window.defData = []; let totS = 0, totL = 0;
+                snap.forEach(doc => { 
+                    const d = doc.data(); window.defData.push({ id: doc.id, ...d }); 
+                    totS += (d.savingsBalance || 0); totL += (d.loanBalance || 0);
+                });
+                document.getElementById('def-total-savings').innerText = window.formatRp(totS);
+                document.getElementById('def-total-loans').innerText = window.formatRp(totL);
+                document.getElementById('def-total-customers').innerText = `${window.defData.length} Orang`;
+                renderDefCustomerList();
+            });
+        }
+
+        function renderDefCustomerList(query="") {
+            let custs = window.defData;
+            if(query) custs = custs.filter(c => c.name.toLowerCase().includes(query.toLowerCase()) || (c.phone && c.phone.includes(query)));
+            
+            let list = document.getElementById('def-customer-list');
+            if(!custs.length) { list.innerHTML = `<p class="text-center text-slate-500 text-xs py-4">Belum ada anggota defOZite.</p>`; return; }
+            
+            list.innerHTML = custs.map(c => `
+                <div class="glass-card p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-ozgold-500/30">
+                    <div class="flex-1">
+                        <p class="font-bold text-white flex items-center gap-2">${c.name} <span class="text-[9px] px-2 py-0.5 rounded-full ${c.isActive !== false ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">${c.isActive !== false ? 'Aktif' : 'Nonaktif'}</span></p>
+                        <p class="text-[11px] text-slate-400 mt-1"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> ${c.phone||'-'}</p>
+                    </div>
+                    <div class="flex gap-4 w-full md:w-auto border-t md:border-t-0 border-white/10 pt-3 md:pt-0">
+                        <div class="flex-1 md:text-right">
+                            <span class="text-[10px] text-slate-400">Tabungan</span>
+                            <p class="font-bold text-emerald-400 text-sm">${window.formatRp(c.savingsBalance||0)}</p>
+                        </div>
+                        <div class="flex-1 md:text-right">
+                            <span class="text-[10px] text-slate-400">Pinjaman</span>
+                            <p class="font-bold text-red-400 text-sm">${window.formatRp(c.loanBalance||0)}</p>
+                        </div>
+                    </div>
+                    ${window.isAdmin ? `<button type="button" onclick="window.defOpenEditModal('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-ozgold-500 text-slate-400 hover:text-gray-900 transition-colors flex items-center justify-center shrink-0 self-end md:self-center absolute top-4 right-4 md:relative md:top-0 md:right-0"><i class="fa-solid fa-pen text-xs"></i></button>` : ''}
+                </div>`).join('');
+        }
+
+        window.defSearch = () => renderDefCustomerList(document.getElementById('def-search-input').value);
+
+        window.defOpenAddModal = () => {
+            document.getElementById('def-modal-title').innerText = 'Tambah Anggota defOZite';
+            document.getElementById('def-c-id').value = '';
+            document.getElementById('def-c-name').value = ''; document.getElementById('def-c-phone').value = ''; document.getElementById('def-c-address').value = '';
+            document.getElementById('def-form-modal').classList.remove('hidden-view');
+        };
+
+        window.defOpenEditModal = (id) => {
+            const c = window.defData.find(x => x.id === id); if(!c) return;
+            document.getElementById('def-modal-title').innerText = 'Edit Anggota defOZite';
+            document.getElementById('def-c-id').value = c.id;
+            document.getElementById('def-c-name').value = c.name || '';
+            document.getElementById('def-c-phone').value = c.phone || '';
+            document.getElementById('def-c-address').value = c.address || '';
+            document.getElementById('def-c-status').value = c.isActive !== false ? 'true' : 'false';
+            document.getElementById('def-form-modal').classList.remove('hidden-view');
+        };
+
+        window.defCloseModal = () => document.getElementById('def-form-modal').classList.add('hidden-view');
+
+        window.defSubmitData = async () => {
+            const id = document.getElementById('def-c-id').value;
+            const name = document.getElementById('def-c-name').value.trim();
+            const phone = document.getElementById('def-c-phone').value.trim();
+            const address = document.getElementById('def-c-address').value.trim();
+            const isActive = document.getElementById('def-c-status').value === 'true';
+
+            if(!name || !phone) return alert("Nama dan WhatsApp wajib diisi!");
+            
+            try {
+                if(id) {
+                    await defDb.collection("customers").doc(id).update({ name, phone, address, isActive });
+                } else {
+                    await defDb.collection("customers").add({ name, phone, address, savingsBalance: 0, loanBalance: 0, isActive: true, createdAt: defApp.firestore.FieldValue.serverTimestamp() });
+                }
+                window.showToast("Data defOZite Tersimpan!");
+                window.defCloseModal();
+            } catch(e) { alert("Gagal menyimpan ke Firestore: " + e.message); }
+        };
+
+        // Mulai sistem saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', initDatabases);
+    </script>
+</body>
+</html>
