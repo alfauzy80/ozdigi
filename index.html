@@ -113,7 +113,7 @@
 
                 <!-- Admin Auth Buttons -->
                 <div class="border-l border-white/20 pl-6 flex items-center gap-3">
-                    <button type="button" id="nav-login-btn" onclick="window.openAuthModal()" class="text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2">
+                    <button type="button" id="nav-login-btn" onclick="window.openLoginModal()" class="text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2">
                         <i class="fa-solid fa-user-circle text-ozgold-400"></i> Masuk / Daftar
                     </button>
                     
@@ -658,18 +658,33 @@
             } catch(e) { alert("Gagal mendaftar: " + e.message); }
         };
 
+        
         window.processLogin = async () => {
             const id = document.getElementById('auth-login-id').value.trim();
             const pwd = document.getElementById('auth-login-pwd').value;
             
+            // Bypass untuk Super Admin (Offline / Cepat)
+            const savedEmail = localStorage.getItem('ozdigi_admin_email') || 'admin@oznet.com';
+            const savedPwd = localStorage.getItem('ozdigi_admin_pwd') || 'admin';
+            
+            if(id === savedEmail && pwd === savedPwd) {
+                window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif' };
+                window.showToast("Berhasil login sebagai Super Admin!");
+                window.closeAuthModal();
+                window.updateUIAuth();
+                return;
+            }
+            
+            // Jika bukan super admin, cek ke Firestore
             try {
+                if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
                 let snapshot = await defDb.collection('users').where('email', '==', id).where('password', '==', pwd).get();
                 if(snapshot.empty) {
                     snapshot = await defDb.collection('users').where('phone', '==', id).where('password', '==', pwd).get();
                 }
 
                 if(snapshot.empty) {
-                    alert("Kredensial salah atau tidak terdaftar."); return;
+                    alert("Kredensial salah atau akun tidak terdaftar."); return;
                 }
 
                 const userData = snapshot.docs[0].data();
@@ -681,7 +696,9 @@
                 window.showToast(`Selamat datang, ${userData.name}!`);
                 window.closeAuthModal();
                 window.updateUIAuth();
-            } catch(e) { alert("Gagal masuk: " + e.message); }
+            } catch(e) { 
+                alert("Gagal masuk (Koneksi Error): " + e.message); 
+            }
         };
 
         window.logoutUser = () => {
@@ -1001,7 +1018,7 @@
 
             if(emailInput === savedEmail && pwdInput === savedPwd) {
                 window.isAdmin = true;
-                window.closeAuthModal();
+                window.closeLoginModal();
                 window.showToast("Berhasil login sebagai Admin");
                 window.updateAdminUI();
             } else {
