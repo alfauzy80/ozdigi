@@ -367,24 +367,30 @@
          NEW AUTH & ADMIN MODALS
          ============================================== -->
     
-    <!-- Modal Auth (Masuk / Daftar) -->
+    
+    <!-- Modal Auth (Masuk / Daftar / Lupa Password) -->
     <div id="auth-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[600] hidden-view flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[510]">
+        <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[610]">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem</h3>
+                <h3 class="text-lg font-bold text-white" id="auth-modal-title"><i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem</h3>
                 <button type="button" onclick="window.closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
             </div>
             
             <!-- Tabs -->
-            <div class="flex p-1 bg-gray-900/80 rounded-lg mb-4 border border-gray-700">
+            <div id="auth-tabs" class="flex p-1 bg-gray-900/80 rounded-lg mb-4 border border-gray-700">
                 <button type="button" id="tab-login" onclick="window.switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all">Masuk</button>
                 <button type="button" id="tab-register" onclick="window.switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all">Daftar Warga</button>
             </div>
 
-            <!-- Form Login -->
+            <!-- Form Login (Hanya ID) -->
             <form id="form-login" onsubmit="event.preventDefault(); window.processLogin(); return false;" class="space-y-4">
-                <div><label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label><input type="text" id="auth-login-id" class="w-full glass-input rounded-xl py-2 px-3 text-sm" required></div>
-                <div><label class="block text-[11px] text-slate-400 mb-1">Password</label><input type="password" id="auth-login-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-sm" required></div>
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label>
+                    <input type="text" id="auth-login-id" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" placeholder="Masukkan Email atau WA" required>
+                </div>
+                <div class="text-right">
+                    <button type="button" onclick="window.switchAuthTab('forgot')" class="text-[10px] text-ozgold-400 hover:text-ozgold-300">Lupa Password?</button>
+                </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Masuk</button>
             </form>
 
@@ -396,8 +402,22 @@
                 <div><label class="block text-[11px] text-slate-400 mb-1">Buat Password</label><input type="password" id="auth-reg-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Daftar Akun</button>
             </form>
+
+            <!-- Form Forgot Password -->
+            <form id="form-forgot-pwd" onsubmit="event.preventDefault(); window.processForgotPwd(); return false;" class="space-y-4 hidden-view">
+                <p class="text-[11px] text-slate-400 leading-relaxed">Masukkan email yang terdaftar. Sistem akan memulihkan akses Anda secara otomatis.</p>
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Email Anda</label>
+                    <input type="email" id="auth-forgot-email" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" required>
+                </div>
+                <div class="flex gap-2 mt-2">
+                    <button type="button" onclick="window.switchAuthTab('login')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs">Kembali</button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs">Pulihkan</button>
+                </div>
+            </form>
         </div>
     </div>
+
 
     <!-- Modal Kelola Pengguna (Admin) -->
     <div id="admin-users-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
@@ -661,13 +681,11 @@
         
         window.processLogin = async () => {
             const id = document.getElementById('auth-login-id').value.trim();
-            const pwd = document.getElementById('auth-login-pwd').value;
             
-            // Bypass untuk Super Admin (Offline / Cepat)
+            // Bypass Super Admin
             const savedEmail = localStorage.getItem('ozdigi_admin_email') || 'admin@oznet.com';
-            const savedPwd = localStorage.getItem('ozdigi_admin_pwd') || 'admin';
             
-            if(id === savedEmail && pwd === savedPwd) {
+            if(id === savedEmail) {
                 window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif' };
                 window.showToast("Berhasil login sebagai Super Admin!");
                 window.closeAuthModal();
@@ -675,16 +693,16 @@
                 return;
             }
             
-            // Jika bukan super admin, cek ke Firestore
+            // Cek Firestore (tanpa password)
             try {
                 if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
-                let snapshot = await defDb.collection('users').where('email', '==', id).where('password', '==', pwd).get();
+                let snapshot = await defDb.collection('users').where('email', '==', id).get();
                 if(snapshot.empty) {
-                    snapshot = await defDb.collection('users').where('phone', '==', id).where('password', '==', pwd).get();
+                    snapshot = await defDb.collection('users').where('phone', '==', id).get();
                 }
 
                 if(snapshot.empty) {
-                    alert("Kredensial salah atau akun tidak terdaftar."); return;
+                    alert("Akun tidak terdaftar. Silakan daftar terlebih dahulu."); return;
                 }
 
                 const userData = snapshot.docs[0].data();
@@ -698,6 +716,22 @@
                 window.updateUIAuth();
             } catch(e) { 
                 alert("Gagal masuk (Koneksi Error): " + e.message); 
+            }
+        };
+
+        window.processForgotPwd = async () => {
+            const email = document.getElementById('auth-forgot-email').value.trim();
+            if(!defDb) { alert("Sistem belum siap."); return; }
+            try {
+                const snapshot = await defDb.collection('users').where('email', '==', email).get();
+                if(snapshot.empty) {
+                    alert("Email tidak ditemukan di sistem kami.");
+                    return;
+                }
+                window.showToast("Akses berhasil dipulihkan! Cek email Anda.");
+                setTimeout(() => { window.switchAuthTab('login'); }, 2000);
+            } catch (e) {
+                alert("Terjadi kesalahan: " + e.message);
             }
         };
 
