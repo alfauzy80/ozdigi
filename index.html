@@ -1077,6 +1077,38 @@
             const pinjamPosts = window.postsData.filter(p => p.type === 'pinjam');
             const savingPosts = window.postsData.filter(p => p.type === 'saving');
 
+            // 0. Feed Beranda (Semua Postingan Terbaru)
+            const berandaContainer = document.getElementById('beranda-feed-grid');
+            if(berandaContainer) {
+                if(!window.postsData.length) { 
+                    berandaContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada promo atau info terbaru.</p>'; 
+                } else {
+                    // Ambil maksimal 6 postingan terbaru untuk di beranda
+                    const recentPosts = window.postsData.slice(0, 6);
+                    berandaContainer.innerHTML = recentPosts.map(p => {
+                        let mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl">`) : `<div class="w-full h-48 bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-bullhorn text-4xl text-gray-700"></i></div>`;
+                        
+                        let badgeColor = 'bg-blue-500/20 text-blue-400'; let badgeText = 'OZPinjam';
+                        if(p.type === 'kredit') { badgeColor = 'bg-ozgold-500/20 text-ozgold-400'; badgeText = 'OZKredit'; }
+                        if(p.type === 'saving') { badgeColor = 'bg-emerald-500/20 text-emerald-400'; badgeText = 'OZSaving'; }
+
+                        return `
+                        <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group cursor-pointer hover:border-ozgold-500/50" onclick="switchSection('${p.type === 'kredit' ? 'oz-kredit' : (p.type === 'pinjam' ? 'oz-pinjam' : 'defozite-saving')}')">
+                            ${isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-8 h-8 rounded-full z-10 flex items-center justify-center hover:text-ozgold-400"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
+                            <div class="relative">
+                                ${mediaHtml}
+                                <span class="absolute bottom-2 left-2 px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-widest ${badgeColor} backdrop-blur-md shadow-lg border border-white/10">${badgeText}</span>
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h3 class="font-bold text-base text-white mb-1 line-clamp-1">${p.title}</h3>
+                                ${p.type === 'kredit' && p.price ? `<p class="text-ozgold-400 font-bold text-sm mb-2">${window.formatRp(p.price)}</p>` : ''}
+                                <p class="text-[11px] text-gray-400 line-clamp-2">${p.description}</p>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
             // 1. Katalog Kredit
             const krContainer = document.getElementById('kredit-catalog-grid');
             if(!kreditPosts.length) { krContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada produk kredit.</p>'; }
