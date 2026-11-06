@@ -501,8 +501,19 @@
                     </select>
                 </div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Judul Konten / Produk</label><input type="text" id="post-title" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
-                <div><label class="block text-[11px] text-slate-400 mb-1">Link Foto / Video URL (Opsional)</label><input type="url" id="post-media" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="https://..."></div>
-
+                <div class="space-y-2 border border-white/10 p-3 rounded-xl bg-black/20">
+                    <label class="block text-[11px] text-ozgold-400 font-bold mb-1"><i class="fa-solid fa-images mr-1"></i> Media Publikasi (1 - 4 File)</label>
+                    <div class="flex gap-2">
+                        <input type="url" id="post-media-1" class="w-full glass-input rounded-lg py-2 px-3 text-xs" placeholder="URL Foto/Video 1 (Utama)">
+                        <select id="post-media-type" class="w-1/3 glass-input rounded-lg py-2 px-2 text-[10px] shrink-0">
+                            <option value="image" class="bg-darkblue-900">Gambar</option>
+                            <option value="video" class="bg-darkblue-900">Video</option>
+                        </select>
+                    </div>
+                    <input type="url" id="post-media-2" class="w-full glass-input rounded-lg py-2 px-3 text-xs" placeholder="URL Foto 2 (Opsional)">
+                    <input type="url" id="post-media-3" class="w-full glass-input rounded-lg py-2 px-3 text-xs" placeholder="URL Foto 3 (Opsional)">
+                    <input type="url" id="post-media-4" class="w-full glass-input rounded-lg py-2 px-3 text-xs" placeholder="URL Foto 4 (Opsional)">
+                </div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Harga (Khusus OZKredit) Rp.</label><input type="number" id="post-price" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Kosongkan jika bukan produk"></div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Deskripsi Lengkap</label><textarea id="post-desc" rows="4" class="w-full glass-input rounded-xl py-2 px-3 text-xs custom-scroll" required></textarea></div>
                 <div class="pt-3 flex gap-2">
@@ -889,7 +900,13 @@
                     document.getElementById('post-id').value = post.id;
                     document.getElementById('post-type').value = post.type;
                     document.getElementById('post-title').value = post.title;
-                    document.getElementById('post-media').value = post.mediaUrl || '';
+                    
+                    const urls = post.mediaUrls || (post.mediaUrl ? [post.mediaUrl] : []);
+                    document.getElementById('post-media-1').value = urls[0] || '';
+                    document.getElementById('post-media-2').value = urls[1] || '';
+                    document.getElementById('post-media-3').value = urls[2] || '';
+                    document.getElementById('post-media-4').value = urls[3] || '';
+                    
                     document.getElementById('post-media-type').value = post.mediaType || 'image';
                     document.getElementById('post-price').value = post.price || '';
                     document.getElementById('post-desc').value = post.description;
@@ -902,10 +919,17 @@
 
         window.savePost = async () => {
             const id = document.getElementById('post-id').value;
+            const url1 = document.getElementById('post-media-1').value.trim();
+            const url2 = document.getElementById('post-media-2').value.trim();
+            const url3 = document.getElementById('post-media-3').value.trim();
+            const url4 = document.getElementById('post-media-4').value.trim();
+            const mediaUrls = [url1, url2, url3, url4].filter(u => u !== '');
+
             const postData = {
                 type: document.getElementById('post-type').value,
                 title: document.getElementById('post-title').value.trim(),
-                mediaUrl: document.getElementById('post-media').value.trim(),
+                mediaUrls: mediaUrls,
+                mediaUrl: mediaUrls[0] || '',
                 mediaType: document.getElementById('post-media-type').value,
                 price: parseInt(document.getElementById('post-price').value) || 0,
                 description: document.getElementById('post-desc').value.trim(),
