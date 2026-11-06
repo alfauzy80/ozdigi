@@ -502,12 +502,22 @@
                 </div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Judul Konten / Produk</label><input type="text" id="post-title" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Link Foto / Video URL (Opsional)</label><input type="url" id="post-media" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="https://..."></div>
-
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Format Media</label>
+                    <select id="post-media-type" class="w-full glass-input rounded-xl py-2 px-3 text-xs">
+                        <option value="image" class="bg-darkblue-900">Gambar / Foto</option>
+                        <option value="video" class="bg-darkblue-900">Video (MP4/WebM)</option>
+                    </select>
+                </div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Harga (Khusus OZKredit) Rp.</label><input type="number" id="post-price" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Kosongkan jika bukan produk"></div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Deskripsi Lengkap</label><textarea id="post-desc" rows="4" class="w-full glass-input rounded-xl py-2 px-3 text-xs custom-scroll" required></textarea></div>
-                <div class="pt-3 flex gap-2">
-                    <button type="button" id="btn-del-post" onclick="window.deletePost()" class="hidden-view bg-red-500/20 text-red-400 px-4 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2 rounded-xl shadow-lg">Simpan Publikasi</button>
+                <div class="flex items-center gap-2 py-1">
+                    <input type="checkbox" id="post-show-beranda" class="w-4 h-4 rounded border-white/20 bg-black/40 text-ozgold-500 accent-ozgold-500" checked>
+                    <label for="post-show-beranda" class="text-[11px] text-slate-300 cursor-pointer">Sematkan & Tampilkan di Beranda OZdigi</label>
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" id="btn-del-post" onclick="window.deletePost()" class="hidden-view bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-xl text-xs font-bold transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-ozgold-600 to-ozgold-500 hover:from-ozgold-500 hover:to-ozgold-400 text-white font-bold py-2 rounded-xl shadow-lg transition-colors">Simpan Publikasi</button>
                 </div>
             </form>
         </div>
@@ -880,6 +890,7 @@
             document.getElementById('admin-post-modal').classList.remove('hidden-view');
             document.getElementById('form-post').reset();
             document.getElementById('post-id').value = '';
+            document.getElementById('post-show-beranda').checked = true;
             document.getElementById('btn-del-post').classList.add('hidden-view');
             document.getElementById('post-modal-title').innerHTML = '<i class="fa-solid fa-pen-nib text-ozgold-400 mr-2"></i> Buat Konten Baru';
 
@@ -893,6 +904,7 @@
                     document.getElementById('post-media-type').value = post.mediaType || 'image';
                     document.getElementById('post-price').value = post.price || '';
                     document.getElementById('post-desc').value = post.description;
+                    document.getElementById('post-show-beranda').checked = post.showInBeranda !== false;
                     document.getElementById('btn-del-post').classList.remove('hidden-view');
                     document.getElementById('post-modal-title').innerHTML = '<i class="fa-solid fa-pen-nib text-ozgold-400 mr-2"></i> Edit Konten';
                 }
@@ -909,6 +921,7 @@
                 mediaType: document.getElementById('post-media-type').value,
                 price: parseInt(document.getElementById('post-price').value) || 0,
                 description: document.getElementById('post-desc').value.trim(),
+                showInBeranda: document.getElementById('post-show-beranda').checked,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
