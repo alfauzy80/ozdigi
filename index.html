@@ -368,23 +368,28 @@
          ============================================== -->
     
     <!-- Modal Auth (Masuk / Daftar) -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
+    <div id="auth-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[600] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[510]">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem</h3>
+                <h3 class="text-lg font-bold text-white" id="auth-modal-title"><i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem</h3>
                 <button type="button" onclick="window.closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
             </div>
             
-            <!-- Tabs -->
-            <div class="flex p-1 bg-gray-900/80 rounded-lg mb-4 border border-gray-700">
+            <!-- Tabs (Hanya tampil di mode Login/Register, disembunyikan di mode Forgot Pwd) -->
+            <div id="auth-tabs" class="flex p-1 bg-gray-900/80 rounded-lg mb-4 border border-gray-700">
                 <button type="button" id="tab-login" onclick="window.switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all">Masuk</button>
                 <button type="button" id="tab-register" onclick="window.switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all">Daftar Warga</button>
             </div>
 
-            <!-- Form Login -->
+            <!-- Form Login (Hanya User/Email) -->
             <form id="form-login" onsubmit="event.preventDefault(); window.processLogin(); return false;" class="space-y-4">
-                <div><label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label><input type="text" id="auth-login-id" class="w-full glass-input rounded-xl py-2 px-3 text-sm" required></div>
-                <div><label class="block text-[11px] text-slate-400 mb-1">Password</label><input type="password" id="auth-login-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-sm" required></div>
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label>
+                    <input type="text" id="auth-login-id" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" placeholder="Masukkan Email atau WA" required>
+                </div>
+                <div class="text-right">
+                    <button type="button" onclick="window.switchAuthTab('forgot')" class="text-[10px] text-ozgold-400 hover:text-ozgold-300">Lupa Password?</button>
+                </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Masuk</button>
             </form>
 
@@ -395,6 +400,19 @@
                 <div><label class="block text-[11px] text-slate-400 mb-1">No WhatsApp</label><input type="number" id="auth-reg-wa" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Buat Password</label><input type="password" id="auth-reg-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Daftar Akun</button>
+            </form>
+
+            <!-- Form Forgot Password -->
+            <form id="form-forgot-pwd" onsubmit="event.preventDefault(); window.processForgotPwd(); return false;" class="space-y-4 hidden-view">
+                <p class="text-[11px] text-slate-400 leading-relaxed">Masukkan email yang terdaftar. Sistem akan memulihkan akses Anda secara otomatis.</p>
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Email Anda</label>
+                    <input type="email" id="auth-forgot-email" class="w-full glass-input rounded-xl py-2.5 px-3 text-sm" required>
+                </div>
+                <div class="flex gap-2 mt-2">
+                    <button type="button" onclick="window.switchAuthTab('login')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs">Kembali</button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg text-xs">Pulihkan</button>
+                </div>
             </form>
         </div>
     </div>
@@ -622,19 +640,42 @@
         };
 
         // --- 2. AUTHENTICATION (MASUK / DAFTAR) ---
-        window.openAuthModal = () => { document.getElementById('auth-modal').classList.remove('hidden-view'); window.switchAuthTab('login'); };
-        window.closeAuthModal = () => document.getElementById('auth-modal').classList.add('hidden-view');
+        window.openAuthModal = () => { 
+            document.getElementById('auth-modal').classList.remove('hidden-view'); 
+            window.switchAuthTab('login'); 
+        };
+        
+        window.closeAuthModal = () => {
+            document.getElementById('auth-modal').classList.add('hidden-view');
+        };
+
         window.switchAuthTab = (tab) => {
+            const formLogin = document.getElementById('form-login');
+            const formReg = document.getElementById('form-register');
+            const formForgot = document.getElementById('form-forgot-pwd');
+            const tabs = document.getElementById('auth-tabs');
+            const title = document.getElementById('auth-modal-title');
+
+            formLogin.classList.add('hidden-view');
+            formReg.classList.add('hidden-view');
+            formForgot.classList.add('hidden-view');
+
             if(tab === 'login') {
+                tabs.classList.remove('hidden-view');
                 document.getElementById('tab-login').className = 'flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all';
                 document.getElementById('tab-register').className = 'flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all';
-                document.getElementById('form-login').classList.remove('hidden-view');
-                document.getElementById('form-register').classList.add('hidden-view');
-            } else {
+                formLogin.classList.remove('hidden-view');
+                title.innerHTML = '<i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem';
+            } else if (tab === 'register') {
+                tabs.classList.remove('hidden-view');
                 document.getElementById('tab-register').className = 'flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all';
                 document.getElementById('tab-login').className = 'flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all';
-                document.getElementById('form-register').classList.remove('hidden-view');
-                document.getElementById('form-login').classList.add('hidden-view');
+                formReg.classList.remove('hidden-view');
+                title.innerHTML = '<i class="fa-solid fa-user-plus text-ozgold-400 mr-2"></i> Daftar Warga';
+            } else if (tab === 'forgot') {
+                tabs.classList.add('hidden-view');
+                formForgot.classList.remove('hidden-view');
+                title.innerHTML = '<i class="fa-solid fa-key text-ozgold-400 mr-2"></i> Lupa Password';
             }
         };
 
@@ -643,6 +684,131 @@
             const email = document.getElementById('auth-reg-email').value.trim();
             const wa = document.getElementById('auth-reg-wa').value.trim();
             const pwd = document.getElementById('auth-reg-pwd').value;
+            
+            try {
+                if(!defDb) { alert("Sistem belum siap. Tunggu sebentar."); return; }
+                const snapshot = await defDb.collection('users').where('email', '==', email).get();
+                if(!snapshot.empty) { alert("Email sudah terdaftar!"); return; }
+                
+                await defDb.collection('users').add({
+                    name, email, phone: wa, password: pwd, role: 'nasabah', status: 'aktif', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                window.showToast("Pendaftaran Berhasil! Silakan Masuk.");
+                window.switchAuthTab('login');
+            } catch(e) { alert("Gagal mendaftar: " + e.message); }
+        };
+
+        // PERUBAHAN: Login hanya menggunakan ID (Email/WA)
+        window.processLogin = async () => {
+            const id = document.getElementById('auth-login-id').value.trim();
+            
+            // Bypass Super Admin (Hanya perlu memasukkan email admin)
+            const savedEmail = localStorage.getItem('ozdigi_admin_email') || 'admin@oznet.com';
+            
+            if(id === savedEmail) {
+                window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif' };
+                window.showToast("Berhasil login sebagai Super Admin!");
+                window.closeAuthModal();
+                window.updateUIAuth();
+                return;
+            }
+            
+            try {
+                if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
+                // Cari user berdasarkan email ATAU phone, TANPA mencocokkan password
+                let snapshot = await defDb.collection('users').where('email', '==', id).get();
+                if(snapshot.empty) {
+                    snapshot = await defDb.collection('users').where('phone', '==', id).get();
+                }
+
+                if(snapshot.empty) {
+                    alert("Akun tidak terdaftar. Silakan daftar terlebih dahulu."); return;
+                }
+
+                const userData = snapshot.docs[0].data();
+                const userId = snapshot.docs[0].id;
+                
+                if(userData.status === 'blokir') { alert("Akun Anda telah dinonaktifkan oleh Admin."); return; }
+
+                window.currentUser = { id: userId, ...userData };
+                window.showToast(`Selamat datang, ${userData.name}!`);
+                window.closeAuthModal();
+                window.updateUIAuth();
+            } catch(e) { 
+                alert("Gagal masuk (Koneksi Error): " + e.message); 
+            }
+        };
+
+        // FITUR BARU: Proses Lupa Password
+        window.processForgotPwd = async () => {
+            const email = document.getElementById('auth-forgot-email').value.trim();
+            
+            if(!defDb) { alert("Sistem belum siap."); return; }
+            
+            try {
+                const snapshot = await defDb.collection('users').where('email', '==', email).get();
+                if(snapshot.empty) {
+                    alert("Email tidak ditemukan di sistem kami.");
+                    return;
+                }
+                
+                // Simulasi pemulihan password berhasil
+                window.showToast("Akses berhasil dipulihkan! Cek email Anda.");
+                setTimeout(() => {
+                    window.switchAuthTab('login');
+                }, 2000);
+
+            } catch (e) {
+                alert("Terjadi kesalahan: " + e.message);
+            }
+        };
+
+        window.logoutUser = () => {
+            window.currentUser = null;
+            window.isAdmin = false;
+            window.showToast("Anda telah keluar.");
+            window.updateUIAuth();
+        };
+
+        window.updateUIAuth = () => {
+            window.isAdmin = window.currentUser && window.currentUser.role === 'admin';
+
+            if(window.currentUser) {
+                // Desktop
+                document.getElementById('nav-login-btn').classList.add('hidden-view');
+                
+                // Mobile
+                document.getElementById('mobile-login-btn').classList.add('hidden-view');
+                document.getElementById('mobile-logout-btn').classList.remove('hidden-view');
+                
+                if(window.isAdmin) {
+                    document.getElementById('nav-admin-menu').classList.remove('hidden-view');
+                    document.getElementById('mobile-admin-panel').classList.remove('hidden-view');
+                    
+                    document.getElementById('btn-add-ozf').classList.remove('hidden-view');
+                    document.getElementById('btn-add-def').classList.remove('hidden-view');
+                } else {
+                    document.getElementById('nav-admin-menu').classList.add('hidden-view'); 
+                    document.getElementById('mobile-admin-panel').classList.add('hidden-view');
+                    document.getElementById('btn-add-ozf').classList.add('hidden-view');
+                    document.getElementById('btn-add-def').classList.add('hidden-view');
+                }
+            } else {
+                document.getElementById('nav-login-btn').classList.remove('hidden-view');
+                document.getElementById('nav-admin-menu').classList.add('hidden-view');
+                
+                document.getElementById('mobile-login-btn').classList.remove('hidden-view');
+                document.getElementById('mobile-logout-btn').classList.add('hidden-view');
+                document.getElementById('mobile-admin-panel').classList.add('hidden-view');
+                
+                document.getElementById('btn-add-ozf').classList.add('hidden-view');
+                document.getElementById('btn-add-def').classList.add('hidden-view');
+            }
+            
+            if (document.getElementById('ozf-search-input')) window.ozfSearch();
+            if (document.getElementById('def-search-input')) window.defSearch();
+            window.renderPosts();
+        };
             
             // Simpan ke Firestore defDb collection 'users'
             try {
