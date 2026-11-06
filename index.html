@@ -177,11 +177,21 @@
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         
         <!-- SECTION 1: BERANDA -->
-        <section id="section-beranda" class="space-y-12">
+        <section id="section-beranda" class="space-y-8">
             <div class="text-center space-y-4 max-w-3xl mx-auto py-12">
                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-ozgold-500/10 text-ozgold-400 border border-ozgold-500/20">OZdigi Ecosystem Dashboard</span>
                 <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">Selamat Datang di <span class="text-gradient-gold">OZdigi</span></h1>
                 <p class="text-slate-400 text-sm sm:text-base">Platform digital terintegrasi untuk pengelolaan keuangan, pembiayaan, tabungan, dan infrastruktur layanan digital Anda.</p>
+            </div>
+
+            <!-- Feed Postingan Terbaru di Beranda -->
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="flex justify-between items-center border-b border-white/10 pb-4">
+                    <h2 class="text-2xl font-bold"><i class="fa-solid fa-fire text-ozgold-400 mr-2"></i> Info & Promo Terbaru</h2>
+                </div>
+                <div id="beranda-feed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+                    <p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada postingan terbaru...</p>
+                </div>
             </div>
         </section>
 
@@ -938,6 +948,7 @@
         };
 
         // --- 6. RENDER POSTINGAN & KALKULATOR (PINJAM, KREDIT, SAVING) ---
+        
         window.renderPosts = () => {
             const isAdmin = window.currentUser && window.currentUser.role === 'admin';
             
@@ -945,43 +956,87 @@
             const pinjamPosts = window.postsData.filter(p => p.type === 'pinjam');
             const savingPosts = window.postsData.filter(p => p.type === 'saving');
 
-            // 1. Katalog Kredit
-            const krContainer = document.getElementById('kredit-catalog-grid');
-            if(!kreditPosts.length) { krContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada produk kredit.</p>'; }
-            else {
-                krContainer.innerHTML = kreditPosts.map(p => {
-                    const hrg = parseInt(p.price) || 0;
-                    const cicil6 = (hrg + (hrg * 0.04 * 6)) / 6;
-                    const cicil12 = (hrg + (hrg * 0.04 * 12)) / 12;
-                    const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl" autoplay loop muted></video>` : `<img src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl">`) : `<div class="w-full h-48 bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
-                    
-                    return `
-                    <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group">
-                        ${isAdmin ? `<button onclick="window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white p-2 rounded-full z-10 hover:text-ozgold-400"><i class="fa-solid fa-pen"></i></button>`:''}
-                        ${mediaHtml}
-                        <div class="p-4 flex-1 flex flex-col">
-                            <h3 class="font-bold text-lg text-white">${p.title}</h3>
+            // --- 1. RENDER KE BERANDA (SEMUA POSTINGAN TERBARU) ---
+            const berandaContainer = document.getElementById('beranda-feed-grid');
+            if(berandaContainer) {
+                if(!window.postsData.length) {
+                    berandaContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada postingan terbaru...</p>';
+                } else {
+                    berandaContainer.innerHTML = window.postsData.map(p => {
+                        let extraHtml = '';
+                        if(p.type === 'kredit') {
+                            const hrg = parseInt(p.price) || 0;
+                            const cicil6 = (hrg + (hrg * 0.03 * 6)) / 6;  // Bunga 3%
+                            const cicil12 = (hrg + (hrg * 0.03 * 12)) / 12; // Bunga 3%
+                            extraHtml = `
                             <p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrg)}</p>
-                            <p class="text-[11px] text-gray-400 line-clamp-3 mb-4 flex-1">${p.description}</p>
                             <div class="space-y-2 mt-auto pt-3 border-t border-white/10">
-                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan</p>
-                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 6 Bln</span><span class="font-bold text-white">${window.formatRp(cicil6)} /bln</span></div>
-                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 12 Bln</span><span class="font-bold text-white">${window.formatRp(cicil12)} /bln</span></div>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan (Bunga 3%)</p>
+                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">6 Bln</span><span class="font-bold text-white">${window.formatRp(cicil6)} /bln</span></div>
+                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">12 Bln</span><span class="font-bold text-white">${window.formatRp(cicil12)} /bln</span></div>
+                            </div>`;
+                        } else {
+                            const badgeColor = p.type === 'pinjam' ? 'bg-blue-500/20 text-blue-400' : 'bg-emerald-500/20 text-emerald-400';
+                            const badgeText = p.type === 'pinjam' ? 'OZPinjam' : 'OZSaving';
+                            extraHtml = `<div class="mt-auto pt-3 border-t border-white/10"><span class="text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wide ${badgeColor}">${badgeText}</span></div>`;
+                        }
+
+                        const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl">`) : `<div class="w-full h-48 bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-image text-4xl text-gray-700"></i></div>`;
+
+                        return `
+                        <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group cursor-pointer">
+                            ${isAdmin ? `<button onclick="window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-7 h-7 rounded-full flex items-center justify-center z-10 hover:text-ozgold-400"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
+                            ${mediaHtml}
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h3 class="font-bold text-lg text-white line-clamp-1">${p.title}</h3>
+                                <p class="text-[11px] text-gray-400 line-clamp-3 my-2 flex-1">${p.description}</p>
+                                ${extraHtml}
                             </div>
-                        </div>
-                    </div>`;
-                }).join('');
+                        </div>`;
+                    }).join('');
+                }
             }
 
-            // Info Promo
+            // --- 2. Katalog Kredit (Khusus halaman OZKredit) ---
+            const krContainer = document.getElementById('kredit-catalog-grid');
+            if(krContainer) {
+                if(!kreditPosts.length) { krContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada produk kredit.</p>'; }
+                else {
+                    krContainer.innerHTML = kreditPosts.map(p => {
+                        const hrg = parseInt(p.price) || 0;
+                        const cicil6 = (hrg + (hrg * 0.03 * 6)) / 6; // Bunga 3%
+                        const cicil12 = (hrg + (hrg * 0.03 * 12)) / 12; // Bunga 3%
+                        const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full h-48 object-cover rounded-t-xl">`) : `<div class="w-full h-48 bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
+                        
+                        return `
+                        <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group">
+                            ${isAdmin ? `<button onclick="window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-7 h-7 rounded-full flex items-center justify-center z-10 hover:text-ozgold-400"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
+                            ${mediaHtml}
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h3 class="font-bold text-lg text-white">${p.title}</h3>
+                                <p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrg)}</p>
+                                <p class="text-[11px] text-gray-400 line-clamp-3 mb-4 flex-1">${p.description}</p>
+                                <div class="space-y-2 mt-auto pt-3 border-t border-white/10">
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan (3%)</p>
+                                    <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 6 Bln</span><span class="font-bold text-white">${window.formatRp(cicil6)} /bln</span></div>
+                                    <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 12 Bln</span><span class="font-bold text-white">${window.formatRp(cicil12)} /bln</span></div>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
+            // --- 3. Info Promo (OZPinjam & OZSaving) ---
             const renderPromo = (containerId, posts) => {
                 const c = document.getElementById(containerId);
-                if(!posts.length) { c.innerHTML = '<p class="text-slate-500 text-xs">Belum ada info terbaru.</p>'; return; }
+                if(!c) return;
+                if(!posts.length) { c.innerHTML = '<p class="text-slate-500 text-xs col-span-full">Belum ada info terbaru.</p>'; return; }
                 c.innerHTML = posts.map(p => `
                     <div class="glass-card p-4 rounded-xl relative">
-                        ${isAdmin ? `<button onclick="window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 text-gray-500 hover:text-ozgold-400"><i class="fa-solid fa-pen"></i></button>`:''}
-                        <h4 class="font-bold text-sm text-ozgold-400 mb-2">${p.title}</h4>
-                        ${p.mediaUrl ? (p.mediaType==='video'?`<video src="${p.mediaUrl}" class="w-full h-32 object-cover rounded-lg mb-2" autoplay loop muted></video>`:`<img src="${p.mediaUrl}" class="w-full h-32 object-cover rounded-lg mb-2">`) : ''}
+                        ${isAdmin ? `<button onclick="window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 flex items-center justify-center rounded-full z-10 hover:text-ozgold-400"><i class="fa-solid fa-pen text-[10px]"></i></button>`:''}
+                        <h4 class="font-bold text-sm text-ozgold-400 mb-2 pr-6">${p.title}</h4>
+                        ${p.mediaUrl ? (p.mediaType==='video'?`<video src="${p.mediaUrl}" class="w-full h-32 object-cover rounded-lg mb-2" autoplay loop muted playsinline></video>`:`<img src="${p.mediaUrl}" class="w-full h-32 object-cover rounded-lg mb-2">`) : ''}
                         <p class="text-[11px] text-gray-400 whitespace-pre-line">${p.description}</p>
                     </div>
                 `).join('');
