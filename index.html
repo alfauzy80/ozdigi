@@ -5,6 +5,10 @@
     <title>OZdigi Ecosystem - Integrated Dashboard</title>
     
 <link rel="icon" type="image/x-icon" href="/favicon.png" />
+
+    <link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#0F172A" />
+<link rel="apple-touch-icon" href="/icon-192x192.png" />
     
     <!-- CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1401,6 +1405,16 @@
         };
 
         document.addEventListener('DOMContentLoaded', initDatabases);
-    </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then(registration => {
+        console.log('PWA ServiceWorker sukses:', registration.scope);
+      }).catch(err => {
+        console.log('PWA gagal didaftarkan:', err);
+      });
+    });
+  }
+</script>
 </body>
 </html>
