@@ -639,9 +639,25 @@
                     </select>
                 </div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Judul Konten / Produk</label><input type="text" id="post-title" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
-                <div><label class="block text-[11px] text-slate-400 mb-1">Link Foto / Video URL (Opsional)</label><input type="url" id="post-media" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="https://..."></div>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Tipe Media</label>
+                        <select id="post-media-type" class="w-full glass-input rounded-xl py-2 px-3 text-xs">
+                            <option value="image" class="bg-darkblue-900">Gambar (Foto)</option>
+                            <option value="video" class="bg-darkblue-900">Video (MP4 / WebM)</option>
+                        </select>
+                    </div>
+                    <div><label class="block text-[11px] text-slate-400 mb-1">Link Foto/Video (Opsional)</label><input type="url" id="post-media" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="https://..."></div>
+                </div>
 
                 <div><label class="block text-[11px] text-slate-400 mb-1">Harga (Khusus OZKredit) Rp.</label><input type="number" id="post-price" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Kosongkan jika bukan produk"></div>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-[11px] text-slate-400 mb-1">Bunga Cicilan (%) /Bulan</label><input type="number" step="0.01" id="post-interest" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Default: 4"></div>
+                    <div><label class="block text-[11px] text-slate-400 mb-1">Biaya Admin (Rp)</label><input type="number" id="post-fee" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Maks: 20000"></div>
+                </div>
+
                 <div><label class="block text-[11px] text-slate-400 mb-1">Deskripsi Lengkap</label><textarea id="post-desc" rows="4" class="w-full glass-input rounded-xl py-2 px-3 text-xs custom-scroll" required></textarea></div>
                 <div class="pt-3 flex gap-2">
                     <button type="button" id="btn-del-post" onclick="window.deletePost()" class="hidden-view bg-red-500/20 text-red-400 px-4 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
@@ -1052,6 +1068,9 @@
             document.getElementById('admin-post-modal').classList.remove('hidden-view');
             document.getElementById('form-post').reset();
             document.getElementById('post-id').value = '';
+            document.getElementById('post-media-type').value = 'image';
+            document.getElementById('post-interest').value = '';
+            document.getElementById('post-fee').value = '';
             document.getElementById('btn-del-post').classList.add('hidden-view');
             document.getElementById('post-modal-title').innerHTML = '<i class="fa-solid fa-pen-nib text-ozgold-400 mr-2"></i> Buat Konten Baru';
 
@@ -1064,6 +1083,8 @@
                     document.getElementById('post-media').value = post.mediaUrl || '';
                     document.getElementById('post-media-type').value = post.mediaType || 'image';
                     document.getElementById('post-price').value = post.price || '';
+                    document.getElementById('post-interest').value = post.interest !== undefined ? post.interest : '';
+                    document.getElementById('post-fee').value = post.fee || '';
                     document.getElementById('post-desc').value = post.description;
                     document.getElementById('btn-del-post').classList.remove('hidden-view');
                     document.getElementById('post-modal-title').innerHTML = '<i class="fa-solid fa-pen-nib text-ozgold-400 mr-2"></i> Edit Konten';
@@ -1080,6 +1101,8 @@
                 mediaUrl: document.getElementById('post-media').value.trim(),
                 mediaType: document.getElementById('post-media-type').value,
                 price: parseInt(document.getElementById('post-price').value) || 0,
+                interest: parseFloat(document.getElementById('post-interest').value) || 4, // Jika kosong, gunakan default 4%
+                fee: parseInt(document.getElementById('post-fee').value) || 0, // Biaya Admin (Rp)
                 description: document.getElementById('post-desc').value.trim(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
@@ -1134,11 +1157,14 @@
             
             if(post.type === 'kredit' && post.price) {
                 const hrg = parseInt(post.price) || 0;
+                const interest = post.interest !== undefined ? parseFloat(post.interest) : 4;
+                const fee = post.fee ? parseInt(post.fee) : 0;
+
                 priceEl.innerText = window.formatRp(hrg);
                 priceEl.classList.remove('hidden-view');
                 
-                const cicil6 = (hrg + (hrg * 0.04 * 6)) / 6;
-                const cicil12 = (hrg + (hrg * 0.04 * 12)) / 12;
+                const cicil6 = (hrg + fee + (hrg * (interest / 100) * 6)) / 6;
+                const cicil12 = (hrg + fee + (hrg * (interest / 100) * 12)) / 12;
                 
                 document.getElementById('pd-cicil-6').innerText = window.formatRp(cicil6) + ' /bln';
                 document.getElementById('pd-cicil-12').innerText = window.formatRp(cicil12) + ' /bln';
@@ -1213,8 +1239,11 @@
             else {
                 krContainer.innerHTML = kreditPosts.map(p => {
                     const hrg = parseInt(p.price) || 0;
-                    const cicil6 = (hrg + (hrg * 0.04 * 6)) / 6;
-                    const cicil12 = (hrg + (hrg * 0.04 * 12)) / 12;
+                    const interest = p.interest !== undefined ? parseFloat(p.interest) : 4;
+                    const fee = p.fee ? parseInt(p.fee) : 0;
+                    
+                    const cicil6 = (hrg + fee + (hrg * (interest / 100) * 6)) / 6;
+                    const cicil12 = (hrg + fee + (hrg * (interest / 100) * 12)) / 12;
                     const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl">`) : `<div class="w-full aspect-square bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
                     
                     return `
