@@ -1,3 +1,4 @@
+```html
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -997,6 +998,7 @@
             if(id === savedEmail) {
                 if(passwordInput !== 'admin') { alert("Password Super Admin salah!"); return; }
                 window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif' };
+                localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
                 window.showToast("Berhasil login sebagai Super Admin!");
                 window.closeAuthModal(); window.updateUIAuth(); return;
             }
@@ -1023,6 +1025,7 @@
                     if(userData.status === 'blokir') { alert("Akun Anda telah dinonaktifkan oleh Admin."); return; }
 
                     window.currentUser = { id: userId, ...userData };
+                    localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
                     window.showToast(`Selamat datang, ${userData.name}!`);
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
@@ -1054,6 +1057,7 @@
                         role: 'nasabah', 
                         status: 'aktif' 
                     };
+                    localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
                     window.showToast(`Selamat datang, ${autoNasabah.name}!`);
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
@@ -1074,8 +1078,10 @@
 
         window.logoutUser = () => {
             window.currentUser = null;
+            localStorage.removeItem('ozdigi_user_session');
             window.showToast("Anda telah keluar.");
             window.updateUIAuth();
+            switchSection('beranda');
         };
 
         // --- 4. KELOLA PENGGUNA (ADMIN) ---
@@ -2054,6 +2060,15 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            const savedSession = localStorage.getItem('ozdigi_user_session');
+            if(savedSession) {
+                try {
+                    window.currentUser = JSON.parse(savedSession);
+                } catch(e) {
+                    localStorage.removeItem('ozdigi_user_session');
+                }
+            }
+            
             initDatabases();
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
