@@ -210,12 +210,15 @@
         <section id="section-beranda" class="space-y-12">
             
             <div class="relative w-full rounded-3xl overflow-hidden glass-panel border border-white/10 mt-4 mb-8 shadow-2xl">
-                <div class="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/80 to-transparent z-10 pointer-events-none"></div>
+                <!-- Gradasi hitam tebal dihapus diganti dengan lapisan transparan super tipis 20% agar media tampil jernih -->
+                <div class="absolute inset-0 bg-black/20 z-10 pointer-events-none"></div>
                 
-                <img id="hero-bg-img" src="" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay transition-opacity duration-500" style="opacity: 0.4;">
-                <video id="hero-bg-video" src="" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay transition-opacity duration-500 hidden-view" autoplay loop muted playsinline style="opacity: 0.4;"></video>
+                <!-- Efek mix-blend-overlay dihapus agar warna asli gambar/video keluar -->
+                <img id="hero-bg-img" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500" style="opacity: 1;">
+                <video id="hero-bg-video" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 hidden-view" autoplay loop muted playsinline style="opacity: 1;"></video>
                 
-                <div class="relative z-20 px-8 py-16 md:py-24 max-w-2xl">
+                <!-- Menambahkan drop shadow kuat pada teks agar tetap terbaca jelas di background apa pun -->
+                <div class="relative z-20 px-8 py-16 md:py-24 max-w-2xl drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">
                     <span id="hero-badge" class="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold bg-ozgold-500 text-black mb-6 uppercase tracking-widest shadow-[0_0_15px_rgba(245,158,11,0.5)]">Super App Koperasi Digital</span>
                     <h1 id="hero-title" class="text-4xl sm:text-6xl font-bold tracking-tight hero-title mb-6 leading-tight">Masa Depan <br><span class="text-gradient-gold">Keuangan Anda</span></h1>
                     <p id="hero-desc" class="text-slate-300 text-sm sm:text-base mb-10 max-w-lg leading-relaxed">OZdigi mengintegrasikan layanan pembiayaan, tabungan pintar, dan manajemen kredit dalam satu ekosistem aman dengan teknologi tinggi.</p>
@@ -287,16 +290,16 @@
                     <i class="fa-solid fa-lock text-2xl text-slate-400"></i>
                 </div>
                 <h3 class="text-lg font-bold text-white mb-2">Akses Dibatasi</h3>
-                <p class="text-sm text-slate-400 max-w-md">Data pelanggan dikunci untuk menjaga privasi dan hanya dapat diakses oleh Admin.</p>
+                <p class="text-sm text-slate-400 max-w-md">Silakan login terlebih dahulu untuk melihat data tagihan atau cicilan Anda.</p>
             </div>
 
-            <div id="ozf-data-panel" class="admin-only-menu hidden-view glass-panel p-6 rounded-2xl space-y-6">
+            <div id="ozf-data-panel" class="hidden-view glass-panel p-6 rounded-2xl space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-4">
                     <div>
                         <h2 class="text-2xl font-bold"><i class="fa-solid fa-wallet text-ozgold-400 mr-2"></i> Data Pelanggan OZ Finance</h2>
                         <p class="text-xs text-slate-400">Manajemen cicilan dan pembiayaan</p>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <div class="admin-only-menu flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                         <div class="relative w-full sm:w-64">
                             <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="text" id="ozf-search-input" placeholder="Cari Nama/WA..." class="w-full glass-input rounded-xl py-2 pl-9 pr-4 text-xs" onkeyup="window.ozfSearch()">
@@ -348,16 +351,16 @@
                     <i class="fa-solid fa-lock text-2xl text-slate-400"></i>
                 </div>
                 <h3 class="text-lg font-bold text-white mb-2">Akses Dibatasi</h3>
-                <p class="text-sm text-slate-400 max-w-md">Data pelanggan dikunci untuk menjaga privasi dan hanya dapat diakses oleh Admin.</p>
+                <p class="text-sm text-slate-400 max-w-md">Silakan login terlebih dahulu untuk melihat data buku tabungan Anda.</p>
             </div>
 
-            <div id="def-data-panel" class="admin-only-menu hidden-view glass-panel p-6 rounded-2xl space-y-6">
+            <div id="def-data-panel" class="hidden-view glass-panel p-6 rounded-2xl space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-4">
                     <div>
                         <h2 class="text-2xl font-bold"><i class="fa-solid fa-vault text-ozgold-400 mr-2"></i> Data Pelanggan defOZite</h2>
                         <p class="text-xs text-slate-400">Manajemen buku tabungan dan status pinjaman</p>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <div class="admin-only-menu flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                         <div class="relative w-full sm:w-64">
                             <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="text" id="def-search-input" placeholder="Cari anggota..." class="w-full glass-input rounded-xl py-2 pl-9 pr-4 text-xs" onkeyup="window.defSearch()">
@@ -598,13 +601,6 @@
                         <input type="url" id="edit-hero-bg" class="w-full glass-input rounded-lg py-2 px-3 text-xs" placeholder="https://...">
                         <p class="text-[9px] text-slate-500 mt-1 leading-tight">Link langsung (.jpg/.mp4). Jika pakai <b>Dropbox</b>, sistem akan otomatis mengonversi agar bisa diputar. <b>YouTube tidak didukung</b>.</p>
                     </div>
-                    <div>
-                        <label class="block text-[11px] text-ozgold-400 font-bold mb-1 flex justify-between">
-                            <span><i class="fa-solid fa-eye-dropper mr-1"></i> Opasitas / Tingkat Transparansi</span>
-                            <span id="opacity-val-display" class="text-white">40%</span>
-                        </label>
-                        <input type="range" id="edit-hero-opacity" min="0" max="100" value="40" class="w-full accent-ozgold-500 cursor-pointer" oninput="document.getElementById('opacity-val-display').innerText = this.value + '%'">
-                    </div>
                 </div>
 
                 <div class="pt-3 flex gap-2">
@@ -629,7 +625,7 @@
                 <button type="button" id="tab-register" onclick="window.switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all">Daftar Warga</button>
             </div>
 
-            <!-- Form Login (Hanya ID) -->
+            <!-- Form Login -->
             <form id="form-login" onsubmit="event.preventDefault(); window.processLogin(); return false;" class="space-y-4">
                 <div>
                     <label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label>
@@ -637,7 +633,7 @@
                 </div>
                 <div>
                     <label class="block text-[11px] text-slate-400 mb-1">Password</label>
-                    <input type="password" id="auth-login-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Masukkan Password" required>
+                    <input type="password" id="auth-login-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Masukkan Password (Def: No WA)" required>
                 </div>
                 <div class="text-right">
                     <button type="button" onclick="window.processForgotPwd()" class="text-[10px] text-ozgold-400 hover:text-ozgold-300">Lupa Password?</button>
@@ -650,7 +646,7 @@
                 <div><label class="block text-[11px] text-slate-400 mb-1">Nama Lengkap</label><input type="text" id="auth-reg-name" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Email Aktif</label><input type="email" id="auth-reg-email" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">No WhatsApp</label><input type="number" id="auth-reg-wa" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
-                <div><label class="block text-[11px] text-slate-400 mb-1">Buat Password</label><input type="password" id="auth-reg-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Default: 1234" value="1234" required></div>
+                <div><label class="block text-[11px] text-slate-400 mb-1">Buat Password</label><input type="password" id="auth-reg-pwd" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Opsional (Default: 1234)"></div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Daftar Akun</button>
             </form>
 
@@ -998,43 +994,71 @@
             const savedEmail = localStorage.getItem('ozdigi_admin_email') || 'admin@oznet.com';
             
             if(id === savedEmail) {
-                if(passwordInput !== 'admin') {
-                    alert("Password Super Admin salah!");
-                    return;
-                }
+                if(passwordInput !== 'admin') { alert("Password Super Admin salah!"); return; }
                 window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif' };
                 window.showToast("Berhasil login sebagai Super Admin!");
-                window.closeAuthModal();
-                window.updateUIAuth();
-                return;
+                window.closeAuthModal(); window.updateUIAuth(); return;
             }
             
             try {
                 if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
+                
+                // 1. Cek tabel users (Admin / yang daftar manual)
                 let snapshot = await defDb.collection('users').where('email', '==', id).get();
                 if(snapshot.empty) {
                     snapshot = await defDb.collection('users').where('phone', '==', id).get();
                 }
-
-                if(snapshot.empty) {
-                    alert("Akun tidak terdaftar. Silakan daftar terlebih dahulu."); return;
-                }
-
-                const userData = snapshot.docs[0].data();
-                const userId = snapshot.docs[0].id;
                 
-                const userPassword = userData.password || '1234';
-                if(passwordInput !== userPassword) {
-                    alert("Password salah! Silakan periksa kembali atau klik 'Lupa Password' untuk mereset via WhatsApp.");
-                    return;
+                if(!snapshot.empty) {
+                    const userData = snapshot.docs[0].data();
+                    const userId = snapshot.docs[0].id;
+                    const userPassword = userData.password || '1234';
+                    
+                    // Cek password sesuai database, atau pakai no WA sebagai fallback jika mereka belum pernah ganti
+                    if(passwordInput !== userPassword && passwordInput !== userData.phone) {
+                        alert("Password salah! Silakan periksa kembali atau klik 'Lupa Password' untuk mereset via WhatsApp.");
+                        return;
+                    }
+                    if(userData.status === 'blokir') { alert("Akun Anda telah dinonaktifkan oleh Admin."); return; }
+
+                    window.currentUser = { id: userId, ...userData };
+                    window.showToast(`Selamat datang, ${userData.name}!`);
+                    window.closeAuthModal(); window.updateUIAuth(); return;
                 }
 
-                if(userData.status === 'blokir') { alert("Akun Anda telah dinonaktifkan oleh Admin."); return; }
+                // 2. Jika tidak ada di tabel users, cek otomatis di data defOZite & OZFinance
+                let autoNasabah = null;
+                
+                // Cek defOZite
+                const defMatch = window.defData.find(c => c.phone === id);
+                if(defMatch) autoNasabah = { id: defMatch.id, name: defMatch.name, phone: defMatch.phone };
+                
+                // Cek OZFinance jika belum ketemu
+                if(!autoNasabah) {
+                    const ozfMatch = window.ozfData.find(c => c.wa === id);
+                    if(ozfMatch) autoNasabah = { id: ozfMatch.id, name: ozfMatch.name, phone: ozfMatch.wa };
+                }
 
-                window.currentUser = { id: userId, ...userData };
-                window.showToast(`Selamat datang, ${userData.name}!`);
-                window.closeAuthModal();
-                window.updateUIAuth();
+                if(autoNasabah) {
+                    // Jika login otomatis, password HARUS sama dengan No WA
+                    if(passwordInput !== autoNasabah.phone) {
+                        alert("Password salah! Gunakan No WhatsApp Anda sebagai password.");
+                        return;
+                    }
+                    
+                    window.currentUser = { 
+                        id: autoNasabah.id, 
+                        name: autoNasabah.name, 
+                        phone: autoNasabah.phone, 
+                        role: 'nasabah', 
+                        status: 'aktif' 
+                    };
+                    window.showToast(`Selamat datang, ${autoNasabah.name}!`);
+                    window.closeAuthModal(); window.updateUIAuth(); return;
+                }
+
+                alert("Akun tidak terdaftar. Silakan daftar terlebih dahulu.");
+                
             } catch(e) { 
                 alert("Gagal masuk (Koneksi Error): " + e.message); 
             }
@@ -1587,7 +1611,6 @@
             heroDesc: "OZdigi mengintegrasikan layanan pembiayaan, tabungan pintar, dan manajemen kredit dalam satu ekosistem aman dengan teknologi tinggi.",
             heroBg: "https://www.dropbox.com/scl/fi/du87py64k3osivulg5psp/Screenshot_20261104_145214_Shopee.png?rlkey=ldqswhmpa9jzmvyycp3zjl2zv&st=qjs9go4c&dl=0",
             heroMediaType: "image",
-            heroOpacity: 40,
             pinjam: {}
         };
 
@@ -1615,14 +1638,13 @@
             
             let rawUrl = window.siteConfig.heroBg;
             if(rawUrl && rawUrl.includes('dropbox.com')) rawUrl = rawUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
-            const opacityVal = (window.siteConfig.heroOpacity !== undefined ? window.siteConfig.heroOpacity : 40) / 100;
 
             if(window.siteConfig.heroMediaType === 'video') {
                 if(bgImg) bgImg.classList.add('hidden-view');
-                if(bgVid) { bgVid.classList.remove('hidden-view'); bgVid.style.opacity = opacityVal; if(bgVid.src !== rawUrl) bgVid.src = rawUrl; }
+                if(bgVid) { bgVid.classList.remove('hidden-view'); bgVid.style.opacity = 1; if(bgVid.src !== rawUrl) bgVid.src = rawUrl; }
             } else {
                 if(bgVid) bgVid.classList.add('hidden-view');
-                if(bgImg) { bgImg.classList.remove('hidden-view'); bgImg.style.opacity = opacityVal; if(bgImg.src !== rawUrl) bgImg.src = rawUrl; }
+                if(bgImg) { bgImg.classList.remove('hidden-view'); bgImg.style.opacity = 1; if(bgImg.src !== rawUrl) bgImg.src = rawUrl; }
             }
         }
 
@@ -1632,9 +1654,6 @@
             document.getElementById('edit-hero-desc').value = window.siteConfig.heroDesc;
             document.getElementById('edit-hero-bg').value = window.siteConfig.heroBg;
             document.getElementById('edit-hero-media-type').value = window.siteConfig.heroMediaType || 'image';
-            const currentOpacity = window.siteConfig.heroOpacity !== undefined ? window.siteConfig.heroOpacity : 40;
-            document.getElementById('edit-hero-opacity').value = currentOpacity;
-            document.getElementById('opacity-val-display').innerText = currentOpacity + '%';
             document.getElementById('admin-edit-beranda-modal').classList.remove('hidden-view');
         };
 
@@ -1646,8 +1665,7 @@
                 heroTitle: document.getElementById('edit-hero-title').value.trim(),
                 heroDesc: document.getElementById('edit-hero-desc').value.trim(),
                 heroBg: document.getElementById('edit-hero-bg').value.trim() || window.siteConfig.heroBg,
-                heroMediaType: document.getElementById('edit-hero-media-type').value,
-                heroOpacity: parseInt(document.getElementById('edit-hero-opacity').value) || 40
+                heroMediaType: document.getElementById('edit-hero-media-type').value
             };
             try {
                 await defDb.collection("config").doc("beranda").set(newConfig, {merge: true});
@@ -1722,7 +1740,7 @@
             }
 
             // Lock Data Pelanggan Panels
-            if(window.isAdmin) {
+            if(window.currentUser) {
                 document.getElementById('ozf-data-panel').classList.remove('hidden-view');
                 document.getElementById('def-data-panel').classList.remove('hidden-view');
                 document.getElementById('ozf-lock-message').classList.add('hidden-view');
@@ -1853,6 +1871,11 @@
         
         function renderOzfDashboard(filterQuery = "") {
             let filtered = window.ozfData || [];
+            
+            if(!window.isAdmin && window.currentUser) {
+                filtered = filtered.filter(d => String(d.wa) === String(window.currentUser.phone));
+            }
+
             if(filterQuery) filtered = filtered.filter(d => (d.name && d.name.toLowerCase().includes(filterQuery.toLowerCase())) || (d.wa && String(d.wa).includes(filterQuery)));
             const groupedData = filtered.reduce((acc, curr) => {
                 if(!curr || !curr.name) return acc;
@@ -1895,7 +1918,7 @@
                     <div class="p-4 border-t border-white/5 bg-gray-900/60 flex justify-between items-center mt-auto"><span class="text-xs text-gray-400 font-medium">Tagihan/Bln</span><span class="text-sm font-bold text-ozgold-400">${window.formatRp(totalTagihan)}</span></div>
                 </div>`;
             });
-            if(customers.length === 0) htmlContent = `<div class="w-full text-center py-10 text-gray-500">Tidak ada data nasabah.</div>`;
+            if(customers.length === 0) htmlContent = `<div class="w-full text-center py-10 text-gray-500">${!window.isAdmin ? 'Anda belum memiliki riwayat tagihan/cicilan.' : 'Tidak ada data nasabah.'}</div>`;
             const grid = document.getElementById('ozf-dashboard-grid');
             if(grid) grid.innerHTML = htmlContent;
         }
@@ -1940,11 +1963,16 @@
         window.defSearch = () => renderDefCustomerList(document.getElementById('def-search-input') ? document.getElementById('def-search-input').value : "");
         function renderDefCustomerList(query="") {
             let custs = window.defData || [];
+            
+            if(!window.isAdmin && window.currentUser) {
+                custs = custs.filter(c => String(c.phone) === String(window.currentUser.phone));
+            }
+
             if(query) custs = custs.filter(c => c.name.toLowerCase().includes(query.toLowerCase()) || (c.phone && c.phone.includes(query)));
             
             let list = document.getElementById('def-customer-list');
             if(!list) return;
-            if(!custs.length) { list.innerHTML = `<p class="text-center text-slate-500 text-xs py-4">Belum ada anggota defOZite.</p>`; return; }
+            if(!custs.length) { list.innerHTML = `<p class="text-center text-slate-500 text-xs py-4">${!window.isAdmin ? 'Anda belum terdaftar sebagai anggota tabungan.' : 'Belum ada anggota defOZite.'}</p>`; return; }
             
             list.innerHTML = custs.map(c => `
                 <div class="glass-card p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-ozgold-500/30 relative">
