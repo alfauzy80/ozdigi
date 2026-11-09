@@ -1,3 +1,4 @@
+```html
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -872,14 +873,15 @@
     <!-- Modal Konfirmasi Hapus (Global) -->
     <div id="confirm-action-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[750] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-red-500/50 relative text-center shadow-2xl">
-            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i>
+            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4" id="confirm-action-icon"></i>
             <h3 class="text-lg font-bold text-white mb-2" id="confirm-action-title">Hapus Data Permanen?</h3>
             <p class="text-xs text-slate-400 mb-6" id="confirm-action-desc">Data yang dihapus tidak dapat dikembalikan lagi. Yakin ingin melanjutkan?</p>
             <input type="hidden" id="confirm-action-id">
             <input type="hidden" id="confirm-action-type">
+            <input type="hidden" id="confirm-action-amount">
             <div class="flex gap-3">
                 <button type="button" onclick="document.getElementById('confirm-action-modal').classList.add('hidden-view')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl text-sm transition-colors">Batal</button>
-                <button type="button" onclick="window.executeAction()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg">Ya, Hapus</button>
+                <button type="button" id="btn-confirm-action" onclick="window.executeAction()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg">Ya, Hapus</button>
             </div>
         </div>
     </div>
@@ -1182,6 +1184,12 @@
             document.getElementById('confirm-action-type').value = 'user';
             document.getElementById('confirm-action-title').innerText = 'Hapus Akun Permanen?';
             document.getElementById('confirm-action-desc').innerText = 'Data nasabah atau admin yang dihapus tidak dapat dikembalikan lagi. Yakin ingin melanjutkan?';
+            
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4';
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Hapus';
+            btn.className = 'flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+            
             document.getElementById('confirm-action-modal').classList.remove('hidden-view');
         };
 
@@ -1190,6 +1198,12 @@
             document.getElementById('confirm-action-type').value = 'ozf';
             document.getElementById('confirm-action-title').innerText = 'Hapus Data Cicilan?';
             document.getElementById('confirm-action-desc').innerText = 'Data cicilan ini akan dihapus permanen. Yakin ingin melanjutkan?';
+            
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4';
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Hapus';
+            btn.className = 'flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+
             document.getElementById('confirm-action-modal').classList.remove('hidden-view');
         };
 
@@ -1198,6 +1212,12 @@
             document.getElementById('confirm-action-type').value = 'def';
             document.getElementById('confirm-action-title').innerText = 'Hapus Nasabah defOZite?';
             document.getElementById('confirm-action-desc').innerText = 'Semua data tabungan dan riwayat transaksi nasabah ini akan hilang permanen. Yakin?';
+            
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4';
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Hapus';
+            btn.className = 'flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+
             document.getElementById('confirm-action-modal').classList.remove('hidden-view');
         };
 
@@ -1218,9 +1238,41 @@
                 } else if (type === 'def') {
                     await defDb.collection("customers").doc(id).delete();
                     window.showToast("Nasabah defOZite berhasil dihapus!");
+                } else if (type.startsWith('trx-')) {
+                    const trxType = type.split('-')[1]; // 'setor' or 'tarik'
+                    const amount = parseInt(document.getElementById('confirm-action-amount').value) || 0;
+                    
+                    const c = window.defData.find(x => x.id === id);
+                    if(!c) throw new Error("Nasabah tidak ditemukan.");
+
+                    let currentBalance = parseInt(c.savingsBalance) || 0;
+                    const newBalance = trxType === 'setor' ? currentBalance + amount : currentBalance - amount;
+                    
+                    const newTrx = {
+                        id: Date.now().toString() + Math.floor(Math.random() * 1000),
+                        type: trxType,
+                        amount: amount,
+                        date: new Date().toISOString()
+                    };
+                    
+                    const trxHistory = Array.isArray(c.transactions) ? [...c.transactions] : [];
+                    trxHistory.push(newTrx);
+
+                    document.getElementById('sav-trx-detail-balance').innerText = "Menyimpan...";
+
+                    await defDb.collection("customers").doc(c.id).update({
+                        savingsBalance: newBalance,
+                        transactions: trxHistory
+                    });
+                    
+                    document.getElementById('sav-trx-amount').value = '';
+                    window.showToast(`Transaksi ${trxType.toUpperCase()} berhasil diproses!`);
                 }
             } catch(e) {
-                window.showToast("Gagal menghapus data: " + e.message);
+                window.showToast("Gagal memproses aksi: " + e.message);
+                if(type.startsWith('trx-') && window.activeSavCustId) {
+                    window.openSavTrxDetail(window.activeSavCustId); 
+                }
             }
         };
 
@@ -1533,75 +1585,51 @@
         };
 
         window.processSavTrx = async (type) => {
-            try {
-                if(!window.activeSavCustId) {
-                    alert("Gagal: Pilih nasabah terlebih dahulu.");
-                    return;
-                }
-                
-                const amountInput = document.getElementById('sav-trx-amount');
-                if (!amountInput) return;
-                
-                // MENGUBAH INPUT KOTOR (TITIK/KOMA) MENJADI ANGKA MURNI
-                const rawAmount = amountInput.value.replace(/[^0-9]/g, '');
-                const amount = parseInt(rawAmount);
-                
-                if(isNaN(amount) || amount <= 0) { 
-                    alert("Gagal: Masukkan nominal transaksi (pastikan berupa angka dan lebih dari 0)."); 
-                    return; 
-                }
-
-                const c = window.defData.find(x => x.id === window.activeSavCustId);
-                if(!c) {
-                    alert("Gagal: Data nasabah tidak ditemukan di sistem.");
-                    return;
-                }
-
-                let currentBalance = parseInt(c.savingsBalance);
-                if (isNaN(currentBalance)) currentBalance = 0;
-                
-                if(type === 'tarik' && amount > currentBalance) { 
-                    alert(`Gagal: Saldo tidak mencukupi! Saldo saat ini: ${window.formatRp(currentBalance)}`); 
-                    return; 
-                }
-                
-                if(!confirm(`Konfirmasi: Anda akan melakukan ${type.toUpperCase()} TUNAI sebesar ${window.formatRp(amount)} untuk nasabah ${c.name}?`)) {
-                    return;
-                }
-
-                const newBalance = type === 'setor' ? currentBalance + amount : currentBalance - amount;
-                
-                const newTrx = {
-                    id: Date.now().toString() + Math.floor(Math.random() * 1000),
-                    type: type,
-                    amount: amount,
-                    date: new Date().toISOString()
-                };
-                
-                const trxHistory = Array.isArray(c.transactions) ? [...c.transactions] : [];
-                trxHistory.push(newTrx);
-
-                // OPTIMISTIC UI: LANGSUNG GANTI TULISAN SEBELUM KONEKSI SELESAI
-                document.getElementById('sav-trx-detail-balance').innerText = "Menyimpan...";
-
-                // FORCE UPDATE/CREATE KE DATABASE
-                await defDb.collection("customers").doc(c.id).set({
-                    savingsBalance: newBalance,
-                    transactions: trxHistory
-                }, { merge: true });
-                
-                amountInput.value = '';
-                window.showToast("Transaksi " + type.toUpperCase() + " Berhasil!");
-                
-            } catch (error) {
-                console.error("Trx Error:", error);
-                alert("Terjadi kesalahan sistem saat memproses transaksi: " + error.message);
-                
-                // Kembalikan UI jika gagal
-                if(window.activeSavCustId) {
-                    window.openSavTrxDetail(window.activeSavCustId); 
-                }
+            if(!window.activeSavCustId) {
+                window.showToast("Pilih nasabah terlebih dahulu.");
+                return;
             }
+            
+            const amountInput = document.getElementById('sav-trx-amount');
+            if (!amountInput) return;
+            
+            const rawAmount = amountInput.value.replace(/[^0-9]/g, '');
+            const amount = parseInt(rawAmount);
+            
+            if(isNaN(amount) || amount <= 0) { 
+                window.showToast("Masukkan nominal transaksi yang valid."); 
+                return; 
+            }
+
+            const c = window.defData.find(x => x.id === window.activeSavCustId);
+            if(!c) {
+                window.showToast("Data nasabah tidak ditemukan.");
+                return;
+            }
+
+            let currentBalance = parseInt(c.savingsBalance);
+            if (isNaN(currentBalance)) currentBalance = 0;
+            
+            if(type === 'tarik' && amount > currentBalance) { 
+                window.showToast(`Saldo tidak mencukupi! Saldo saat ini: ${window.formatRp(currentBalance)}`); 
+                return; 
+            }
+            
+            // Menggunakan Modal Konfirmasi Anti-Blokir
+            document.getElementById('confirm-action-id').value = c.id;
+            document.getElementById('confirm-action-type').value = 'trx-' + type;
+            document.getElementById('confirm-action-amount').value = amount;
+            
+            document.getElementById('confirm-action-title').innerText = 'Konfirmasi Transaksi';
+            document.getElementById('confirm-action-desc').innerText = `Anda akan memproses ${type.toUpperCase()} TUNAI sebesar ${window.formatRp(amount)} untuk nasabah ${c.name}?`;
+            
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-money-bill-transfer text-4xl text-emerald-500 mb-4';
+            
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Lanjutkan';
+            btn.className = 'flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+            
+            document.getElementById('confirm-action-modal').classList.remove('hidden-view');
         };
 
         // --- 8. CONFIG BERANDA & PINJAM ---
@@ -2021,7 +2049,7 @@
             if(!name || !phone) return alert("Nama dan WhatsApp wajib diisi!");
             try {
                 if(id) { await defDb.collection("customers").doc(id).update({ name, phone, address, isActive }); } 
-                else { await defDb.collection("customers").add({ name, phone, address, savingsBalance: 0, loanBalance: 0, isActive: true, createdAt: defApp.firestore.FieldValue.serverTimestamp() }); }
+                else { await defDb.collection("customers").add({ name, phone, address, savingsBalance: 0, loanBalance: 0, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); }
                 window.showToast("Data defOZite Tersimpan!"); window.defCloseModal();
             } catch(e) { alert("Gagal menyimpan ke Firestore: " + e.message); }
         };
