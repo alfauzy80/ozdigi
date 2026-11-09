@@ -1,3 +1,4 @@
+```html
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -156,12 +157,19 @@
                             <button onclick="window.openAdminUsersModal()" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-slate-300 hover:text-white transition-colors flex items-center gap-2">
                                 <i class="fa-solid fa-users-gear text-ozgold-400"></i> Kelola Nasabah
                             </button>
+                            <button onclick="window.registerFingerprint()" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2 mt-1 border-t border-white/10 pt-2">
+                                <i class="fa-solid fa-fingerprint"></i> Daftarkan Sidik Jari
+                            </button>
                             <button onclick="window.logoutUser()" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-colors flex items-center gap-2 mt-1 border-t border-white/10 pt-2">
                                 <i class="fa-solid fa-right-from-bracket"></i> Keluar
                             </button>
                         </div>
                     </div>
                     
+                    <button type="button" id="nav-fingerprint-btn" onclick="window.registerFingerprint()" class="hidden-view text-xs px-4 py-2 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer">
+                        <i class="fa-solid fa-fingerprint"></i> Daftarkan Sidik Jari
+                    </button>
+
                     <button type="button" id="nav-logout-nasabah-btn" onclick="window.logoutUser()" class="hidden-view text-xs px-4 py-2 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer">
                         <i class="fa-solid fa-right-from-bracket"></i> Keluar
                     </button>
@@ -198,6 +206,7 @@
                     <button type="button" onclick="window.openAdminPostModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-bullhorn text-ozgold-400 w-4"></i> Kelola Postingan</button>
                     <button type="button" onclick="window.openAdminUsersModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-users-gear text-ozgold-400 w-4"></i> Kelola Nasabah</button>
                 </div>
+                <button type="button" id="mobile-fingerprint-btn" onclick="window.registerFingerprint(); toggleMobileMenu();" class="hidden-view w-full text-center bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 font-bold py-2 rounded-lg text-xs transition-colors mt-2"><i class="fa-solid fa-fingerprint"></i> Daftarkan Sidik Jari</button>
                 <button type="button" id="mobile-logout-btn" onclick="window.logoutUser(); toggleMobileMenu();" class="hidden-view w-full text-center bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold py-2 rounded-lg text-xs transition-colors mt-2">Keluar (Logout)</button>
             </div>
         </div>
@@ -378,70 +387,80 @@
         </section>
     
         <!-- MODUL OZPINJAM -->
-        <section id="section-oz-pinjam" class="hidden-section space-y-6">
-            <div class="flex flex-col md:flex-row gap-6">
-                <!-- Simulasi Pinjaman -->
-                <div class="w-full md:w-1/3 glass-panel p-6 rounded-2xl space-y-4">
-                    <h2 class="text-xl font-bold"><i class="fa-solid fa-calculator text-ozgold-400 mr-2"></i> Simulasi OZPinjam</h2>
-                    <p class="text-xs text-slate-400 admin-only-menu hidden-view" id="sim-pinjam-subtitle">Bunga flat 4% per bulan.</p>
+    <section id="section-oz-pinjam" class="hidden-section space-y-6">
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Simulasi Pinjaman -->
+            <div class="w-full md:w-1/3 glass-panel p-6 rounded-2xl space-y-4">
+                <h2 class="text-xl font-bold"><i class="fa-solid fa-calculator text-ozgold-400 mr-2"></i> Simulasi OZPinjam</h2>
+                <p class="text-xs text-slate-400 admin-only-menu hidden-view" id="sim-pinjam-subtitle">Bunga flat 4% per bulan.</p>
+                
+                <!-- Panel Konfigurasi Admin -->
+                <div id="admin-pinjam-settings" class="admin-only-menu hidden-view bg-gray-800/80 rounded-xl p-4 border border-ozgold-500/30 mb-4">
+                    <p class="text-[10px] text-ozgold-400 uppercase font-bold tracking-widest mb-2 flex justify-between items-center">
+                        <span><i class="fa-solid fa-gear"></i> Config Simulasi Admin</span>
+                        <button onclick="window.savePinjamConfig()" class="bg-ozgold-600 text-white px-2 py-1 rounded hover:bg-ozgold-500 transition-colors">Simpan</button>
+                    </p>
                     
-                    <!-- Panel Konfigurasi Admin -->
-                    <div id="admin-pinjam-settings" class="admin-only-menu hidden-view bg-gray-800/80 rounded-xl p-4 border border-ozgold-500/30 mb-4">
-                        <p class="text-[10px] text-ozgold-400 uppercase font-bold tracking-widest mb-2 flex justify-between items-center">
-                            <span><i class="fa-solid fa-gear"></i> Config Simulasi Admin</span>
-                            <button onclick="window.savePinjamConfig()" class="bg-ozgold-600 text-white px-2 py-1 rounded hover:bg-ozgold-500 transition-colors">Simpan</button>
-                        </p>
+                    <div class="grid grid-cols-3 gap-2 mb-3 text-[10px]">
+                        <div class="font-bold text-slate-300">Tenor</div>
+                        <div class="font-bold text-slate-300">Bunga (%)</div>
+                        <div class="font-bold text-slate-300">Pot. Admin</div>
                         
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Bunga (1 Bln) %</label><input type="number" step="0.01" id="config-bunga-1" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Potongan Admin (1 Bln)</label><input type="number" id="config-admin-1" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Bunga (2 Bln) %</label><input type="number" step="0.01" id="config-bunga-2" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Potongan Admin (2 Bln)</label><input type="number" id="config-admin-2" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
+                        <div>1 Bln</div>
+                        <div><input type="number" step="0.01" id="config-bunga-1" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                        <div><input type="number" id="config-admin-1" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
 
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Bunga (3 Bln) %</label><input type="number" step="0.01" id="config-bunga-3" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Potongan Admin (3 Bln)</label><input type="number" id="config-admin-3" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
+                        <div>2 Bln</div>
+                        <div><input type="number" step="0.01" id="config-bunga-2" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                        <div><input type="number" id="config-admin-2" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
 
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Bunga (6 Bln) %</label><input type="number" step="0.01" id="config-bunga-6" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Potongan Admin (6 Bln)</label><input type="number" id="config-admin-6" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Bunga (9 Bln) %</label><input type="number" step="0.01" id="config-bunga-9" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Potongan Admin (9 Bln)</label><input type="number" id="config-admin-9" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Bunga (12 Bln) %</label><input type="number" step="0.01" id="config-bunga-12" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
-                            <div><label class="block text-[10px] text-slate-400 mb-1">Potongan Admin (12 Bln)</label><input type="number" id="config-admin-12" class="w-full glass-input rounded py-1 px-2 text-xs"></div>
+                        <div>3 Bln</div>
+                        <div><input type="number" step="0.01" id="config-bunga-3" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                        <div><input type="number" id="config-admin-3" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+
+                        <div>6 Bln</div>
+                        <div><input type="number" step="0.01" id="config-bunga-6" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                        <div><input type="number" id="config-admin-6" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+
+                        <div>9 Bln</div>
+                        <div><input type="number" step="0.01" id="config-bunga-9" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                        <div><input type="number" id="config-admin-9" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+
+                        <div>12 Bln</div>
+                        <div><input type="number" step="0.01" id="config-bunga-12" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                        <div><input type="number" id="config-admin-12" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Nominal Pinjaman (Rp)</label>
+                        <input type="number" id="sim-pinjam-nominal" class="w-full glass-input rounded-xl py-2 px-3 text-sm font-bold" placeholder="Contoh: 5000000" oninput="window.calcPinjam()">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Pilih Tenor</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" id="btn-tenor-1" onclick="window.setPinjamTenor(1)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">1 Bln</button>
+                            <button type="button" id="btn-tenor-2" onclick="window.setPinjamTenor(2)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">2 Bln</button>
+                            <button type="button" id="btn-tenor-3" onclick="window.setPinjamTenor(3)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">3 Bln</button>
+                            <button type="button" id="btn-tenor-6" onclick="window.setPinjamTenor(6)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all bg-ozgold-500/10 text-ozgold-400 border-ozgold-400">6 Bln</button>
+                            <button type="button" id="btn-tenor-9" onclick="window.setPinjamTenor(9)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">9 Bln</button>
+                            <button type="button" id="btn-tenor-12" onclick="window.setPinjamTenor(12)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">12 Bln</button>
                         </div>
                     </div>
-
-                    <div class="space-y-3 pt-2">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Nominal Pinjaman (Rp)</label>
-                            <input type="number" id="sim-pinjam-nominal" class="w-full glass-input rounded-xl py-2 px-3 text-sm font-bold" placeholder="Contoh: 5000000" oninput="window.calcPinjam()">
+                    <div class="pt-4 border-t border-white/10 space-y-3">
+                        <div class="bg-emerald-900/20 p-3 rounded-xl border border-emerald-500/20">
+                            <p class="text-xs text-emerald-400/80">Dana Cair (Pencairan Bersih):</p>
+                            <p class="text-xl font-bold text-emerald-400 mt-1" id="sim-pinjam-cair">Rp 0</p>
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-400 mb-1">Pilih Tenor</label>
-                            <div class="flex flex-wrap gap-2">
-                                <button type="button" id="btn-tenor-1" onclick="window.setPinjamTenor(1)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">1 Bln</button>
-                                <button type="button" id="btn-tenor-2" onclick="window.setPinjamTenor(2)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">2 Bln</button>
-                                <button type="button" id="btn-tenor-3" onclick="window.setPinjamTenor(3)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">3 Bln</button>
-                                <button type="button" id="btn-tenor-6" onclick="window.setPinjamTenor(6)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all bg-ozgold-500/10 text-ozgold-400 border-ozgold-400">6 Bln</button>
-                                <button type="button" id="btn-tenor-9" onclick="window.setPinjamTenor(9)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">9 Bln</button>
-                                <button type="button" id="btn-tenor-12" onclick="window.setPinjamTenor(12)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">12 Bln</button>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-white/10 space-y-3">
-                            <div class="bg-emerald-900/20 p-3 rounded-xl border border-emerald-500/20">
-                                <p class="text-xs text-emerald-400/80">Dana Cair (Setelah Potongan Admin):</p>
-                                <p class="text-xl font-bold text-emerald-400 mt-1" id="sim-pinjam-cair">Rp 0</p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-slate-400">Estimasi Cicilan per Bulan:</p>
-                                <p class="text-2xl font-bold text-red-400 mt-1" id="sim-pinjam-result">Rp 0</p>
-                            </div>
+                            <p class="text-xs text-slate-400">Estimasi Cicilan per Bulan:</p>
+                            <p class="text-2xl font-bold text-red-400 mt-1" id="sim-pinjam-result">Rp 0</p>
                         </div>
                     </div>
                 </div>
-                <!-- Konten Postingan OZPinjam -->
+            </div>
+            <!-- Konten Postingan OZPinjam -->
                 <div class="w-full md:w-2/3 glass-panel p-6 rounded-2xl">
                     <h2 class="text-xl font-bold mb-4"><i class="fa-solid fa-bullhorn text-ozgold-400 mr-2"></i> Info & Promo OZPinjam</h2>
                     <div id="post-container-pinjam" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -639,6 +658,18 @@
                     <button type="button" onclick="window.processForgotPwd()" class="text-[10px] text-ozgold-400 hover:text-ozgold-300">Lupa Password?</button>
                 </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Masuk</button>
+                
+                <!-- Divider -->
+                <div class="relative flex py-3 items-center">
+                    <div class="flex-grow border-t border-white/10"></div>
+                    <span class="flex-shrink-0 mx-3 text-[10px] text-slate-500 uppercase tracking-widest">Atau</span>
+                    <div class="flex-grow border-t border-white/10"></div>
+                </div>
+                
+                <!-- Tombol Fingerprint -->
+                <button type="button" onclick="window.processFingerprintLogin()" class="w-full bg-gray-800 hover:bg-gray-700 border border-white/10 text-white font-bold py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-colors">
+                    <i class="fa-solid fa-fingerprint text-ozgold-400 text-lg"></i> Masuk dengan Sidik Jari
+                </button>
             </form>
 
             <!-- Form Register -->
@@ -996,7 +1027,7 @@
             
             if(id === savedEmail) {
                 if(passwordInput !== 'admin') { alert("Password Super Admin salah!"); return; }
-                window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif' };
+                window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif', phone: '000' };
                 localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
                 window.showToast("Berhasil login sebagai Super Admin!");
                 window.closeAuthModal(); window.updateUIAuth(); return;
@@ -1016,7 +1047,6 @@
                     const userId = snapshot.docs[0].id;
                     const userPassword = userData.password || '1234';
                     
-                    // Cek password sesuai database, atau pakai no WA sebagai fallback jika mereka belum pernah ganti
                     if(passwordInput !== userPassword && passwordInput !== userData.phone) {
                         alert("Password salah! Silakan periksa kembali atau klik 'Lupa Password' untuk mereset via WhatsApp.");
                         return;
@@ -1065,6 +1095,90 @@
                 
             } catch(e) { 
                 alert("Gagal masuk (Koneksi Error): " + e.message); 
+            }
+        };
+
+        window.registerFingerprint = async () => {
+            if (!window.currentUser) {
+                alert("Anda harus login manual terlebih dahulu sebelum bisa mendaftarkan sidik jari.");
+                return;
+            }
+            if (!window.PublicKeyCredential) { 
+                alert("PENTING: Perangkat / Browser ini tidak mendukung fitur Sidik Jari (WebAuthn). \n\nPastikan Anda membukanya menggunakan browser modern (Chrome/Safari) dengan koneksi aman (HTTPS) atau localhost. Fitur ini tidak akan berfungsi pada Previewer bawaan atau HTTP biasa."); 
+                return; 
+            }
+            
+            try {
+                const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                const userId = new Uint8Array(16); window.crypto.getRandomValues(userId);
+                
+                const cred = await navigator.credentials.create({
+                    publicKey: {
+                        challenge: challenge,
+                        rp: { name: "OZdigi Ecosystem", id: window.location.hostname },
+                        user: {
+                            id: userId,
+                            name: window.currentUser.email || window.currentUser.phone || "user",
+                            displayName: window.currentUser.name || "User"
+                        },
+                        pubKeyCredParams: [
+                            { type: "public-key", alg: -7 },  // ECDSA
+                            { type: "public-key", alg: -257 } // RSA
+                        ],
+                        authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+                        timeout: 60000
+                    }
+                });
+                
+                // Konversi RawID untuk disimpan ke database
+                const rawId = Array.from(new Uint8Array(cred.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                // Kita simpan di Local Storage agar sidik jari ini terkait langsung ke Perangkat ini (Device-Bound Passkey)
+                localStorage.setItem('ozdigi_passkey_' + rawId, JSON.stringify(window.currentUser));
+                window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
+                
+            } catch(e) {
+                console.error("WebAuthn Error:", e);
+                alert("Gagal mendaftarkan sidik jari. Pemindaian dibatalkan atau sistem menolak akses keamanan.");
+            }
+        };
+
+        window.processFingerprintLogin = async () => {
+            if (!window.PublicKeyCredential) { 
+                alert("Perangkat / Browser ini tidak mendukung fitur Sidik Jari. Gunakan HTTPS atau Google Chrome."); 
+                return; 
+            }
+            try {
+                const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                
+                const assertion = await navigator.credentials.get({
+                    publicKey: {
+                        challenge: challenge,
+                        rpId: window.location.hostname,
+                        userVerification: "required",
+                        timeout: 60000
+                    }
+                });
+                
+                const rawId = Array.from(new Uint8Array(assertion.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                // Cek data User dari Local Storage yang terkait dengan Sidik Jari ini
+                const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawId);
+                
+                if(savedUserStr) {
+                    const userData = JSON.parse(savedUserStr);
+                    window.currentUser = userData;
+                    localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                    window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${userData.name}`);
+                    window.closeAuthModal(); 
+                    window.updateUIAuth(); 
+                } else {
+                    alert("Sidik jari ini belum terdaftar untuk akun manapun di perangkat ini. Silakan login menggunakan password, lalu daftarkan sidik jari Anda.");
+                }
+                
+            } catch(e) {
+                console.error("WebAuthn Auth Error:", e);
+                window.showToast("Autentikasi sidik jari dibatalkan / gagal dikenali.");
             }
         };
 
@@ -1271,6 +1385,9 @@
                     
                     document.getElementById('sav-trx-amount').value = '';
                     window.showToast(`Transaksi ${trxType.toUpperCase()} berhasil diproses!`);
+                    
+                    // Refresh detail view instantly
+                    window.openSavTrxDetail(c.id);
                 }
             } catch(e) {
                 window.showToast("Gagal memproses aksi: " + e.message);
@@ -1490,29 +1607,34 @@
         };
 
         window.calcPinjam = () => {
-            const nom = parseInt(document.getElementById('sim-pinjam-nominal').value) || 0;
-            const t = window.activePinjamTenor;
+            const nomInput = document.getElementById('sim-pinjam-nominal');
+            const nom = nomInput ? parseInt(nomInput.value) || 0 : 0;
+            const t = window.activePinjamTenor || 6;
             
             let bungaRate = 0.04;
             let adminFee = 0;
             
             if(window.siteConfig && window.siteConfig.pinjam) {
-                bungaRate = (parseFloat(window.siteConfig.pinjam[`bunga_${t}`]) || 4) / 100;
+                bungaRate = (parseFloat(window.siteConfig.pinjam[`bunga_${t}`]) !== undefined && !isNaN(window.siteConfig.pinjam[`bunga_${t}`])) ? parseFloat(window.siteConfig.pinjam[`bunga_${t}`]) / 100 : 0.04;
                 adminFee = parseInt(window.siteConfig.pinjam[`admin_${t}`]) || 0;
             }
 
             const subtitle = document.getElementById('sim-pinjam-subtitle');
             if(subtitle) subtitle.innerText = `Bunga flat ${bungaRate * 100}% per bulan.`;
 
+            const cairEl = document.getElementById('sim-pinjam-cair');
+            const resultEl = document.getElementById('sim-pinjam-result');
+
             if(nom > 0) {
                 const danaCair = nom - adminFee; 
-                const totalBayar = nom + (nom * bungaRate * t);
+                const totalPokokBunga = nom + (nom * bungaRate * t);
+                const cicilPerBulan = totalPokokBunga / t;
                 
-                document.getElementById('sim-pinjam-cair').innerText = window.formatRp(danaCair);
-                document.getElementById('sim-pinjam-result').innerText = window.formatRp(totalBayar / t);
+                if(cairEl) cairEl.innerText = window.formatRp(danaCair > 0 ? danaCair : 0);
+                if(resultEl) resultEl.innerText = window.formatRp(cicilPerBulan > 0 ? cicilPerBulan : 0);
             } else {
-                document.getElementById('sim-pinjam-cair').innerText = "Rp 0";
-                document.getElementById('sim-pinjam-result').innerText = "Rp 0";
+                if(cairEl) cairEl.innerText = "Rp 0";
+                if(resultEl) resultEl.innerText = "Rp 0";
             }
         };
 
@@ -1731,82 +1853,109 @@
         };
 
         window.updateUIAuth = () => {
-            window.isAdmin = window.currentUser && window.currentUser.role === 'admin';
-            
-            document.querySelectorAll('.admin-only-menu').forEach(el => {
-                if(window.isAdmin) el.classList.remove('hidden-view'); else el.classList.add('hidden-view');
-            });
-
-            // Transaksi OZSaving Panel Logic
-            const guestMode = document.getElementById('sav-trx-guest-mode');
-            const listMode = document.getElementById('sav-trx-list-mode');
-            const detailMode = document.getElementById('sav-trx-detail-mode');
-            
-            if(window.isAdmin) {
-                if(guestMode) guestMode.classList.add('hidden-view');
-                if(listMode) listMode.classList.remove('hidden-view');
-                if(detailMode) detailMode.classList.add('hidden-view');
-                window.activeSavCustId = null;
-                window.renderSavTrxList();
-            } else if (window.currentUser) {
-                if(guestMode) guestMode.classList.add('hidden-view');
-                if(listMode) listMode.classList.add('hidden-view');
+            try {
+                window.isAdmin = window.currentUser && window.currentUser.role === 'admin';
                 
-                const myData = window.defData.find(c => c.phone === window.currentUser.phone);
-                if(myData) {
-                    window.openSavTrxDetail(myData.id);
-                } else {
-                    if(detailMode) detailMode.classList.add('hidden-view');
-                    if(guestMode) {
-                        guestMode.innerHTML = `<i class="fa-solid fa-piggy-bank text-3xl text-emerald-600 mb-3"></i><p class="text-xs text-slate-400">Akun Anda belum memiliki data tabungan Koperasi. Silakan hubungi Admin.</p>`;
-                        guestMode.classList.remove('hidden-view');
-                    }
-                }
-            } else {
-                if(guestMode) {
-                    guestMode.innerHTML = `<i class="fa-solid fa-lock text-3xl text-slate-600 mb-3"></i><p class="text-xs text-slate-400">Silakan login untuk melihat tabungan Anda.</p>`;
-                    guestMode.classList.remove('hidden-view');
-                }
-                if(listMode) listMode.classList.add('hidden-view');
-                if(detailMode) detailMode.classList.add('hidden-view');
-            }
+                document.querySelectorAll('.admin-only-menu').forEach(el => {
+                    if(window.isAdmin) el.classList.remove('hidden-view'); else el.classList.add('hidden-view');
+                });
 
-            // Lock Data Pelanggan Panels
-            if(window.currentUser) {
-                document.getElementById('ozf-data-panel').classList.remove('hidden-view');
-                document.getElementById('def-data-panel').classList.remove('hidden-view');
-                document.getElementById('ozf-lock-message').classList.add('hidden-view');
-                document.getElementById('def-lock-message').classList.add('hidden-view');
-            } else {
-                document.getElementById('ozf-data-panel').classList.add('hidden-view');
-                document.getElementById('def-data-panel').classList.add('hidden-view');
-                document.getElementById('ozf-lock-message').classList.remove('hidden-view');
-                document.getElementById('def-lock-message').classList.remove('hidden-view');
-            }
-
-            if(window.currentUser) {
-                document.getElementById('nav-login-btn').classList.add('hidden-view');
-                document.getElementById('mobile-login-btn').classList.add('hidden-view');
-                document.getElementById('mobile-logout-btn').classList.remove('hidden-view');
+                // Transaksi OZSaving Panel Logic
+                const guestMode = document.getElementById('sav-trx-guest-mode');
+                const listMode = document.getElementById('sav-trx-list-mode');
+                const detailMode = document.getElementById('sav-trx-detail-mode');
                 
                 if(window.isAdmin) {
-                    document.getElementById('nav-admin-menu').classList.remove('hidden-view');
-                    document.getElementById('mobile-admin-panel').classList.remove('hidden-view');
+                    if(guestMode) guestMode.classList.add('hidden-view');
+                    if(listMode) listMode.classList.remove('hidden-view');
+                    if(detailMode) detailMode.classList.add('hidden-view');
+                    window.activeSavCustId = null;
+                    window.renderSavTrxList();
+                } else if (window.currentUser) {
+                    if(guestMode) guestMode.classList.add('hidden-view');
+                    if(listMode) listMode.classList.add('hidden-view');
+                    
+                    const myData = window.defData.find(c => c.phone === window.currentUser.phone);
+                    if(myData) {
+                        window.openSavTrxDetail(myData.id);
+                    } else {
+                        if(detailMode) detailMode.classList.add('hidden-view');
+                        if(guestMode) {
+                            guestMode.innerHTML = `<i class="fa-solid fa-piggy-bank text-3xl text-emerald-600 mb-3"></i><p class="text-xs text-slate-400">Akun Anda belum memiliki data tabungan Koperasi. Silakan hubungi Admin.</p>`;
+                            guestMode.classList.remove('hidden-view');
+                        }
+                    }
                 } else {
-                    document.getElementById('nav-admin-menu').classList.add('hidden-view'); 
-                    document.getElementById('mobile-admin-panel').classList.add('hidden-view');
+                    if(guestMode) {
+                        guestMode.innerHTML = `<i class="fa-solid fa-lock text-3xl text-slate-600 mb-3"></i><p class="text-xs text-slate-400">Silakan login untuk melihat tabungan Anda.</p>`;
+                        guestMode.classList.remove('hidden-view');
+                    }
+                    if(listMode) listMode.classList.add('hidden-view');
+                    if(detailMode) detailMode.classList.add('hidden-view');
                 }
-            } else {
-                document.getElementById('nav-login-btn').classList.remove('hidden-view');
-                document.getElementById('nav-admin-menu').classList.add('hidden-view');
-                document.getElementById('mobile-login-btn').classList.remove('hidden-view');
-                document.getElementById('mobile-logout-btn').classList.add('hidden-view');
-                document.getElementById('mobile-admin-panel').classList.add('hidden-view');
+
+                // Lock Data Pelanggan Panels
+                const ozfPanel = document.getElementById('ozf-data-panel');
+                const defPanel = document.getElementById('def-data-panel');
+                const ozfLock = document.getElementById('ozf-lock-message');
+                const defLock = document.getElementById('def-lock-message');
+
+                if(window.currentUser) {
+                    if(ozfPanel) ozfPanel.classList.remove('hidden-view');
+                    if(defPanel) defPanel.classList.remove('hidden-view');
+                    if(ozfLock) ozfLock.classList.add('hidden-view');
+                    if(defLock) defLock.classList.add('hidden-view');
+                } else {
+                    if(ozfPanel) ozfPanel.classList.add('hidden-view');
+                    if(defPanel) defPanel.classList.add('hidden-view');
+                    if(ozfLock) ozfLock.classList.remove('hidden-view');
+                    if(defLock) defLock.classList.remove('hidden-view');
+                }
+
+                // Update Navbar and Mobile Menu Buttons
+                const navLoginBtn = document.getElementById('nav-login-btn');
+                const navAdminMenu = document.getElementById('nav-admin-menu');
+                const navLogoutBtn = document.getElementById('nav-logout-nasabah-btn');
+                const navFingerBtn = document.getElementById('nav-fingerprint-btn');
+
+                const mobLoginBtn = document.getElementById('mobile-login-btn');
+                const mobAdminPanel = document.getElementById('mobile-admin-panel');
+                const mobLogoutBtn = document.getElementById('mobile-logout-btn');
+                const mobFingerBtn = document.getElementById('mobile-fingerprint-btn');
+
+                if(window.currentUser) {
+                    if(navLoginBtn) navLoginBtn.classList.add('hidden-view');
+                    if(mobLoginBtn) mobLoginBtn.classList.add('hidden-view');
+                    if(mobLogoutBtn) mobLogoutBtn.classList.remove('hidden-view');
+                    if(navFingerBtn) navFingerBtn.classList.remove('hidden-view');
+                    if(mobFingerBtn) mobFingerBtn.classList.remove('hidden-view');
+                    
+                    if(window.isAdmin) {
+                        if(navAdminMenu) navAdminMenu.classList.remove('hidden-view');
+                        if(mobAdminPanel) mobAdminPanel.classList.remove('hidden-view');
+                        if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view'); // Admin logout is in dropdown
+                        if(navFingerBtn) navFingerBtn.classList.add('hidden-view'); // Admin fingerprint is in dropdown
+                    } else {
+                        if(navAdminMenu) navAdminMenu.classList.add('hidden-view'); 
+                        if(mobAdminPanel) mobAdminPanel.classList.add('hidden-view');
+                        if(navLogoutBtn) navLogoutBtn.classList.remove('hidden-view');
+                    }
+                } else {
+                    if(navLoginBtn) navLoginBtn.classList.remove('hidden-view');
+                    if(navAdminMenu) navAdminMenu.classList.add('hidden-view');
+                    if(mobLoginBtn) mobLoginBtn.classList.remove('hidden-view');
+                    if(mobLogoutBtn) mobLogoutBtn.classList.add('hidden-view');
+                    if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view');
+                    if(navFingerBtn) navFingerBtn.classList.add('hidden-view');
+                    if(mobFingerBtn) mobFingerBtn.classList.add('hidden-view');
+                }
+                
+                if (document.getElementById('ozf-search-input')) window.ozfSearch();
+                if (document.getElementById('def-search-input')) window.defSearch();
+                window.renderPosts();
+            } catch(e) {
+                console.error("UI Update Error: ", e);
             }
-            
-            if (document.getElementById('ozf-search-input')) window.ozfSearch();
-            if (document.getElementById('def-search-input')) window.defSearch();
-            window.renderPosts();
         };
 
         window.renderSavingAdminLists = () => {
