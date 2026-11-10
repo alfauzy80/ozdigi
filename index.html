@@ -1271,6 +1271,7 @@
                 if(passwordInput !== 'admin') { alert("Password Super Admin salah!"); return; }
                 window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif', phone: '000' };
                 localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                window.resetActivityTimer();
                 window.showToast("Berhasil login sebagai Super Admin!");
                 window.closeAuthModal(); window.updateUIAuth(); return;
             }
@@ -1309,6 +1310,7 @@
 
                     window.currentUser = { id: userId, ...userData };
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                    window.resetActivityTimer();
                     window.showToast(`Selamat datang, ${userData.name}!`);
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
@@ -1330,6 +1332,7 @@
                     }
                     window.currentUser = { id: autoNasabah.id, name: autoNasabah.name, phone: autoNasabah.phone, role: 'nasabah', status: 'aktif' };
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                    window.resetActivityTimer();
                     window.showToast(`Selamat datang, ${autoNasabah.name}!`);
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
@@ -1401,6 +1404,7 @@
                     const userData = JSON.parse(savedUserStr);
                     window.currentUser = userData;
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                    window.resetActivityTimer();
                     window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${userData.name}`);
                     window.closeAuthModal(); 
                     window.updateUIAuth(); 
@@ -2671,17 +2675,60 @@
             } catch(e) { alert("Gagal menyimpan ke Firestore: " + e.message); }
         };
 
+        // --- 11. SISTEM AUTO LOGOUT (20 MENIT) ---
+        window.INACTIVITY_LIMIT = 20 * 60 * 1000; // 20 Menit dalam milidetik
+        
+        window.resetActivityTimer = () => {
+            if (window.currentUser) {
+                localStorage.setItem('ozdigi_last_activity', Date.now());
+            }
+        };
+
+        window.checkInactivity = () => {
+            if (!window.currentUser) return; // Hanya jalankan pengecekan jika ada user yang login
+            
+            const lastActivity = parseInt(localStorage.getItem('ozdigi_last_activity') || Date.now());
+            const currentTime = Date.now();
+            const timeElapsed = currentTime - lastActivity;
+
+            if (timeElapsed >= window.INACTIVITY_LIMIT) {
+                window.logoutUser();
+                alert("Sesi Anda telah berakhir secara otomatis karena tidak ada aktivitas selama 20 menit demi keamanan.\n\nSilakan masuk kembali.");
+            }
+        };
+
+        window.setupAutoLogout = () => {
+            // Deteksi semua interaksi pengguna yang menandakan "sedang aktif"
+            const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+            activityEvents.forEach(event => {
+                document.addEventListener(event, window.resetActivityTimer, { passive: true });
+            });
+
+            // Cek berkala setiap 1 menit (saat aplikasi sedang dibuka)
+            setInterval(window.checkInactivity, 60000);
+
+            // Cek SEKETIKA saat HP dihidupkan ulang dari keadaan layar mati (Visibility API)
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    window.checkInactivity();
+                }
+            });
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             const savedSession = localStorage.getItem('ozdigi_user_session');
             if(savedSession) {
                 try {
                     window.currentUser = JSON.parse(savedSession);
+                    localStorage.setItem('ozdigi_last_activity', Date.now()); // Reset saat tab baru dibuka
                 } catch(e) {
                     localStorage.removeItem('ozdigi_user_session');
                 }
             }
             
             initDatabases();
+            window.setupAutoLogout(); // Jalankan inisialisasi keamanan Auto Logout
+
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     if (window.location.protocol.startsWith('http')) {
