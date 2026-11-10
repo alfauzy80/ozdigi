@@ -485,14 +485,20 @@
         <!-- MODUL OZKREDIT -->
         <section id="section-oz-kredit" class="hidden-section space-y-6">
             <div class="glass-panel p-6 rounded-2xl space-y-4">
-                <div class="flex justify-between items-center border-b border-white/10 pb-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-4">
                     <div>
                         <h2 class="text-2xl font-bold"><i class="fa-solid fa-mobile-screen-button text-ozgold-400 mr-2"></i> Katalog OZKredit</h2>
                         <p class="text-xs text-slate-400">Kredit produk digital dan elektronik dengan proses cepat.</p>
                     </div>
+                    <div class="w-full md:w-auto">
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="kredit-search-input" placeholder="Cari merk atau tipe hp..." class="w-full glass-input rounded-xl py-2 pl-9 pr-4 text-xs" onkeyup="window.renderPosts()">
+                        </div>
+                    </div>
                 </div>
-                <div id="kredit-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
-                    <p class="text-slate-500 text-xs col-span-full text-center py-10">Memuat katalog produk...</p>
+                <div id="kredit-catalog-grid" class="space-y-8 pt-4">
+                    <p class="text-slate-500 text-xs text-center py-10 w-full">Memuat katalog produk...</p>
                 </div>
             </div>
         </section>
@@ -1578,9 +1584,16 @@
 
         window.renderPosts = () => {
             const isAdmin = window.currentUser && window.currentUser.role === 'admin';
-            const kreditPosts = window.postsData.filter(p => p.type === 'kredit');
+            let kreditPosts = window.postsData.filter(p => p.type === 'kredit');
             const pinjamPosts = window.postsData.filter(p => p.type === 'pinjam');
             const savingPosts = window.postsData.filter(p => p.type === 'saving');
+
+            // Search Filter untuk Katalog OZKredit
+            const searchKreditInput = document.getElementById('kredit-search-input');
+            if(searchKreditInput && searchKreditInput.value) {
+                const query = searchKreditInput.value.toLowerCase();
+                kreditPosts = kreditPosts.filter(p => p.title.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query)));
+            }
 
             // Feed Beranda
             const berandaContainer = document.getElementById('beranda-feed-grid');
@@ -1611,31 +1624,79 @@
                 }
             }
 
-            // Katalog Kredit
+            // Katalog Kredit (Pengelompokan Otomatis per Merek)
             const krContainer = document.getElementById('kredit-catalog-grid');
             if(krContainer) {
-                if(!kreditPosts.length) krContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada produk kredit.</p>';
-                else krContainer.innerHTML = kreditPosts.map(p => {
-                    const hrg = parseInt(p.price) || 0; const interest = p.interest !== undefined ? parseFloat(p.interest) : 4; const fee = p.fee ? parseInt(p.fee) : 0;
-                    const cicil6 = (hrg + fee + (hrg * (interest / 100) * 6)) / 6; const cicil12 = (hrg + fee + (hrg * (interest / 100) * 12)) / 12;
-                    const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl">`) : `<div class="w-full aspect-square bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
+                if(!kreditPosts.length) {
+                    krContainer.innerHTML = '<p class="text-slate-500 text-xs text-center py-10 w-full">Belum ada produk kredit.</p>';
+                } else {
+                    // Logika Pengelompokan Merek
+                    const groupedKredit = kreditPosts.reduce((acc, post) => {
+                        // Mengambil kata pertama dari judul produk (contoh: "Samsung A07" -> "SAMSUNG")
+                        let brand = post.title.split(' ')[0].toUpperCase();
+                        
+                        // Menyatukan varian produk di bawah merek induk official-nya
+                        if(brand === 'IPHONE' || brand === 'IPAD' || brand === 'MACBOOK' || brand === 'IMAC') brand = 'APPLE';
+                        else if(brand === 'SAMSUNG' || brand === 'GALAXY') brand = 'SAMSUNG';
+                        else if(brand === 'REDMI' || brand === 'XIAOMI' || brand === 'POCO') brand = 'XIAOMI';
+                        else if(brand === 'REALME') brand = 'REALME';
+                        else if(brand === 'VIVO' || brand === 'IQOO') brand = 'VIVO';
+                        else if(brand === 'OPPO') brand = 'OPPO';
+                        else if(brand === 'INFINIX') brand = 'INFINIX';
+                        else if(brand === 'ASUS' || brand === 'ROG' || brand === 'ZENFONE') brand = 'ASUS';
+                        else if(brand === 'ITEL' || brand === 'TECNO') brand = 'TRANSSION';
+                        // Selain yang di atas, gunakan kata pertama sebagai merek default-nya
+                        
+                        if (!acc[brand]) acc[brand] = [];
+                        acc[brand].push(post);
+                        return acc;
+                    }, {});
+
+                    let htmlContent = '';
                     
-                    return `
-                    <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group cursor-pointer hover:border-ozgold-500/50 transition-all" onclick="window.openPostDetail('${p.id}')">
-                        ${isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-8 h-8 rounded-full z-10 flex items-center justify-center hover:text-ozgold-400"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
-                        ${mediaHtml}
-                        <div class="p-4 flex-1 flex flex-col">
-                            <h3 class="font-bold text-lg text-white line-clamp-1">${p.title}</h3>
-                            <p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrg)}</p>
-                            <p class="text-[11px] text-gray-400 line-clamp-2 mb-4 flex-1">${p.description}</p>
-                            <div class="space-y-2 mt-auto pt-3 border-t border-white/10">
-                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan</p>
-                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 6 Bln</span><span class="font-bold text-white">${window.formatRp(cicil6)} /bln</span></div>
-                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 12 Bln</span><span class="font-bold text-white">${window.formatRp(cicil12)} /bln</span></div>
+                    // Mengurutkan nama merek secara alfabet (A-Z)
+                    const sortedBrands = Object.keys(groupedKredit).sort();
+
+                    for (const brand of sortedBrands) {
+                        const posts = groupedKredit[brand];
+                        
+                        htmlContent += `
+                        <div class="space-y-4">
+                            <!-- Judul Kategori Merek -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-1.5 h-6 bg-ozgold-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                                <h3 class="text-xl font-bold text-white tracking-widest">${brand}</h3>
+                                <div class="h-px bg-gradient-to-r from-white/20 to-transparent flex-1"></div>
                             </div>
-                        </div>
-                    </div>`;
-                }).join('');
+                            
+                            <!-- Grid Produk untuk Merek Tersebut -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                ${posts.map(p => {
+                                    const hrg = parseInt(p.price) || 0; const interest = p.interest !== undefined ? parseFloat(p.interest) : 4; const fee = p.fee ? parseInt(p.fee) : 0;
+                                    const cicil6 = (hrg + fee + (hrg * (interest / 100) * 6)) / 6; const cicil12 = (hrg + fee + (hrg * (interest / 100) * 12)) / 12;
+                                    const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl">`) : `<div class="w-full aspect-square bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
+                                    
+                                    return `
+                                    <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group cursor-pointer hover:border-ozgold-500/50 transition-all shadow-lg" onclick="window.openPostDetail('${p.id}')">
+                                        ${isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-8 h-8 rounded-full z-10 flex items-center justify-center hover:text-ozgold-400 backdrop-blur-sm transition-colors"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
+                                        ${mediaHtml}
+                                        <div class="p-4 flex-1 flex flex-col">
+                                            <h3 class="font-bold text-lg text-white line-clamp-1">${p.title}</h3>
+                                            <p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrg)}</p>
+                                            <p class="text-[11px] text-gray-400 line-clamp-2 mb-4 flex-1 leading-relaxed">${p.description}</p>
+                                            <div class="space-y-2 mt-auto pt-3 border-t border-white/10">
+                                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan</p>
+                                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 6 Bln</span><span class="font-bold text-white">${window.formatRp(cicil6)} /bln</span></div>
+                                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 12 Bln</span><span class="font-bold text-white">${window.formatRp(cicil12)} /bln</span></div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                                }).join('')}
+                            </div>
+                        </div>`;
+                    }
+                    krContainer.innerHTML = htmlContent;
+                }
             }
 
             const renderPromo = (cId, posts) => {
