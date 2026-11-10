@@ -871,10 +871,13 @@
                             <option value="video" class="bg-darkblue-900">Video (MP4 / WebM)</option>
                         </select>
                     </div>
-                    <div><label class="block text-[11px] text-slate-400 mb-1">Link Foto/Video (Opsional)</label><input type="url" id="post-media" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="https://..."></div>
+                    <div><label class="block text-[11px] text-slate-400 mb-1">URL Photo/Video (Opsional)</label><input type="url" id="post-media" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="https://..."></div>
                 </div>
 
-                <div><label class="block text-[11px] text-slate-400 mb-1">Harga Pokok (Khusus OZKredit) Rp.</label><input type="number" id="post-price" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Kosongkan jika bukan produk"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-[11px] text-slate-400 mb-1">Harga Normal (Rp)</label><input type="number" id="post-price" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Misal: 5000000"></div>
+                    <div><label class="block text-[11px] text-ozgold-400 font-bold mb-1">Harga Promo (Rp)</label><input type="number" id="post-promo-price" class="w-full glass-input border border-ozgold-500/50 rounded-xl py-2 px-3 text-xs" placeholder="Opsional"></div>
+                </div>
                 
                 <div class="grid grid-cols-2 gap-2">
                     <div><label class="block text-[11px] text-slate-400 mb-1">Bunga Cicilan (%) /Bulan</label><input type="number" step="0.01" id="post-interest" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Default: 4"></div>
@@ -1765,6 +1768,8 @@
             document.getElementById('form-post').reset();
             document.getElementById('post-id').value = '';
             document.getElementById('post-media-type').value = 'image';
+            document.getElementById('post-price').value = '';
+            document.getElementById('post-promo-price').value = '';
             document.getElementById('post-interest').value = '';
             document.getElementById('post-fee').value = '';
             document.getElementById('btn-del-post').classList.add('hidden-view');
@@ -1779,6 +1784,7 @@
                     document.getElementById('post-media').value = post.mediaUrl || '';
                     document.getElementById('post-media-type').value = post.mediaType || 'image';
                     document.getElementById('post-price').value = post.price || '';
+                    document.getElementById('post-promo-price').value = post.promoPrice || '';
                     document.getElementById('post-interest').value = post.interest !== undefined ? post.interest : '';
                     document.getElementById('post-fee').value = post.fee || '';
                     document.getElementById('post-desc').value = post.description;
@@ -1797,6 +1803,7 @@
                 mediaUrl: document.getElementById('post-media').value.trim(),
                 mediaType: document.getElementById('post-media-type').value,
                 price: parseInt(document.getElementById('post-price').value) || 0,
+                promoPrice: parseInt(document.getElementById('post-promo-price').value) || 0,
                 interest: parseFloat(document.getElementById('post-interest').value) || 4,
                 fee: parseInt(document.getElementById('post-fee').value) || 0,
                 description: document.getElementById('post-desc').value.trim(),
@@ -1843,15 +1850,21 @@
             const installContainer = document.getElementById('pd-installment-container');
             
             if((post.type === 'kredit' || post.type === 'pinjam') && post.price) {
-                const hrg = parseInt(post.price) || 0;
+                const hrgOriginal = parseInt(post.price) || 0;
+                const hrgPromo = parseInt(post.promoPrice) || 0;
+                const hrgFinal = hrgPromo > 0 ? hrgPromo : hrgOriginal;
                 const interest = post.interest !== undefined ? parseFloat(post.interest) : 4;
                 const fee = post.fee ? parseInt(post.fee) : 0;
 
-                priceEl.innerText = window.formatRp(hrg);
+                if (hrgPromo > 0) {
+                    priceEl.innerHTML = `<span class="text-sm text-gray-500 line-through mr-2">${window.formatRp(hrgOriginal)}</span><span class="text-ozgold-400">${window.formatRp(hrgPromo)}</span>`;
+                } else {
+                    priceEl.innerText = window.formatRp(hrgOriginal);
+                }
                 priceEl.classList.remove('hidden-view');
                 
-                const cicil6 = (hrg + fee + (hrg * (interest / 100) * 6)) / 6;
-                const cicil12 = (hrg + fee + (hrg * (interest / 100) * 12)) / 12;
+                const cicil6 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 6)) / 6;
+                const cicil12 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 12)) / 12;
                 
                 document.getElementById('pd-cicil-6').innerText = window.formatRp(cicil6) + ' /bln';
                 document.getElementById('pd-cicil-12').innerText = window.formatRp(cicil12) + ' /bln';
@@ -1908,7 +1921,11 @@
                             </div>
                             <div class="p-4 flex-1 flex flex-col">
                                 <h3 class="font-bold text-base text-white mb-1 line-clamp-1">${p.title}</h3>
-                                ${(p.type === 'kredit' || p.type === 'pinjam') && p.price ? `<p class="text-ozgold-400 font-bold text-sm mb-2">${window.formatRp(p.price)}</p>` : ''}
+                                ${(p.type === 'kredit' || p.type === 'pinjam') && p.price ? 
+                                    (p.promoPrice > 0 
+                                        ? `<div class="mb-2"><span class="text-[10px] text-gray-500 line-through mr-1.5">${window.formatRp(p.price)}</span><span class="text-ozgold-400 font-bold text-sm">${window.formatRp(p.promoPrice)}</span></div>`
+                                        : `<p class="text-ozgold-400 font-bold text-sm mb-2">${window.formatRp(p.price)}</p>`) 
+                                : ''}
                                 <p class="text-[11px] text-gray-400 line-clamp-2">${p.description}</p>
                             </div>
                         </div>`;
@@ -1957,9 +1974,17 @@
                             <!-- Grid Produk untuk Merek Tersebut -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 ${posts.map(p => {
-                                    const hrg = parseInt(p.price) || 0; const interest = p.interest !== undefined ? parseFloat(p.interest) : 4; const fee = p.fee ? parseInt(p.fee) : 0;
-                                    const cicil6 = (hrg + fee + (hrg * (interest / 100) * 6)) / 6; const cicil12 = (hrg + fee + (hrg * (interest / 100) * 12)) / 12;
+                                    const hrgOriginal = parseInt(p.price) || 0; 
+                                    const hrgPromo = parseInt(p.promoPrice) || 0;
+                                    const hrgFinal = hrgPromo > 0 ? hrgPromo : hrgOriginal;
+                                    
+                                    const interest = p.interest !== undefined ? parseFloat(p.interest) : 4; const fee = p.fee ? parseInt(p.fee) : 0;
+                                    const cicil6 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 6)) / 6; const cicil12 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 12)) / 12;
                                     const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl">`) : `<div class="w-full aspect-square bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
+                                    
+                                    const priceHtml = hrgPromo > 0 
+                                        ? `<div class="mb-2"><span class="text-xs text-gray-500 line-through mr-2">${window.formatRp(hrgOriginal)}</span><span class="text-ozgold-400 font-bold text-lg">${window.formatRp(hrgPromo)}</span></div>`
+                                        : `<p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrgOriginal)}</p>`;
                                     
                                     return `
                                     <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group cursor-pointer hover:border-ozgold-500/50 transition-all shadow-lg" onclick="window.openPostDetail('${p.id}')">
@@ -1967,7 +1992,7 @@
                                         ${mediaHtml}
                                         <div class="p-4 flex-1 flex flex-col">
                                             <h3 class="font-bold text-lg text-white line-clamp-1">${p.title}</h3>
-                                            <p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrg)}</p>
+                                            ${priceHtml}
                                             <p class="text-[11px] text-gray-400 line-clamp-2 mb-4 flex-1 leading-relaxed">${p.description}</p>
                                             <div class="space-y-2 mt-auto pt-3 border-t border-white/10">
                                                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan</p>
