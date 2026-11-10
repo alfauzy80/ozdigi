@@ -1324,8 +1324,38 @@
                 }
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    window.profileImageBase64 = e.target.result;
-                    document.getElementById('profile-photo-preview').src = window.profileImageBase64;
+                    // Kompresi Otomatis Menggunakan Canvas HTML5
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 400; // Resolusi maksimal diperkecil
+                        const MAX_HEIGHT = 400;
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Hitung rasio aspek baru
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Ubah format ke JPEG dengan kualitas 70% agar ukuran turun drastis (Aman untuk batas 1MB Firestore)
+                        window.profileImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('profile-photo-preview').src = window.profileImageBase64;
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
