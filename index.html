@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -44,7 +45,6 @@
                 radial-gradient(circle at 50% 0%, #1E293B 0%, #020617 80%);
             background-attachment: fixed;
             color: #F8FAFC;
-            min-height: 100vh;
         }
         
         .hero-title {
@@ -78,9 +78,9 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
-    <!-- Floating WA Button -->
-    <a href="https://wa.me/628568080847" target="_blank" class="fixed bottom-6 right-6 z-[200] bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-transform floating-wa">
+<body class="flex flex-col min-h-screen pb-20 md:pb-0">
+    <!-- Floating WA Button (Disembunyikan di HP karena sudah ada di Navigasi Bawah) -->
+    <a href="https://wa.me/628568080847" target="_blank" class="hidden md:flex fixed bottom-6 right-6 z-[200] bg-green-500 text-white w-14 h-14 rounded-full items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-transform floating-wa">
         <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
 
@@ -163,7 +163,6 @@
                         </div>
                     </div>
 
-                    <!-- Tombol Profil -->
                     <button type="button" id="nav-profile-btn" onclick="window.openProfileModal()" class="hidden-view text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer border border-white/10">
                         <i class="fa-solid fa-user"></i> Profil
                     </button>
@@ -401,80 +400,80 @@
         </section>
     
         <!-- MODUL OZPINJAM -->
-    <section id="section-oz-pinjam" class="hidden-section space-y-6">
-        <div class="flex flex-col md:flex-row gap-6">
-            <!-- Simulasi Pinjaman -->
-            <div class="w-full md:w-1/3 glass-panel p-6 rounded-2xl space-y-4">
-                <h2 class="text-xl font-bold"><i class="fa-solid fa-calculator text-ozgold-400 mr-2"></i> Simulasi OZPinjam</h2>
-                <p class="text-xs text-slate-400 admin-only-menu hidden-view" id="sim-pinjam-subtitle">Bunga flat 4% per bulan.</p>
-                
-                <!-- Panel Konfigurasi Admin -->
-                <div id="admin-pinjam-settings" class="admin-only-menu hidden-view bg-gray-800/80 rounded-xl p-4 border border-ozgold-500/30 mb-4">
-                    <p class="text-[10px] text-ozgold-400 uppercase font-bold tracking-widest mb-2 flex justify-between items-center">
-                        <span><i class="fa-solid fa-gear"></i> Config Simulasi Admin</span>
-                        <button onclick="window.savePinjamConfig()" class="bg-ozgold-600 text-white px-2 py-1 rounded hover:bg-ozgold-500 transition-colors">Simpan</button>
-                    </p>
+        <section id="section-oz-pinjam" class="hidden-section space-y-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Simulasi Pinjaman -->
+                <div class="w-full md:w-1/3 glass-panel p-6 rounded-2xl space-y-4">
+                    <h2 class="text-xl font-bold"><i class="fa-solid fa-calculator text-ozgold-400 mr-2"></i> Simulasi OZPinjam</h2>
+                    <p class="text-xs text-slate-400 admin-only-menu hidden-view" id="sim-pinjam-subtitle">Bunga flat 4% per bulan.</p>
                     
-                    <div class="grid grid-cols-3 gap-2 mb-3 text-[10px]">
-                        <div class="font-bold text-slate-300">Tenor</div>
-                        <div class="font-bold text-slate-300">Bunga (%)</div>
-                        <div class="font-bold text-slate-300">Pot. Admin</div>
+                    <!-- Panel Konfigurasi Admin -->
+                    <div id="admin-pinjam-settings" class="admin-only-menu hidden-view bg-gray-800/80 rounded-xl p-4 border border-ozgold-500/30 mb-4">
+                        <p class="text-[10px] text-ozgold-400 uppercase font-bold tracking-widest mb-2 flex justify-between items-center">
+                            <span><i class="fa-solid fa-gear"></i> Config Simulasi Admin</span>
+                            <button onclick="window.savePinjamConfig()" class="bg-ozgold-600 text-white px-2 py-1 rounded hover:bg-ozgold-500 transition-colors">Simpan</button>
+                        </p>
                         
-                        <div>1 Bln</div>
-                        <div><input type="number" step="0.01" id="config-bunga-1" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
-                        <div><input type="number" id="config-admin-1" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+                        <div class="grid grid-cols-3 gap-2 mb-3 text-[10px]">
+                            <div class="font-bold text-slate-300">Tenor</div>
+                            <div class="font-bold text-slate-300">Bunga (%)</div>
+                            <div class="font-bold text-slate-300">Pot. Admin</div>
+                            
+                            <div>1 Bln</div>
+                            <div><input type="number" step="0.01" id="config-bunga-1" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                            <div><input type="number" id="config-admin-1" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
 
-                        <div>2 Bln</div>
-                        <div><input type="number" step="0.01" id="config-bunga-2" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
-                        <div><input type="number" id="config-admin-2" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+                            <div>2 Bln</div>
+                            <div><input type="number" step="0.01" id="config-bunga-2" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                            <div><input type="number" id="config-admin-2" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
 
-                        <div>3 Bln</div>
-                        <div><input type="number" step="0.01" id="config-bunga-3" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
-                        <div><input type="number" id="config-admin-3" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+                            <div>3 Bln</div>
+                            <div><input type="number" step="0.01" id="config-bunga-3" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                            <div><input type="number" id="config-admin-3" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
 
-                        <div>6 Bln</div>
-                        <div><input type="number" step="0.01" id="config-bunga-6" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
-                        <div><input type="number" id="config-admin-6" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+                            <div>6 Bln</div>
+                            <div><input type="number" step="0.01" id="config-bunga-6" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                            <div><input type="number" id="config-admin-6" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
 
-                        <div>9 Bln</div>
-                        <div><input type="number" step="0.01" id="config-bunga-9" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
-                        <div><input type="number" id="config-admin-9" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
+                            <div>9 Bln</div>
+                            <div><input type="number" step="0.01" id="config-bunga-9" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                            <div><input type="number" id="config-admin-9" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
 
-                        <div>12 Bln</div>
-                        <div><input type="number" step="0.01" id="config-bunga-12" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
-                        <div><input type="number" id="config-admin-12" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
-                    </div>
-                </div>
-
-                <div class="space-y-3 pt-2">
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">Nominal Pinjaman (Rp)</label>
-                        <input type="number" id="sim-pinjam-nominal" class="w-full glass-input rounded-xl py-2 px-3 text-sm font-bold" placeholder="Contoh: 5000000" oninput="window.calcPinjam()">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">Pilih Tenor</label>
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" id="btn-tenor-1" onclick="window.setPinjamTenor(1)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">1 Bln</button>
-                            <button type="button" id="btn-tenor-2" onclick="window.setPinjamTenor(2)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">2 Bln</button>
-                            <button type="button" id="btn-tenor-3" onclick="window.setPinjamTenor(3)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">3 Bln</button>
-                            <button type="button" id="btn-tenor-6" onclick="window.setPinjamTenor(6)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all bg-ozgold-500/10 text-ozgold-400 border-ozgold-400">6 Bln</button>
-                            <button type="button" id="btn-tenor-9" onclick="window.setPinjamTenor(9)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">9 Bln</button>
-                            <button type="button" id="btn-tenor-12" onclick="window.setPinjamTenor(12)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">12 Bln</button>
+                            <div>12 Bln</div>
+                            <div><input type="number" step="0.01" id="config-bunga-12" class="w-full glass-input rounded py-1 px-1.5 text-[10px]"></div>
+                            <div><input type="number" id="config-admin-12" class="w-full glass-input rounded py-1 px-1.5 text-[10px]" placeholder="Rp"></div>
                         </div>
                     </div>
-                    <div class="pt-4 border-t border-white/10 space-y-3">
-                        <div class="bg-emerald-900/20 p-3 rounded-xl border border-emerald-500/20">
-                            <p class="text-xs text-emerald-400/80">Dana Cair (Pencairan Bersih):</p>
-                            <p class="text-xl font-bold text-emerald-400 mt-1" id="sim-pinjam-cair">Rp 0</p>
+
+                    <div class="space-y-3 pt-2">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Nominal Pinjaman (Rp)</label>
+                            <input type="number" id="sim-pinjam-nominal" class="w-full glass-input rounded-xl py-2 px-3 text-sm font-bold" placeholder="Contoh: 5000000" oninput="window.calcPinjam()">
                         </div>
                         <div>
-                            <p class="text-xs text-slate-400">Estimasi Cicilan per Bulan:</p>
-                            <p class="text-2xl font-bold text-red-400 mt-1" id="sim-pinjam-result">Rp 0</p>
+                            <label class="block text-xs text-slate-400 mb-1">Pilih Tenor</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button type="button" id="btn-tenor-1" onclick="window.setPinjamTenor(1)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">1 Bln</button>
+                                <button type="button" id="btn-tenor-2" onclick="window.setPinjamTenor(2)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">2 Bln</button>
+                                <button type="button" id="btn-tenor-3" onclick="window.setPinjamTenor(3)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">3 Bln</button>
+                                <button type="button" id="btn-tenor-6" onclick="window.setPinjamTenor(6)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all bg-ozgold-500/10 text-ozgold-400 border-ozgold-400">6 Bln</button>
+                                <button type="button" id="btn-tenor-9" onclick="window.setPinjamTenor(9)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">9 Bln</button>
+                                <button type="button" id="btn-tenor-12" onclick="window.setPinjamTenor(12)" class="flex-1 min-w-[60px] py-2 glass-input rounded-xl text-xs font-bold border border-white/10 hover:border-ozgold-400 transition-all">12 Bln</button>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-white/10 space-y-3">
+                            <div class="bg-emerald-900/20 p-3 rounded-xl border border-emerald-500/20">
+                                <p class="text-xs text-emerald-400/80">Dana Cair (Pencairan Bersih):</p>
+                                <p class="text-xl font-bold text-emerald-400 mt-1" id="sim-pinjam-cair">Rp 0</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-400">Estimasi Cicilan per Bulan:</p>
+                                <p class="text-2xl font-bold text-red-400 mt-1" id="sim-pinjam-result">Rp 0</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Konten Postingan OZPinjam -->
+                <!-- Konten Postingan OZPinjam -->
                 <div class="w-full md:w-2/3 glass-panel p-6 rounded-2xl">
                     <h2 class="text-xl font-bold mb-4"><i class="fa-solid fa-bullhorn text-ozgold-400 mr-2"></i> Info & Promo OZPinjam</h2>
                     <div id="post-container-pinjam" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -602,9 +601,23 @@
             </div>
         </section>
 
+        <!-- MODUL PORTOFOLIO GABUNGAN (KHUSUS NASABAH) -->
+        <section id="section-portfolio" class="hidden-section space-y-6">
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="flex justify-between items-center border-b border-white/10 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold"><i class="fa-solid fa-folder-open text-ozgold-400 mr-2"></i> Portofolio Saya</h2>
+                        <p class="text-xs text-slate-400">Ringkasan tabungan defOZite & tagihan OZ Finance Anda.</p>
+                    </div>
+                </div>
+                <div id="portfolio-container" class="space-y-6">
+                    <p class="text-center text-slate-500 text-xs py-10">Memuat data portofolio...</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    
     <!-- Modal Edit Beranda (Admin) -->
     <div id="admin-edit-beranda-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-md p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 relative z-[510] max-h-[95vh] overflow-y-auto custom-scroll">
@@ -992,6 +1005,30 @@
         <p>&copy; 2026 <span class="text-ozgold-400 font-semibold">OZdigi Ecosystem</span>. All rights reserved.</p>
     </footer>
 
+    <!-- BOTTOM NAVIGATION (MOBILE ONLY) -->
+    <div class="md:hidden glass-panel fixed bottom-0 left-0 w-full z-[150] border-t border-white/10 px-4 py-2 flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.8)] bg-[#020617]/95 backdrop-blur-xl">
+        <button onclick="switchSection('beranda')" class="flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-ozgold-400 transition-colors w-16">
+            <i class="fa-solid fa-house text-[18px]"></i>
+            <span class="text-[10px] font-bold mt-0.5">Beranda</span>
+        </button>
+        <button onclick="window.handleBottomNavData()" class="flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-ozgold-400 transition-colors w-16">
+            <i class="fa-solid fa-folder-open text-[18px]"></i>
+            <span class="text-[10px] font-bold mt-0.5">Data</span>
+        </button>
+        <button onclick="window.open('https://wa.me/628568080847', '_blank')" class="flex flex-col items-center gap-1 p-2 text-emerald-400 hover:text-emerald-300 transition-colors w-16 relative">
+            <div class="absolute -top-7 bg-gradient-to-tr from-emerald-600 to-emerald-400 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.5)] border-[3px] border-[#020617] hover:scale-110 transition-transform">
+                <i class="fa-brands fa-whatsapp text-2xl"></i>
+            </div>
+            <span class="text-[10px] font-bold mt-6 text-emerald-400">Chat</span>
+        </button>
+        <button onclick="window.handleBottomNavProfile()" class="flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-ozgold-400 transition-colors w-16">
+            <div id="btm-nav-avatar" class="w-6 h-6 rounded-full bg-slate-800 border border-slate-500 overflow-hidden flex items-center justify-center shadow-inner">
+                <i class="fa-solid fa-user text-[12px] text-slate-400"></i>
+            </div>
+            <span class="text-[10px] font-bold mt-0.5">Profil</span>
+        </button>
+    </div>
+
     <!-- ==============================================
          JAVASCRIPT INITIALIZATION & LOGIC
          ============================================== -->
@@ -999,7 +1036,7 @@
         // --- 1. UI Navigation Logic ---
         function switchSection(sectionId) {
             window.currentSectionId = sectionId;
-            const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-oz-pinjam', 'section-oz-kredit', 'section-defozite-home', 'section-defozite-customers', 'section-defozite-saving'];
+            const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-oz-pinjam', 'section-oz-kredit', 'section-defozite-home', 'section-defozite-customers', 'section-defozite-saving', 'section-portfolio'];
             sections.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.classList.add('hidden-section');
@@ -1010,6 +1047,112 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
+
+        window.handleBottomNavData = () => {
+            if (!window.currentUser) {
+                window.openAuthModal();
+                window.showToast("Silakan login terlebih dahulu.");
+            } else if (window.isAdmin) {
+                switchSection('defozite-saving'); // Panel Admin Gabungan ada di sini
+                window.showToast("Menampilkan Panel Manajemen Nasabah");
+            } else {
+                switchSection('portfolio');
+            }
+        };
+
+        window.handleBottomNavProfile = () => {
+            if (!window.currentUser) {
+                window.openAuthModal();
+            } else {
+                window.openProfileModal();
+            }
+        };
+        
+        window.renderPortfolio = () => {
+            const container = document.getElementById('portfolio-container');
+            if(!container) return;
+            
+            if(!window.currentUser || window.isAdmin) {
+                if(window.isAdmin) container.innerHTML = `<p class="text-center text-slate-500 text-xs py-10">Gunakan Panel Admin untuk melihat data.</p>`;
+                return;
+            }
+
+            const phone = window.currentUser.phone;
+            let html = '';
+
+            // 1. Cek defOZite
+            const defMatch = window.defData.find(c => String(c.phone) === String(phone));
+            if(defMatch) {
+                html += `
+                <div class="bg-gray-800/40 border border-emerald-500/30 p-5 rounded-xl shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full -z-10"></div>
+                    <h3 class="text-base font-bold text-emerald-400 mb-4"><i class="fa-solid fa-piggy-bank mr-2"></i> Tabungan Koperasi</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Saldo Tabungan</p>
+                            <p class="text-lg font-bold text-emerald-400">${window.formatRp(defMatch.savingsBalance || 0)}</p>
+                        </div>
+                        <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Sisa Pinjaman</p>
+                            <p class="text-lg font-bold text-red-400">${window.formatRp(defMatch.loanBalance || 0)}</p>
+                        </div>
+                    </div>
+                    <button onclick="switchSection('defozite-saving')" class="w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 py-2 rounded-lg text-xs font-bold border border-emerald-500/30 transition-colors">
+                        Lihat Riwayat Transaksi <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+                `;
+            }
+
+            // 2. Cek OZ Finance
+            const ozfMatches = window.ozfData.filter(d => String(d.wa) === String(phone));
+            if(ozfMatches.length > 0) {
+                let itemsHtml = ozfMatches.map(item => {
+                    const progress = (item.lunas / (item.totalBulan || 1)) * 100;
+                    const isLunas = progress >= 100;
+                    return `
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-ozgold-400 text-sm flex items-center gap-2"><i class="fa-solid fa-box-open"></i> ${item.item}</h4>
+                            <span class="text-[9px] font-bold px-2 py-1 rounded-full ${isLunas ? 'bg-green-500/20 text-green-400' : 'bg-ozgold-500/20 text-ozgold-400'} border ${isLunas ? 'border-green-500/30' : 'border-ozgold-500/30'}">${isLunas ? 'LUNAS' : item.lunas + ' dari ' + item.totalBulan + ' Bln'}</span>
+                        </div>
+                        <div class="flex justify-between text-xs mb-3">
+                            <span class="text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> Jatuh Tempo: Tgl ${item.jatuhTempo}</span>
+                            <span class="text-white font-bold">${window.formatRp(item.tagihan)} /bln</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                            <div class="h-full bg-gradient-to-r ${window.getProgressColor(progress)} rounded-full" style="width: ${progress > 100 ? 100 : progress}%"></div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+                html += `
+                <div class="bg-gray-800/40 border border-ozgold-500/30 p-5 rounded-xl shadow-lg relative overflow-hidden mt-4">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-ozgold-500/10 rounded-bl-full -z-10"></div>
+                    <h3 class="text-base font-bold text-ozgold-400 mb-4"><i class="fa-solid fa-wallet mr-2"></i> Tagihan OZ Finance</h3>
+                    <div class="space-y-3">
+                        ${itemsHtml}
+                    </div>
+                    <button onclick="switchSection('oz-finance-customers')" class="w-full mt-4 bg-ozgold-500/10 hover:bg-ozgold-500/20 text-ozgold-400 py-2 rounded-lg text-xs font-bold border border-ozgold-500/30 transition-colors">
+                        Lihat Detail Cicilan <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+                `;
+            }
+
+            if(!defMatch && ozfMatches.length === 0) {
+                html = `
+                <div class="p-8 text-center flex flex-col items-center justify-center border border-white/5 rounded-xl bg-black/20">
+                    <i class="fa-solid fa-folder-open text-4xl text-slate-600 mb-4"></i>
+                    <h3 class="text-sm font-bold text-white mb-2">Belum Ada Data</h3>
+                    <p class="text-xs text-slate-400 max-w-xs mx-auto">Anda belum memiliki riwayat tabungan Koperasi ataupun tagihan cicilan aktif saat ini.</p>
+                </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        };
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
@@ -2190,6 +2333,14 @@
                     }
                     if(mobProfileBtn) mobProfileBtn.classList.remove('hidden-view');
                     
+                    // UPDATE AVATAR PADA NAVIGASI BAWAH
+                    const btmAvatar = document.getElementById('btm-nav-avatar');
+                    if (btmAvatar) {
+                        const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
+                        btmAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                        btmAvatar.classList.replace('border-slate-500', 'border-ozgold-500');
+                    }
+                    
                     if(window.isAdmin) {
                         if(navAdminMenu) navAdminMenu.classList.remove('hidden-view');
                         if(mobAdminPanel) mobAdminPanel.classList.remove('hidden-view');
@@ -2210,11 +2361,19 @@
                     if(mobFingerBtn) mobFingerBtn.classList.add('hidden-view');
                     if(navProfileBtn) navProfileBtn.classList.add('hidden-view');
                     if(mobProfileBtn) mobProfileBtn.classList.add('hidden-view');
+
+                    // KEMBALIKAN AVATAR PADA NAVIGASI BAWAH KE DEFAULT (SILUET ORANG)
+                    const btmAvatar = document.getElementById('btm-nav-avatar');
+                    if (btmAvatar) {
+                        btmAvatar.innerHTML = `<i class="fa-solid fa-user text-[11px] text-slate-400"></i>`;
+                        btmAvatar.classList.replace('border-ozgold-500', 'border-slate-500');
+                    }
                 }
                 
                 if (document.getElementById('ozf-search-input')) window.ozfSearch();
                 if (document.getElementById('def-search-input')) window.defSearch();
                 window.renderPosts();
+                if (window.renderPortfolio) window.renderPortfolio();
             } catch(e) {
                 console.error("UI Update Error: ", e);
             }
@@ -2268,6 +2427,7 @@
                     window.ozfData = data ? Object.values(data) : [];
                     if(document.getElementById('ozf-search-input')) window.ozfSearch();
                     if(window.renderSavingAdminLists) window.renderSavingAdminLists();
+                    if(window.renderPortfolio) window.renderPortfolio();
                 });
 
                 defDb.collection("customers").orderBy("createdAt", "desc").onSnapshot(snap => {
@@ -2278,6 +2438,7 @@
                     const tc = document.getElementById('def-total-customers'); if(tc) tc.innerText = `${window.defData.length} Orang`;
                     if(document.getElementById('def-search-input')) window.defSearch();
                     if(window.renderSavingAdminLists) window.renderSavingAdminLists();
+                    if(window.renderPortfolio) window.renderPortfolio();
                     
                     if(window.isAdmin && document.getElementById('sav-trx-list-mode') && !document.getElementById('sav-trx-list-mode').classList.contains('hidden-view')) {
                         window.renderSavTrxList();
