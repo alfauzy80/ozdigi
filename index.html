@@ -1183,14 +1183,19 @@
         window.currentSectionId = 'beranda';
         window.profileImageBase64 = null; // Menyimpan data URL foto untuk diedit
 
-        // --- SISTEM NAVIGASI BACK BUTTON (ANDROID & PWA) ---
+        // --- SISTEM NAVIGASI BACK BUTTON (BERSIH TANPA #app DI URL) ---
         window.exitConfirm = false;
         
-        history.pushState({ page: 'trap' }, '', '#trap');
-        history.pushState({ page: 'current' }, '', '#app');
+        // Membersihkan #app dari URL saat pertama kali dimuat jika ada
+        if (window.location.hash) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+
+        history.pushState({ page: 'trap' }, '', '');
+        history.pushState({ page: 'current' }, '', '');
         
         window.addEventListener('popstate', (e) => {
-            history.pushState({ page: 'current' }, '', '#app');
+            history.pushState({ page: 'current' }, '', '');
             
             if (window.currentSectionId !== 'beranda') {
                 switchSection('beranda');
@@ -1289,16 +1294,13 @@
                     const userData = snapshot.docs[0].data();
                     const userId = snapshot.docs[0].id;
                     
-                    // LOGIKA PASSWORD YANG DIPERBAIKI:
                     let isValidPassword = false;
                     const dbPwd = userData.password ? String(userData.password).trim() : '';
                     const userPhone = String(userData.phone).trim();
                     
-                    // Jika password sudah disetel/diganti oleh nasabah (bukan kosong, bukan 1234, bukan No WA)
                     if (dbPwd !== '' && dbPwd !== '1234' && dbPwd !== userPhone) {
                         isValidPassword = (passwordInput === dbPwd);
                     } else {
-                        // Jika masih default (belum diganti), bisa pakai No WA atau 1234
                         isValidPassword = (passwordInput === dbPwd || passwordInput === '1234' || passwordInput === userPhone);
                     }
                     
@@ -1442,7 +1444,7 @@
                 return;
             }
 
-            window.profileImageBase64 = null; // Reset setiap kali buka modal
+            window.profileImageBase64 = null;
             
             const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
             document.getElementById('profile-photo-preview').src = avatarUrl;
@@ -1468,16 +1470,14 @@
                 }
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    // Kompresi Otomatis Menggunakan Canvas HTML5
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400; // Resolusi maksimal diperkecil
+                        const MAX_WIDTH = 400;
                         const MAX_HEIGHT = 400;
                         let width = img.width;
                         let height = img.height;
 
-                        // Hitung rasio aspek baru
                         if (width > height) {
                             if (width > MAX_WIDTH) {
                                 height *= MAX_WIDTH / width;
@@ -1495,7 +1495,6 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // Ubah format ke JPEG dengan kualitas 70% agar ukuran turun drastis (Aman untuk batas 1MB Firestore)
                         window.profileImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
                         document.getElementById('profile-photo-preview').src = window.profileImageBase64;
                     };
@@ -1526,14 +1525,12 @@
                     updateData.photo = window.profileImageBase64;
                 }
 
-                // Cari dan Perbarui data di Koleksi Users
                 const snapshot = await defDb.collection('users').where('phone', '==', phone).get();
                 
                 if (!snapshot.empty) {
                     const docId = snapshot.docs[0].id;
                     await defDb.collection('users').doc(docId).update(updateData);
                 } else {
-                    // Jika akun hasil import (auto-login), buat doc baru di users
                     await defDb.collection('users').add({
                         name: window.currentUser.name,
                         phone: phone,
@@ -1544,15 +1541,13 @@
                     });
                 }
 
-                // Update session
                 window.currentUser = { ...window.currentUser, ...updateData };
                 localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
                 
-                window.updateUIAuth(); // Render ulang navigasi dan avatar
+                window.updateUIAuth();
                 window.showToast("Profil berhasil diperbarui!");
                 window.closeProfileModal();
                 
-                // Jika ganti password, wajibkan relogin
                 if (password) {
                     setTimeout(() => {
                         alert("Password Anda telah berhasil diubah. Silakan login kembali dengan password baru.");
@@ -2385,7 +2380,7 @@
                     if(mobLogoutBtn) mobLogoutBtn.classList.add('hidden-view');
                     if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view');
                     if(navFingerBtn) navFingerBtn.classList.add('hidden-view');
-                    if(mobFingerBtn) mobFingerBtn.classList.add('hidden-view');
+                    if(mobFingerBtn) navFingerBtn.classList.add('hidden-view');
                     if(navProfileBtn) navProfileBtn.classList.add('hidden-view');
                     if(mobProfileBtn) mobProfileBtn.classList.add('hidden-view');
 
@@ -2521,7 +2516,6 @@
                 let itemsHtml = ''; let totalTagihan = 0;
                 let avatarSrc = c.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.customName)}&background=fde047&color=000`;
                 
-                // Jika user yang sedang login punya foto profil, pakai fotonya
                 if (window.currentUser && window.currentUser.photo && String(c.items[0].wa) === String(window.currentUser.phone)) {
                     avatarSrc = window.currentUser.photo;
                 }
@@ -2612,7 +2606,6 @@
             if(!custs.length) { list.innerHTML = `<p class="text-center text-slate-500 text-xs py-4">${!window.isAdmin ? 'Anda belum terdaftar sebagai anggota tabungan.' : 'Belum ada anggota defOZite.'}</p>`; return; }
             
             list.innerHTML = custs.map(c => {
-                // Gunakan foto dari currentUser jika cocok, agar fotonya muncul juga di list nasabah saat diakses admin/user
                 let userPhotoHtml = '';
                 if(window.usersData && window.usersData.length) {
                     const matchUser = window.usersData.find(u => u.phone === c.phone && u.photo);
@@ -2676,7 +2669,7 @@
         };
 
         // --- 11. SISTEM AUTO LOGOUT (20 MENIT) ---
-        window.INACTIVITY_LIMIT = 20 * 60 * 1000; // 20 Menit dalam milidetik
+        window.INACTIVITY_LIMIT = 20 * 60 * 1000;
         
         window.resetActivityTimer = () => {
             if (window.currentUser) {
@@ -2685,7 +2678,7 @@
         };
 
         window.checkInactivity = () => {
-            if (!window.currentUser) return; // Hanya jalankan pengecekan jika ada user yang login
+            if (!window.currentUser) return;
             
             const lastActivity = parseInt(localStorage.getItem('ozdigi_last_activity') || Date.now());
             const currentTime = Date.now();
@@ -2698,16 +2691,13 @@
         };
 
         window.setupAutoLogout = () => {
-            // Deteksi semua interaksi pengguna yang menandakan "sedang aktif"
             const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
             activityEvents.forEach(event => {
                 document.addEventListener(event, window.resetActivityTimer, { passive: true });
             });
 
-            // Cek berkala setiap 1 menit (saat aplikasi sedang dibuka)
             setInterval(window.checkInactivity, 60000);
 
-            // Cek SEKETIKA saat HP dihidupkan ulang dari keadaan layar mati (Visibility API)
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible') {
                     window.checkInactivity();
@@ -2720,14 +2710,14 @@
             if(savedSession) {
                 try {
                     window.currentUser = JSON.parse(savedSession);
-                    localStorage.setItem('ozdigi_last_activity', Date.now()); // Reset saat tab baru dibuka
+                    localStorage.setItem('ozdigi_last_activity', Date.now());
                 } catch(e) {
                     localStorage.removeItem('ozdigi_user_session');
                 }
             }
             
             initDatabases();
-            window.setupAutoLogout(); // Jalankan inisialisasi keamanan Auto Logout
+            window.setupAutoLogout();
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
