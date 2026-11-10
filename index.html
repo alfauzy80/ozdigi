@@ -1318,8 +1318,8 @@
         window.handleProfileImageUpload = (event) => {
             const file = event.target.files[0];
             if (file) {
-                if (file.size > 2 * 1024 * 1024) { // Max 2MB
-                    alert("Ukuran gambar terlalu besar. Maksimal 2MB.");
+                if (file.size > 20 * 1024 * 1024) { // Max 20MB
+                    alert("Ukuran gambar terlalu besar. Maksimal 20MB.");
                     return;
                 }
                 const reader = new FileReader();
