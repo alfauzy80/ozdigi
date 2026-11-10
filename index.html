@@ -1034,6 +1034,10 @@
          JAVASCRIPT INITIALIZATION & LOGIC
          ============================================== -->
     <script>
+        // --- 1. DOMAIN EXTRACTOR (Untuk Sinkronisasi Kunci Sandi) ---
+        // Menghilangkan 'www.' dari URL agar WebAuthn memiliki ID Replying Party (rpId) yang seragam.
+        const getBaseDomain = () => window.location.hostname.replace(/^www\./, '');
+
         // --- 1. UI Navigation Logic ---
         function switchSection(sectionId) {
             window.currentSectionId = sectionId;
@@ -1181,12 +1185,11 @@
         window.activePinjamTenor = 6;
         window.isAdmin = false;
         window.currentSectionId = 'beranda';
-        window.profileImageBase64 = null; // Menyimpan data URL foto untuk diedit
+        window.profileImageBase64 = null; 
 
-        // --- SISTEM NAVIGASI BACK BUTTON (BERSIH TANPA #app DI URL) ---
+        // --- SISTEM NAVIGASI BACK BUTTON ---
         window.exitConfirm = false;
         
-        // Membersihkan #app dari URL saat pertama kali dimuat jika ada
         if (window.location.hash) {
             history.replaceState(null, '', window.location.pathname + window.location.search);
         }
@@ -1284,7 +1287,6 @@
             try {
                 if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
                 
-                // 1. Cek tabel users
                 let snapshot = await defDb.collection('users').where('email', '==', id).get();
                 if(snapshot.empty) {
                     snapshot = await defDb.collection('users').where('phone', '==', id).get();
@@ -1317,7 +1319,6 @@
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
 
-                // 2. Jika tidak ada, cek otomatis di defOZite & OZFinance
                 let autoNasabah = null;
                 const defMatch = window.defData.find(c => c.phone === id);
                 if(defMatch) autoNasabah = { id: defMatch.id, name: defMatch.name, phone: defMatch.phone };
@@ -1355,7 +1356,8 @@
                 const cred = await navigator.credentials.create({
                     publicKey: {
                         challenge: challenge,
-                        rp: { name: "OZdigi Ecosystem", id: window.location.hostname },
+                        // KODE PENTING: Menggunakan domain dasar agar sinkron antara www dan non-www
+                        rp: { name: "OZdigi Ecosystem", id: getBaseDomain() },
                         user: {
                             id: userId,
                             name: window.currentUser.email || window.currentUser.phone || "user",
@@ -1381,7 +1383,7 @@
                 
             } catch(e) {
                 console.error("WebAuthn Error:", e);
-                alert("Gagal mendaftarkan sidik jari. Pemindaian dibatalkan atau sistem menolak akses keamanan.");
+                alert("Gagal mendaftarkan sidik jari. Sistem menolak akses keamanan.");
             }
         };
 
@@ -1393,7 +1395,8 @@
                 const assertion = await navigator.credentials.get({
                     publicKey: {
                         challenge: challenge,
-                        rpId: window.location.hostname,
+                        // KODE PENTING: Menggunakan domain dasar agar sinkron antara www dan non-www
+                        rpId: getBaseDomain(),
                         userVerification: "required",
                         timeout: 60000
                     }
@@ -1411,7 +1414,7 @@
                     window.closeAuthModal(); 
                     window.updateUIAuth(); 
                 } else {
-                    alert("Sidik jari ini belum terdaftar untuk akun manapun di perangkat ini.");
+                    alert("Sidik jari ini belum terdaftar untuk akun manapun di browser perangkat ini.");
                 }
                 
             } catch(e) {
@@ -1464,7 +1467,7 @@
         window.handleProfileImageUpload = (event) => {
             const file = event.target.files[0];
             if (file) {
-                if (file.size > 20 * 1024 * 1024) { // Max 20MB
+                if (file.size > 20 * 1024 * 1024) { 
                     alert("Ukuran gambar terlalu besar. Maksimal 20MB.");
                     return;
                 }
@@ -2380,7 +2383,7 @@
                     if(mobLogoutBtn) mobLogoutBtn.classList.add('hidden-view');
                     if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view');
                     if(navFingerBtn) navFingerBtn.classList.add('hidden-view');
-                    if(mobFingerBtn) navFingerBtn.classList.add('hidden-view');
+                    if(mobFingerBtn) mobFingerBtn.classList.add('hidden-view');
                     if(navProfileBtn) navProfileBtn.classList.add('hidden-view');
                     if(mobProfileBtn) mobProfileBtn.classList.add('hidden-view');
 
