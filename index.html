@@ -93,9 +93,9 @@
     <!-- NAVBAR -->
     <header class="sticky top-0 z-[100] glass-panel border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="switchSection('beranda')">
-                <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&dl=0" alt="OZ Logo" class="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(253,224,38,0.5)]">
-                <span class="text-xl font-bold tracking-tight">OZ<span class="text-gradient-gold">digi</span></span>
+            <div class="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0" onclick="switchSection('beranda')">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&dl=0" alt="OZ Logo" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_8px_rgba(253,224,38,0.5)]">
+                <span class="text-lg sm:text-xl font-bold tracking-tight">OZ<span class="text-gradient-gold">digi</span></span>
             </div>
 
             <!-- Desktop Navigation -->
@@ -175,9 +175,22 @@
                 </div>
             </nav>
 
-            <button type="button" onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white text-xl">
-                <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
-            </button>
+            <!-- Mobile Quick Links (Presisi di Tengah) -->
+            <div class="flex md:hidden flex-1 items-center justify-center gap-2 px-2">
+                <button onclick="switchSection('oz-pinjam'); document.getElementById('mobile-menu').classList.add('hidden'); document.getElementById('mobile-menu-icon').className = 'fa-solid fa-bars';" class="text-[10px] font-bold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-2.5 py-1.5 rounded-lg border border-blue-500/30 shadow-sm transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Pinjam
+                </button>
+                <button onclick="switchSection('defozite-saving'); document.getElementById('mobile-menu').classList.add('hidden'); document.getElementById('mobile-menu-icon').className = 'fa-solid fa-bars';" class="text-[10px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 px-2.5 py-1.5 rounded-lg border border-emerald-500/30 shadow-sm transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-piggy-bank"></i> Saving
+                </button>
+            </div>
+
+            <!-- Mobile Hamburger Toggle (Nempel Kanan) -->
+            <div class="flex md:hidden shrink-0 items-center">
+                <button type="button" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-white text-xl p-2 -mr-2">
+                    <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Mobile Menu -->
