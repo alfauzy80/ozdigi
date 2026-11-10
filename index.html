@@ -164,6 +164,11 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Tombol Profil -->
+                    <button type="button" id="nav-profile-btn" onclick="window.openProfileModal()" class="hidden-view text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer border border-white/10">
+                        <i class="fa-solid fa-user"></i> Profil
+                    </button>
                     
                     <button type="button" id="nav-fingerprint-btn" onclick="window.registerFingerprint()" class="hidden-view text-xs px-4 py-2 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer">
                         <i class="fa-solid fa-fingerprint"></i> Daftarkan Sidik Jari
@@ -218,7 +223,11 @@
                     <button type="button" onclick="window.openAdminPostModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-bullhorn text-ozgold-400 w-4"></i> Kelola Postingan</button>
                     <button type="button" onclick="window.openAdminUsersModal(); toggleMobileMenu();" class="w-full text-left bg-gray-800/50 hover:bg-gray-800 text-slate-300 font-medium py-2 px-3 rounded-lg text-xs transition-colors"><i class="fa-solid fa-users-gear text-ozgold-400 w-4"></i> Kelola Nasabah</button>
                 </div>
-                <button type="button" id="mobile-fingerprint-btn" onclick="window.registerFingerprint(); toggleMobileMenu();" class="hidden-view w-full text-center bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 font-bold py-2 rounded-lg text-xs transition-colors mt-2"><i class="fa-solid fa-fingerprint"></i> Daftarkan Sidik Jari</button>
+                
+                <button type="button" id="mobile-profile-btn" onclick="window.openProfileModal(); toggleMobileMenu();" class="hidden-view w-full text-left bg-white/5 hover:bg-white/10 text-white font-medium py-2 px-3 rounded-lg text-xs transition-colors mt-2 flex items-center gap-2"><i class="fa-solid fa-user-pen text-ozgold-400 w-4"></i> Profil Saya</button>
+                
+                <button type="button" id="mobile-fingerprint-btn" onclick="window.registerFingerprint(); toggleMobileMenu();" class="hidden-view w-full text-left bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 font-medium py-2 px-3 rounded-lg text-xs transition-colors mt-2 flex items-center gap-2"><i class="fa-solid fa-fingerprint w-4"></i> Daftarkan Sidik Jari</button>
+                
                 <button type="button" id="mobile-logout-btn" onclick="window.logoutUser(); toggleMobileMenu();" class="hidden-view w-full text-center bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold py-2 rounded-lg text-xs transition-colors mt-2">Keluar (Logout)</button>
             </div>
         </div>
@@ -231,14 +240,11 @@
         <section id="section-beranda" class="space-y-12">
             
             <div class="relative w-full rounded-3xl overflow-hidden glass-panel border border-white/10 mt-4 mb-8 shadow-2xl">
-                <!-- Gradasi hitam tebal dihapus diganti dengan lapisan transparan super tipis 20% agar media tampil jernih -->
                 <div class="absolute inset-0 bg-black/20 z-10 pointer-events-none"></div>
                 
-                <!-- Efek mix-blend-overlay dihapus agar warna asli gambar/video keluar -->
                 <img id="hero-bg-img" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500" style="opacity: 1;">
                 <video id="hero-bg-video" src="" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 hidden-view" autoplay loop muted playsinline style="opacity: 1;"></video>
                 
-                <!-- Menambahkan drop shadow kuat pada teks agar tetap terbaca jelas di background apa pun -->
                 <div class="relative z-20 px-8 py-16 md:py-24 max-w-2xl drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">
                     <span id="hero-badge" class="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold bg-ozgold-500 text-black mb-6 uppercase tracking-widest shadow-[0_0_15px_rgba(245,158,11,0.5)]">Super App Koperasi Digital</span>
                     <h1 id="hero-title" class="text-4xl sm:text-6xl font-bold tracking-tight hero-title mb-6 leading-tight">Masa Depan <br><span class="text-gradient-gold">Keuangan Anda</span></h1>
@@ -648,6 +654,57 @@
         </div>
     </div>
 
+    <!-- Modal Profil Saya -->
+    <div id="profile-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[600] hidden-view flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[610] max-h-[90vh] overflow-y-auto custom-scroll">
+            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-user-pen text-ozgold-400 mr-2"></i> Profil Saya</h3>
+                <button type="button" onclick="window.closeProfileModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            
+            <form id="form-profile" onsubmit="event.preventDefault(); window.saveProfile(); return false;" class="space-y-4">
+                
+                <!-- Photo Upload -->
+                <div class="flex flex-col items-center justify-center mb-2">
+                    <div class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-ozgold-500/50 mb-2 group cursor-pointer shadow-lg" onclick="document.getElementById('profile-photo-input').click()">
+                        <img id="profile-photo-preview" src="" class="w-full h-full object-cover" alt="Profile">
+                        <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-camera text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 text-center uppercase tracking-widest font-semibold"><i class="fa-solid fa-hand-pointer text-ozgold-400 mr-1"></i> Ketuk untuk mengubah</p>
+                    <input type="file" id="profile-photo-input" accept="image/*" class="hidden" onchange="window.handleProfileImageUpload(event)">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Nama Lengkap</label>
+                    <input type="text" id="profile-name" class="w-full bg-black/40 border border-white/5 rounded-xl py-2 px-3 text-xs text-slate-500 cursor-not-allowed font-bold" disabled>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">No WhatsApp (Hanya Admin yang dapat merubah)</label>
+                    <input type="text" id="profile-phone" class="w-full bg-black/40 border border-white/5 rounded-xl py-2 px-3 text-xs text-slate-500 cursor-not-allowed font-bold" disabled>
+                </div>
+                
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Alamat Domisili</label>
+                    <textarea id="profile-address" rows="2" class="w-full glass-input rounded-xl py-2 px-3 text-xs custom-scroll" placeholder="Masukkan alamat lengkap Anda..."></textarea>
+                </div>
+
+                <div class="border-t border-white/10 pt-3">
+                    <label class="block text-[11px] text-slate-400 mb-1">Ganti Password</label>
+                    <input type="password" id="profile-password" class="w-full glass-input rounded-xl py-2 px-3 text-xs" placeholder="Kosongkan jika tidak ingin diganti">
+                    <p class="text-[9px] text-ozgold-400 mt-1"><i class="fa-solid fa-circle-info"></i> Anda akan diminta login ulang jika password diubah.</p>
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="window.closeProfileModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition-colors">Batal</button>
+                    <button type="submit" id="btn-save-profile" class="flex-1 bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition-all">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Auth (Masuk / Daftar / Lupa Password) -->
     <div id="auth-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[600] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[610]">
@@ -984,48 +1041,28 @@
         window.activePinjamTenor = 6;
         window.isAdmin = false;
         window.currentSectionId = 'beranda';
+        window.profileImageBase64 = null; // Menyimpan data URL foto untuk diedit
 
         // --- SISTEM NAVIGASI BACK BUTTON (ANDROID & PWA) ---
         window.exitConfirm = false;
         
-        // History Trap: Memastikan selalu ada riwayat navigasi untuk di-pop saat tombol back fisik ditekan.
-        // Mencegah aplikasi langsung keluar secara tidak sengaja.
         history.pushState({ page: 'trap' }, '', '#trap');
         history.pushState({ page: 'current' }, '', '#app');
         
         window.addEventListener('popstate', (e) => {
-            // 1. Langsung pulihkan state trap agar tekanan back berikutnya tetap bisa ditangkap oleh sistem
             history.pushState({ page: 'current' }, '', '#app');
             
-            // 2. Evaluasi halaman/seksi saat ini
             if (window.currentSectionId !== 'beranda') {
-                // Skenario 1: Di halaman selain Beranda -> Otomatis kembali ke Beranda (tanpa reload)
                 switchSection('beranda');
             } else {
-                // Skenario 2: Di Beranda -> Cek logika konfirmasi 2 detik
                 if (!window.exitConfirm) {
                     window.exitConfirm = true;
                     window.showToast("Tekan sekali lagi untuk keluar dari aplikasi.");
-                    
-                    // Reset status konfirmasi ke false jika dalam 2 detik tidak ditekan lagi
                     setTimeout(() => { window.exitConfirm = false; }, 2000);
                 } else {
-                    // Skenario 3: Ditekan lagi dalam batas waktu 2 detik -> Eksekusi Keluar (Exit)
-                    
-                    // Deteksi native wrapper (seperti Cordova/PhoneGap)
-                    if (navigator.app && navigator.app.exitApp) {
-                        navigator.app.exitApp(); 
-                    } 
-                    // Deteksi jembatan custom Android WebView
-                    else if (window.Android && window.Android.exitApp) {
-                        window.Android.exitApp(); 
-                    } 
-                    // Mode Standar Browser Chrome / PWA OS
-                    else {
-                        // Navigasi paksa sejarah browser ke awal sebelum 'trap' ditambahkan,
-                        // yang secara otomatis akan menutup tab/aplikasi PWA di Android.
-                        window.history.go(-2); 
-                    }
+                    if (navigator.app && navigator.app.exitApp) { navigator.app.exitApp(); } 
+                    else if (window.Android && window.Android.exitApp) { window.Android.exitApp(); } 
+                    else { window.history.go(-2); }
                 }
             }
         });
@@ -1101,7 +1138,7 @@
             try {
                 if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
                 
-                // 1. Cek tabel users (Admin / yang daftar manual)
+                // 1. Cek tabel users
                 let snapshot = await defDb.collection('users').where('email', '==', id).get();
                 if(snapshot.empty) {
                     snapshot = await defDb.collection('users').where('phone', '==', id).get();
@@ -1110,9 +1147,21 @@
                 if(!snapshot.empty) {
                     const userData = snapshot.docs[0].data();
                     const userId = snapshot.docs[0].id;
-                    const userPassword = userData.password || '1234';
                     
-                    if(passwordInput !== userPassword && passwordInput !== userData.phone) {
+                    // LOGIKA PASSWORD YANG DIPERBAIKI:
+                    let isValidPassword = false;
+                    const dbPwd = userData.password ? String(userData.password).trim() : '';
+                    const userPhone = String(userData.phone).trim();
+                    
+                    // Jika password sudah disetel/diganti oleh nasabah (bukan kosong, bukan 1234, bukan No WA)
+                    if (dbPwd !== '' && dbPwd !== '1234' && dbPwd !== userPhone) {
+                        isValidPassword = (passwordInput === dbPwd);
+                    } else {
+                        // Jika masih default (belum diganti), bisa pakai No WA atau 1234
+                        isValidPassword = (passwordInput === dbPwd || passwordInput === '1234' || passwordInput === userPhone);
+                    }
+                    
+                    if(!isValidPassword) {
                         alert("Password salah! Silakan periksa kembali atau klik 'Lupa Password' untuk mereset via WhatsApp.");
                         return;
                     }
@@ -1124,33 +1173,22 @@
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
 
-                // 2. Jika tidak ada di tabel users, cek otomatis di data defOZite & OZFinance
+                // 2. Jika tidak ada, cek otomatis di defOZite & OZFinance
                 let autoNasabah = null;
-                
-                // Cek defOZite
                 const defMatch = window.defData.find(c => c.phone === id);
                 if(defMatch) autoNasabah = { id: defMatch.id, name: defMatch.name, phone: defMatch.phone };
                 
-                // Cek OZFinance jika belum ketemu
                 if(!autoNasabah) {
                     const ozfMatch = window.ozfData.find(c => c.wa === id);
                     if(ozfMatch) autoNasabah = { id: ozfMatch.id, name: ozfMatch.name, phone: ozfMatch.wa };
                 }
 
                 if(autoNasabah) {
-                    // Jika login otomatis, password HARUS sama dengan No WA
-                    if(passwordInput !== autoNasabah.phone) {
+                    if(passwordInput !== autoNasabah.phone && passwordInput !== '1234') {
                         alert("Password salah! Gunakan No WhatsApp Anda sebagai password.");
                         return;
                     }
-                    
-                    window.currentUser = { 
-                        id: autoNasabah.id, 
-                        name: autoNasabah.name, 
-                        phone: autoNasabah.phone, 
-                        role: 'nasabah', 
-                        status: 'aktif' 
-                    };
+                    window.currentUser = { id: autoNasabah.id, name: autoNasabah.name, phone: autoNasabah.phone, role: 'nasabah', status: 'aktif' };
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
                     window.showToast(`Selamat datang, ${autoNasabah.name}!`);
                     window.closeAuthModal(); window.updateUIAuth(); return;
@@ -1158,20 +1196,12 @@
 
                 alert("Akun tidak terdaftar. Silakan daftar terlebih dahulu.");
                 
-            } catch(e) { 
-                alert("Gagal masuk (Koneksi Error): " + e.message); 
-            }
+            } catch(e) { alert("Gagal masuk (Koneksi Error): " + e.message); }
         };
 
         window.registerFingerprint = async () => {
-            if (!window.currentUser) {
-                alert("Anda harus login manual terlebih dahulu sebelum bisa mendaftarkan sidik jari.");
-                return;
-            }
-            if (!window.PublicKeyCredential) { 
-                alert("PENTING: Perangkat / Browser ini tidak mendukung fitur Sidik Jari (WebAuthn). \n\nPastikan Anda membukanya menggunakan browser modern (Chrome/Safari) dengan koneksi aman (HTTPS) atau localhost. Fitur ini tidak akan berfungsi pada Previewer bawaan atau HTTP biasa."); 
-                return; 
-            }
+            if (!window.currentUser) { alert("Anda harus login manual terlebih dahulu."); return; }
+            if (!window.PublicKeyCredential) { alert("Perangkat/Browser ini tidak mendukung fitur Sidik Jari."); return; }
             
             try {
                 const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
@@ -1187,23 +1217,20 @@
                             displayName: window.currentUser.name || "User"
                         },
                         pubKeyCredParams: [
-                            { type: "public-key", alg: -7 },  // ECDSA
-                            { type: "public-key", alg: -257 } // RSA
+                            { type: "public-key", alg: -7 },
+                            { type: "public-key", alg: -257 }
                         ],
                         authenticatorSelection: { 
                             authenticatorAttachment: "platform", 
                             userVerification: "required",
-                            residentKey: "required",  // INI PENTING UNTUK PASSWORDLESS LOGIN
-                            requireResidentKey: true  // INI PENTING UNTUK PASSWORDLESS LOGIN
+                            residentKey: "required", 
+                            requireResidentKey: true 
                         },
                         timeout: 60000
                     }
                 });
                 
-                // Konversi RawID untuk disimpan ke database
                 const rawId = Array.from(new Uint8Array(cred.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
-                
-                // Kita simpan di Local Storage agar sidik jari ini terkait langsung ke Perangkat ini (Device-Bound Passkey)
                 localStorage.setItem('ozdigi_passkey_' + rawId, JSON.stringify(window.currentUser));
                 window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
                 
@@ -1214,10 +1241,7 @@
         };
 
         window.processFingerprintLogin = async () => {
-            if (!window.PublicKeyCredential) { 
-                alert("Perangkat / Browser ini tidak mendukung fitur Sidik Jari. Gunakan HTTPS atau Google Chrome."); 
-                return; 
-            }
+            if (!window.PublicKeyCredential) { alert("Perangkat / Browser ini tidak mendukung fitur Sidik Jari."); return; }
             try {
                 const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
                 
@@ -1231,8 +1255,6 @@
                 });
                 
                 const rawId = Array.from(new Uint8Array(assertion.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
-                
-                // Cek data User dari Local Storage yang terkait dengan Sidik Jari ini
                 const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawId);
                 
                 if(savedUserStr) {
@@ -1243,7 +1265,7 @@
                     window.closeAuthModal(); 
                     window.updateUIAuth(); 
                 } else {
-                    alert("Sidik jari ini belum terdaftar untuk akun manapun di perangkat ini. Silakan login menggunakan password, lalu daftarkan sidik jari Anda.");
+                    alert("Sidik jari ini belum terdaftar untuk akun manapun di perangkat ini.");
                 }
                 
             } catch(e) {
@@ -1254,7 +1276,7 @@
 
         window.processForgotPwd = () => {
             const idVal = document.getElementById('auth-login-id').value.trim() || 'Nasabah';
-            const waNumber = "628568080847"; // Nomor WA Admin
+            const waNumber = "628568080847";
             const msg = `Halo Admin OZdigi, saya lupa password akun saya (ID/Email/WA: ${idVal}). Mohon bantuannya untuk mereset password saya. Terima kasih.`;
             window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
         };
@@ -1265,6 +1287,111 @@
             window.showToast("Anda telah keluar.");
             window.updateUIAuth();
             switchSection('beranda');
+        };
+
+        // --- SISTEM PROFIL SAYA (NASABAH) ---
+        
+        window.openProfileModal = () => {
+            if (!window.currentUser) return;
+            if (window.currentUser.id === 'admin-super') {
+                alert("Akun Super Admin tidak bisa diedit melalui menu ini.");
+                return;
+            }
+
+            window.profileImageBase64 = null; // Reset setiap kali buka modal
+            
+            const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
+            document.getElementById('profile-photo-preview').src = avatarUrl;
+            
+            document.getElementById('profile-name').value = window.currentUser.name || '';
+            document.getElementById('profile-phone').value = window.currentUser.phone || '';
+            document.getElementById('profile-address').value = window.currentUser.address || '';
+            document.getElementById('profile-password').value = '';
+            
+            document.getElementById('profile-modal').classList.remove('hidden-view');
+        };
+
+        window.closeProfileModal = () => {
+            document.getElementById('profile-modal').classList.add('hidden-view');
+        };
+
+        window.handleProfileImageUpload = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) { // Max 2MB
+                    alert("Ukuran gambar terlalu besar. Maksimal 2MB.");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    window.profileImageBase64 = e.target.result;
+                    document.getElementById('profile-photo-preview').src = window.profileImageBase64;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.saveProfile = async () => {
+            if (!window.currentUser) return;
+            
+            const btn = document.getElementById('btn-save-profile');
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+
+            try {
+                const address = document.getElementById('profile-address').value.trim();
+                const password = document.getElementById('profile-password').value;
+                const phone = window.currentUser.phone;
+                
+                let updateData = { address: address };
+                if (password) {
+                    updateData.password = password;
+                }
+                if (window.profileImageBase64) {
+                    updateData.photo = window.profileImageBase64;
+                }
+
+                // Cari dan Perbarui data di Koleksi Users
+                const snapshot = await defDb.collection('users').where('phone', '==', phone).get();
+                
+                if (!snapshot.empty) {
+                    const docId = snapshot.docs[0].id;
+                    await defDb.collection('users').doc(docId).update(updateData);
+                } else {
+                    // Jika akun hasil import (auto-login), buat doc baru di users
+                    await defDb.collection('users').add({
+                        name: window.currentUser.name,
+                        phone: phone,
+                        role: window.currentUser.role || 'nasabah',
+                        status: window.currentUser.status || 'aktif',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        ...updateData
+                    });
+                }
+
+                // Update session
+                window.currentUser = { ...window.currentUser, ...updateData };
+                localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                
+                window.updateUIAuth(); // Render ulang navigasi dan avatar
+                window.showToast("Profil berhasil diperbarui!");
+                window.closeProfileModal();
+                
+                // Jika ganti password, wajibkan relogin
+                if (password) {
+                    setTimeout(() => {
+                        alert("Password Anda telah berhasil diubah. Silakan login kembali dengan password baru.");
+                        window.logoutUser();
+                        window.openAuthModal();
+                    }, 1000);
+                }
+            } catch (error) {
+                alert("Gagal menyimpan profil: " + error.message);
+            } finally {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            }
         };
 
         // --- 4. KELOLA PENGGUNA (ADMIN) ---
@@ -1278,7 +1405,7 @@
             tbody.innerHTML = window.usersData.map(u => `
                 <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                     <td class="py-3 pr-2 font-bold">${u.name}</td>
-                    <td class="py-3 pr-2">${u.email}</td>
+                    <td class="py-3 pr-2">${u.email || '-'}</td>
                     <td class="py-3 pr-2">${u.phone}</td>
                     <td class="py-3 pr-2 uppercase text-[10px] ${u.role==='admin'?'text-ozgold-400':'text-emerald-400'}">${u.role}</td>
                     <td class="py-3 flex gap-2">
@@ -1334,9 +1461,9 @@
 
             try {
                 if(id) {
-                    const emailCheck = await defDb.collection('users').where('email', '==', email).get();
+                    const emailCheck = await defDb.collection('users').where('phone', '==', phone).get();
                     const isDuplicate = emailCheck.docs.some(doc => doc.id !== id);
-                    if(isDuplicate) { alert("Gagal: Email sudah digunakan oleh akun lain!"); return; }
+                    if(isDuplicate) { alert("Gagal: No WA sudah digunakan oleh akun lain!"); return; }
 
                     const updateData = { name, email, phone, role, status };
                     if(password) updateData.password = password; 
@@ -1344,8 +1471,8 @@
                     await defDb.collection('users').doc(id).update(updateData);
                     window.showToast("Data akun berhasil diperbarui!");
                 } else {
-                    const emailCheck = await defDb.collection('users').where('email', '==', email).get();
-                    if(!emailCheck.empty) { alert("Gagal: Email sudah terdaftar!"); return; }
+                    const emailCheck = await defDb.collection('users').where('phone', '==', phone).get();
+                    if(!emailCheck.empty) { alert("Gagal: No WA sudah terdaftar!"); return; }
 
                     await defDb.collection('users').add({
                         name, email, phone, password, role, status, createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1427,7 +1554,7 @@
                     await defDb.collection("customers").doc(id).delete();
                     window.showToast("Nasabah defOZite berhasil dihapus!");
                 } else if (type.startsWith('trx-')) {
-                    const trxType = type.split('-')[1]; // 'setor' or 'tarik'
+                    const trxType = type.split('-')[1];
                     const amount = parseInt(document.getElementById('confirm-action-amount').value) || 0;
                     
                     const c = window.defData.find(x => x.id === id);
@@ -1455,8 +1582,6 @@
                     
                     document.getElementById('sav-trx-amount').value = '';
                     window.showToast(`Transaksi ${trxType.toUpperCase()} berhasil diproses!`);
-                    
-                    // Refresh detail view instantly
                     window.openSavTrxDetail(c.id);
                 }
             } catch(e) {
@@ -1630,12 +1755,8 @@
                 if(!kreditPosts.length) {
                     krContainer.innerHTML = '<p class="text-slate-500 text-xs text-center py-10 w-full">Belum ada produk kredit.</p>';
                 } else {
-                    // Logika Pengelompokan Merek
                     const groupedKredit = kreditPosts.reduce((acc, post) => {
-                        // Mengambil kata pertama dari judul produk (contoh: "Samsung A07" -> "SAMSUNG")
                         let brand = post.title.split(' ')[0].toUpperCase();
-                        
-                        // Menyatukan varian produk di bawah merek induk official-nya
                         if(brand === 'IPHONE' || brand === 'IPAD' || brand === 'MACBOOK' || brand === 'IMAC') brand = 'APPLE';
                         else if(brand === 'SAMSUNG' || brand === 'GALAXY') brand = 'SAMSUNG';
                         else if(brand === 'REDMI' || brand === 'XIAOMI' || brand === 'POCO') brand = 'XIAOMI';
@@ -1645,7 +1766,6 @@
                         else if(brand === 'INFINIX') brand = 'INFINIX';
                         else if(brand === 'ASUS' || brand === 'ROG' || brand === 'ZENFONE') brand = 'ASUS';
                         else if(brand === 'ITEL' || brand === 'TECNO') brand = 'TRANSSION';
-                        // Selain yang di atas, gunakan kata pertama sebagai merek default-nya
                         
                         if (!acc[brand]) acc[brand] = [];
                         acc[brand].push(post);
@@ -1653,8 +1773,6 @@
                     }, {});
 
                     let htmlContent = '';
-                    
-                    // Mengurutkan nama merek secara alfabet (A-Z)
                     const sortedBrands = Object.keys(groupedKredit).sort();
 
                     for (const brand of sortedBrands) {
@@ -1763,13 +1881,6 @@
             }
         };
 
-        window.calcSaving = () => {
-            const target = parseInt(document.getElementById('sim-saving-target').value) || 0;
-            const bln = parseInt(document.getElementById('sim-saving-time').value) || 0;
-            if(target > 0 && bln > 0) document.getElementById('sim-saving-result').innerText = window.formatRp(target / bln);
-            else document.getElementById('sim-saving-result').innerText = "Rp 0";
-        };
-
         // 7.5 TRANSAKSI DEFOZITE (SETOR/TARIK)
         window.activeSavCustId = null;
 
@@ -1836,10 +1947,7 @@
         };
 
         window.processSavTrx = async (type) => {
-            if(!window.activeSavCustId) {
-                window.showToast("Pilih nasabah terlebih dahulu.");
-                return;
-            }
+            if(!window.activeSavCustId) { window.showToast("Pilih nasabah terlebih dahulu."); return; }
             
             const amountInput = document.getElementById('sav-trx-amount');
             if (!amountInput) return;
@@ -1847,16 +1955,10 @@
             const rawAmount = amountInput.value.replace(/[^0-9]/g, '');
             const amount = parseInt(rawAmount);
             
-            if(isNaN(amount) || amount <= 0) { 
-                window.showToast("Masukkan nominal transaksi yang valid."); 
-                return; 
-            }
+            if(isNaN(amount) || amount <= 0) { window.showToast("Masukkan nominal transaksi yang valid."); return; }
 
             const c = window.defData.find(x => x.id === window.activeSavCustId);
-            if(!c) {
-                window.showToast("Data nasabah tidak ditemukan.");
-                return;
-            }
+            if(!c) { window.showToast("Data nasabah tidak ditemukan."); return; }
 
             let currentBalance = parseInt(c.savingsBalance);
             if (isNaN(currentBalance)) currentBalance = 0;
@@ -1866,14 +1968,12 @@
                 return; 
             }
             
-            // Menggunakan Modal Konfirmasi Anti-Blokir
             document.getElementById('confirm-action-id').value = c.id;
             document.getElementById('confirm-action-type').value = 'trx-' + type;
             document.getElementById('confirm-action-amount').value = amount;
             
             document.getElementById('confirm-action-title').innerText = 'Konfirmasi Transaksi';
             document.getElementById('confirm-action-desc').innerText = `Anda akan memproses ${type.toUpperCase()} TUNAI sebesar ${window.formatRp(amount)} untuk nasabah ${c.name}?`;
-            
             document.getElementById('confirm-action-icon').className = 'fa-solid fa-money-bill-transfer text-4xl text-emerald-500 mb-4';
             
             const btn = document.getElementById('btn-confirm-action');
@@ -2042,11 +2142,13 @@
                 const navAdminMenu = document.getElementById('nav-admin-menu');
                 const navLogoutBtn = document.getElementById('nav-logout-nasabah-btn');
                 const navFingerBtn = document.getElementById('nav-fingerprint-btn');
+                const navProfileBtn = document.getElementById('nav-profile-btn');
 
                 const mobLoginBtn = document.getElementById('mobile-login-btn');
                 const mobAdminPanel = document.getElementById('mobile-admin-panel');
                 const mobLogoutBtn = document.getElementById('mobile-logout-btn');
                 const mobFingerBtn = document.getElementById('mobile-fingerprint-btn');
+                const mobProfileBtn = document.getElementById('mobile-profile-btn');
 
                 if(window.currentUser) {
                     if(navLoginBtn) navLoginBtn.classList.add('hidden-view');
@@ -2055,11 +2157,18 @@
                     if(navFingerBtn) navFingerBtn.classList.remove('hidden-view');
                     if(mobFingerBtn) mobFingerBtn.classList.remove('hidden-view');
                     
+                    if(navProfileBtn) {
+                        navProfileBtn.classList.remove('hidden-view');
+                        const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
+                        navProfileBtn.innerHTML = `<img src="${avatarUrl}" class="w-5 h-5 rounded-full object-cover border border-ozgold-500/50"> <span class="hidden sm:inline">Profil</span>`;
+                    }
+                    if(mobProfileBtn) mobProfileBtn.classList.remove('hidden-view');
+                    
                     if(window.isAdmin) {
                         if(navAdminMenu) navAdminMenu.classList.remove('hidden-view');
                         if(mobAdminPanel) mobAdminPanel.classList.remove('hidden-view');
-                        if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view'); // Admin logout is in dropdown
-                        if(navFingerBtn) navFingerBtn.classList.add('hidden-view'); // Admin fingerprint is in dropdown
+                        if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view');
+                        if(navFingerBtn) navFingerBtn.classList.add('hidden-view'); 
                     } else {
                         if(navAdminMenu) navAdminMenu.classList.add('hidden-view'); 
                         if(mobAdminPanel) mobAdminPanel.classList.add('hidden-view');
@@ -2073,6 +2182,8 @@
                     if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view');
                     if(navFingerBtn) navFingerBtn.classList.add('hidden-view');
                     if(mobFingerBtn) mobFingerBtn.classList.add('hidden-view');
+                    if(navProfileBtn) navProfileBtn.classList.add('hidden-view');
+                    if(mobProfileBtn) mobProfileBtn.classList.add('hidden-view');
                 }
                 
                 if (document.getElementById('ozf-search-input')) window.ozfSearch();
@@ -2195,6 +2306,12 @@
             customers.forEach(c => {
                 let itemsHtml = ''; let totalTagihan = 0;
                 let avatarSrc = c.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.customName)}&background=fde047&color=000`;
+                
+                // Jika user yang sedang login punya foto profil, pakai fotonya
+                if (window.currentUser && window.currentUser.photo && String(c.items[0].wa) === String(window.currentUser.phone)) {
+                    avatarSrc = window.currentUser.photo;
+                }
+
                 c.items.forEach(item => {
                     totalTagihan += parseInt(item.tagihan) || 0;
                     const progress = (item.lunas / (item.totalBulan || 1)) * 100; const isLunas = progress >= 100;
@@ -2280,11 +2397,22 @@
             if(!list) return;
             if(!custs.length) { list.innerHTML = `<p class="text-center text-slate-500 text-xs py-4">${!window.isAdmin ? 'Anda belum terdaftar sebagai anggota tabungan.' : 'Belum ada anggota defOZite.'}</p>`; return; }
             
-            list.innerHTML = custs.map(c => `
+            list.innerHTML = custs.map(c => {
+                // Gunakan foto dari currentUser jika cocok, agar fotonya muncul juga di list nasabah saat diakses admin/user
+                let userPhotoHtml = '';
+                if(window.usersData && window.usersData.length) {
+                    const matchUser = window.usersData.find(u => u.phone === c.phone && u.photo);
+                    if(matchUser) userPhotoHtml = `<img src="${matchUser.photo}" class="w-8 h-8 rounded-full object-cover shrink-0">`;
+                }
+
+                return `
                 <div class="glass-card p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-ozgold-500/30 relative">
-                    <div class="flex-1 pr-16 md:pr-0">
-                        <p class="font-bold text-white flex items-center gap-2">${c.name} <span class="text-[9px] px-2 py-0.5 rounded-full ${c.isActive !== false ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">${c.isActive !== false ? 'Aktif' : 'Nonaktif'}</span></p>
-                        <p class="text-[11px] text-slate-400 mt-1"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> ${c.phone||'-'}</p>
+                    <div class="flex flex-1 pr-16 md:pr-0 gap-3 items-center">
+                        ${userPhotoHtml}
+                        <div>
+                            <p class="font-bold text-white flex items-center gap-2">${c.name} <span class="text-[9px] px-2 py-0.5 rounded-full ${c.isActive !== false ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">${c.isActive !== false ? 'Aktif' : 'Nonaktif'}</span></p>
+                            <p class="text-[11px] text-slate-400 mt-1"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> ${c.phone||'-'}</p>
+                        </div>
                     </div>
                     <div class="flex gap-4 w-full md:w-auto border-t md:border-t-0 border-white/10 pt-3 md:pt-0">
                         <div class="flex-1 md:text-right">
@@ -2301,7 +2429,8 @@
                         <button type="button" onclick="window.defOpenEditModal('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-ozgold-500 text-slate-400 hover:text-gray-900 transition-colors flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
                         <button type="button" onclick="window.deleteDefCustomer('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-red-500 text-slate-400 hover:text-white transition-colors flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
                     </div>` : ''}
-                </div>`).join('');
+                </div>`;
+            }).join('');
         }
 
         window.defOpenAddModal = () => {
