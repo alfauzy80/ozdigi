@@ -939,6 +939,7 @@
     <script>
         // --- 1. UI Navigation Logic ---
         function switchSection(sectionId) {
+            window.currentSectionId = sectionId;
             const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-oz-pinjam', 'section-oz-kredit', 'section-defozite-home', 'section-defozite-customers', 'section-defozite-saving'];
             sections.forEach(id => {
                 const el = document.getElementById(id);
@@ -976,6 +977,52 @@
         window.postsData = [];
         window.activePinjamTenor = 6;
         window.isAdmin = false;
+        window.currentSectionId = 'beranda';
+
+        // --- SISTEM NAVIGASI BACK BUTTON (ANDROID & PWA) ---
+        window.exitConfirm = false;
+        
+        // History Trap: Memastikan selalu ada riwayat navigasi untuk di-pop saat tombol back fisik ditekan.
+        // Mencegah aplikasi langsung keluar secara tidak sengaja.
+        history.pushState({ page: 'trap' }, '', '#trap');
+        history.pushState({ page: 'current' }, '', '#app');
+        
+        window.addEventListener('popstate', (e) => {
+            // 1. Langsung pulihkan state trap agar tekanan back berikutnya tetap bisa ditangkap oleh sistem
+            history.pushState({ page: 'current' }, '', '#app');
+            
+            // 2. Evaluasi halaman/seksi saat ini
+            if (window.currentSectionId !== 'beranda') {
+                // Skenario 1: Di halaman selain Beranda -> Otomatis kembali ke Beranda (tanpa reload)
+                switchSection('beranda');
+            } else {
+                // Skenario 2: Di Beranda -> Cek logika konfirmasi 2 detik
+                if (!window.exitConfirm) {
+                    window.exitConfirm = true;
+                    window.showToast("Tekan sekali lagi untuk keluar dari aplikasi.");
+                    
+                    // Reset status konfirmasi ke false jika dalam 2 detik tidak ditekan lagi
+                    setTimeout(() => { window.exitConfirm = false; }, 2000);
+                } else {
+                    // Skenario 3: Ditekan lagi dalam batas waktu 2 detik -> Eksekusi Keluar (Exit)
+                    
+                    // Deteksi native wrapper (seperti Cordova/PhoneGap)
+                    if (navigator.app && navigator.app.exitApp) {
+                        navigator.app.exitApp(); 
+                    } 
+                    // Deteksi jembatan custom Android WebView
+                    else if (window.Android && window.Android.exitApp) {
+                        window.Android.exitApp(); 
+                    } 
+                    // Mode Standar Browser Chrome / PWA OS
+                    else {
+                        // Navigasi paksa sejarah browser ke awal sebelum 'trap' ditambahkan,
+                        // yang secara otomatis akan menutup tab/aplikasi PWA di Android.
+                        window.history.go(-2); 
+                    }
+                }
+            }
+        });
 
         // --- 3. AUTHENTICATION ---
         window.openAuthModal = () => { 
