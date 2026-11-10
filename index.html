@@ -1035,7 +1035,6 @@
          ============================================== -->
     <script>
         // --- 1. DOMAIN EXTRACTOR (Untuk Sinkronisasi Kunci Sandi) ---
-        // Menghilangkan 'www.' dari URL agar WebAuthn memiliki ID Replying Party (rpId) yang seragam.
         const getBaseDomain = () => window.location.hostname.replace(/^www\./, '');
 
         // --- 1. UI Navigation Logic ---
@@ -1058,7 +1057,7 @@
                 window.openAuthModal();
                 window.showToast("Silakan login terlebih dahulu.");
             } else if (window.isAdmin) {
-                switchSection('defozite-saving'); // Panel Admin Gabungan ada di sini
+                switchSection('defozite-saving');
                 window.showToast("Menampilkan Panel Manajemen Nasabah");
             } else {
                 switchSection('portfolio');
@@ -1085,7 +1084,6 @@
             const phone = window.currentUser.phone;
             let html = '';
 
-            // 1. Cek defOZite
             const defMatch = window.defData.find(c => String(c.phone) === String(phone));
             if(defMatch) {
                 html += `
@@ -1109,7 +1107,6 @@
                 `;
             }
 
-            // 2. Cek OZ Finance
             const ozfMatches = window.ozfData.filter(d => String(d.wa) === String(phone));
             if(ozfMatches.length > 0) {
                 let itemsHtml = ozfMatches.map(item => {
@@ -1187,7 +1184,6 @@
         window.currentSectionId = 'beranda';
         window.profileImageBase64 = null; 
 
-        // --- SISTEM NAVIGASI BACK BUTTON ---
         window.exitConfirm = false;
         
         if (window.location.hash) {
@@ -1279,7 +1275,6 @@
                 if(passwordInput !== 'admin') { alert("Password Super Admin salah!"); return; }
                 window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif', phone: '000' };
                 localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
-                window.resetActivityTimer();
                 window.showToast("Berhasil login sebagai Super Admin!");
                 window.closeAuthModal(); window.updateUIAuth(); return;
             }
@@ -1314,7 +1309,6 @@
 
                     window.currentUser = { id: userId, ...userData };
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
-                    window.resetActivityTimer();
                     window.showToast(`Selamat datang, ${userData.name}!`);
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
@@ -1335,7 +1329,6 @@
                     }
                     window.currentUser = { id: autoNasabah.id, name: autoNasabah.name, phone: autoNasabah.phone, role: 'nasabah', status: 'aktif' };
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
-                    window.resetActivityTimer();
                     window.showToast(`Selamat datang, ${autoNasabah.name}!`);
                     window.closeAuthModal(); window.updateUIAuth(); return;
                 }
@@ -1356,7 +1349,6 @@
                 const cred = await navigator.credentials.create({
                     publicKey: {
                         challenge: challenge,
-                        // KODE PENTING: Menggunakan domain dasar agar sinkron antara www dan non-www
                         rp: { name: "OZdigi Ecosystem", id: getBaseDomain() },
                         user: {
                             id: userId,
@@ -1395,7 +1387,6 @@
                 const assertion = await navigator.credentials.get({
                     publicKey: {
                         challenge: challenge,
-                        // KODE PENTING: Menggunakan domain dasar agar sinkron antara www dan non-www
                         rpId: getBaseDomain(),
                         userVerification: "required",
                         timeout: 60000
@@ -1409,7 +1400,6 @@
                     const userData = JSON.parse(savedUserStr);
                     window.currentUser = userData;
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
-                    window.resetActivityTimer();
                     window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${userData.name}`);
                     window.closeAuthModal(); 
                     window.updateUIAuth(); 
@@ -1433,13 +1423,15 @@
         window.logoutUser = () => {
             window.currentUser = null;
             localStorage.removeItem('ozdigi_user_session');
-            window.showToast("Anda telah keluar.");
+            localStorage.removeItem('ozdigi_bg_timestamp');
+            if (window.bgLogoutTimer) clearTimeout(window.bgLogoutTimer);
+            window.showToast("Sesi berakhir. Silakan login kembali.");
             window.updateUIAuth();
             switchSection('beranda');
+            window.openAuthModal();
         };
 
         // --- SISTEM PROFIL SAYA (NASABAH) ---
-        
         window.openProfileModal = () => {
             if (!window.currentUser) return;
             if (window.currentUser.id === 'admin-super') {
@@ -1895,14 +1887,12 @@
             const pinjamPosts = window.postsData.filter(p => p.type === 'pinjam');
             const savingPosts = window.postsData.filter(p => p.type === 'saving');
 
-            // Search Filter untuk Katalog OZKredit
             const searchKreditInput = document.getElementById('kredit-search-input');
             if(searchKreditInput && searchKreditInput.value) {
                 const query = searchKreditInput.value.toLowerCase();
                 kreditPosts = kreditPosts.filter(p => p.title.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query)));
             }
 
-            // Feed Beranda
             const berandaContainer = document.getElementById('beranda-feed-grid');
             if(berandaContainer) {
                 if(!window.postsData.length) { berandaContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada promo atau info terbaru.</p>'; } 
@@ -1935,7 +1925,6 @@
                 }
             }
 
-            // Katalog Kredit (Pengelompokan Otomatis per Merek)
             const krContainer = document.getElementById('kredit-catalog-grid');
             if(krContainer) {
                 if(!kreditPosts.length) {
@@ -1966,14 +1955,12 @@
                         
                         htmlContent += `
                         <div class="space-y-4">
-                            <!-- Judul Kategori Merek -->
                             <div class="flex items-center gap-3">
                                 <div class="w-1.5 h-6 bg-ozgold-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
                                 <h3 class="text-xl font-bold text-white tracking-widest">${brand}</h3>
                                 <div class="h-px bg-gradient-to-r from-white/20 to-transparent flex-1"></div>
                             </div>
                             
-                            <!-- Grid Produk untuk Merek Tersebut -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 ${posts.map(p => {
                                     const hrgOriginal = parseInt(p.price) || 0; 
@@ -2075,7 +2062,6 @@
             }
         };
 
-        // 7.5 TRANSAKSI DEFOZITE (SETOR/TARIK)
         window.activeSavCustId = null;
 
         window.renderSavTrxList = () => {
@@ -2279,7 +2265,6 @@
                     if(window.isAdmin) el.classList.remove('hidden-view'); else el.classList.add('hidden-view');
                 });
 
-                // Transaksi OZSaving Panel Logic
                 const guestMode = document.getElementById('sav-trx-guest-mode');
                 const listMode = document.getElementById('sav-trx-list-mode');
                 const detailMode = document.getElementById('sav-trx-detail-mode');
@@ -2313,7 +2298,6 @@
                     if(detailMode) detailMode.classList.add('hidden-view');
                 }
 
-                // Lock Data Pelanggan Panels
                 const ozfPanel = document.getElementById('ozf-data-panel');
                 const defPanel = document.getElementById('def-data-panel');
                 const ozfLock = document.getElementById('ozf-lock-message');
@@ -2331,7 +2315,6 @@
                     if(defLock) defLock.classList.remove('hidden-view');
                 }
 
-                // Update Navbar and Mobile Menu Buttons
                 const navLoginBtn = document.getElementById('nav-login-btn');
                 const navAdminMenu = document.getElementById('nav-admin-menu');
                 const navLogoutBtn = document.getElementById('nav-logout-nasabah-btn');
@@ -2358,7 +2341,6 @@
                     }
                     if(mobProfileBtn) mobProfileBtn.classList.remove('hidden-view');
                     
-                    // UPDATE AVATAR PADA NAVIGASI BAWAH
                     const btmAvatar = document.getElementById('btm-nav-avatar');
                     if (btmAvatar) {
                         const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
@@ -2387,7 +2369,6 @@
                     if(navProfileBtn) navProfileBtn.classList.add('hidden-view');
                     if(mobProfileBtn) mobProfileBtn.classList.add('hidden-view');
 
-                    // KEMBALIKAN AVATAR PADA NAVIGASI BAWAH KE DEFAULT (SILUET ORANG)
                     const btmAvatar = document.getElementById('btm-nav-avatar');
                     if (btmAvatar) {
                         btmAvatar.innerHTML = `<i class="fa-solid fa-user text-[11px] text-slate-400"></i>`;
@@ -2671,39 +2652,41 @@
             } catch(e) { alert("Gagal menyimpan ke Firestore: " + e.message); }
         };
 
-        // --- 11. SISTEM AUTO LOGOUT (20 MENIT) ---
-        window.INACTIVITY_LIMIT = 20 * 60 * 1000;
-        
-        window.resetActivityTimer = () => {
-            if (window.currentUser) {
-                localStorage.setItem('ozdigi_last_activity', Date.now());
-            }
-        };
-
-        window.checkInactivity = () => {
-            if (!window.currentUser) return;
-            
-            const lastActivity = parseInt(localStorage.getItem('ozdigi_last_activity') || Date.now());
-            const currentTime = Date.now();
-            const timeElapsed = currentTime - lastActivity;
-
-            if (timeElapsed >= window.INACTIVITY_LIMIT) {
-                window.logoutUser();
-                alert("Sesi Anda telah berakhir secara otomatis karena tidak ada aktivitas selama 20 menit demi keamanan.\n\nSilakan masuk kembali.");
-            }
-        };
+        // --- 11. SISTEM AUTO LOGOUT (5 MENIT DI BACKGROUND) ---
+        window.BACKGROUND_LIMIT = 5 * 60 * 1000; // 5 Menit (300.000 ms)
+        window.bgLogoutTimer = null;
 
         window.setupAutoLogout = () => {
-            const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
-            activityEvents.forEach(event => {
-                document.addEventListener(event, window.resetActivityTimer, { passive: true });
-            });
-
-            setInterval(window.checkInactivity, 60000);
-
             document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible') {
-                    window.checkInactivity();
+                if (!window.currentUser) return;
+
+                if (document.visibilityState === 'hidden') {
+                    // Aplikasi masuk ke background / layar mati
+                    localStorage.setItem('ozdigi_bg_timestamp', Date.now());
+                    
+                    // Backup timer aktif (berjaga-jaga jika WebView tidak membekukan JS)
+                    window.bgLogoutTimer = setTimeout(() => {
+                        window.logoutUser();
+                        window.showToast("Sesi berakhir otomatis (5 menit di background).");
+                    }, window.BACKGROUND_LIMIT);
+                    
+                } else if (document.visibilityState === 'visible') {
+                    // Aplikasi kembali aktif ke layar
+                    const bgTimestamp = localStorage.getItem('ozdigi_bg_timestamp');
+                    
+                    if (bgTimestamp) {
+                        const timeElapsed = Date.now() - parseInt(bgTimestamp);
+                        
+                        if (timeElapsed >= window.BACKGROUND_LIMIT) {
+                            // Lewat 5 menit -> Logout
+                            window.logoutUser();
+                            window.showToast("Sesi berakhir karena aplikasi berada di background lebih dari 5 menit.");
+                        } else {
+                            // Belum 5 menit -> Batalkan
+                            clearTimeout(window.bgLogoutTimer);
+                            localStorage.removeItem('ozdigi_bg_timestamp');
+                        }
+                    }
                 }
             });
         };
@@ -2713,7 +2696,18 @@
             if(savedSession) {
                 try {
                     window.currentUser = JSON.parse(savedSession);
-                    localStorage.setItem('ozdigi_last_activity', Date.now());
+                    
+                    // Validasi sesi background saat halaman dimuat ulang (refresh)
+                    const bgTimestamp = localStorage.getItem('ozdigi_bg_timestamp');
+                    if (bgTimestamp) {
+                        if (Date.now() - parseInt(bgTimestamp) >= window.BACKGROUND_LIMIT) {
+                            localStorage.removeItem('ozdigi_user_session');
+                            localStorage.removeItem('ozdigi_bg_timestamp');
+                            window.currentUser = null;
+                        } else {
+                            localStorage.removeItem('ozdigi_bg_timestamp');
+                        }
+                    }
                 } catch(e) {
                     localStorage.removeItem('ozdigi_user_session');
                 }
