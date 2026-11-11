@@ -2652,8 +2652,8 @@
             } catch(e) { alert("Gagal menyimpan ke Firestore: " + e.message); }
         };
 
-        // --- 11. SISTEM AUTO LOGOUT (5 MENIT DI BACKGROUND) ---
-        window.BACKGROUND_LIMIT = 5 * 60 * 1000; // 5 Menit (300.000 ms)
+        // --- 11. SISTEM AUTO LOGOUT (20 MENIT DI BACKGROUND) ---
+        window.BACKGROUND_LIMIT = 20 * 60 * 1000; // 20 Menit (1.200.000 ms)
         window.bgLogoutTimer = null;
 
         window.setupAutoLogout = () => {
@@ -2667,7 +2667,7 @@
                     // Backup timer aktif (berjaga-jaga jika WebView tidak membekukan JS)
                     window.bgLogoutTimer = setTimeout(() => {
                         window.logoutUser();
-                        window.showToast("Sesi berakhir otomatis (5 menit di background).");
+                        window.showToast("Sesi berakhir otomatis (20 menit di background).");
                     }, window.BACKGROUND_LIMIT);
                     
                 } else if (document.visibilityState === 'visible') {
@@ -2678,11 +2678,11 @@
                         const timeElapsed = Date.now() - parseInt(bgTimestamp);
                         
                         if (timeElapsed >= window.BACKGROUND_LIMIT) {
-                            // Lewat 5 menit -> Logout
+                            // Lewat 20 menit -> Logout
                             window.logoutUser();
-                            window.showToast("Sesi berakhir karena aplikasi berada di background lebih dari 5 menit.");
+                            window.showToast("Sesi berakhir karena aplikasi berada di background lebih dari 20 menit.");
                         } else {
-                            // Belum 5 menit -> Batalkan
+                            // Belum 20 menit -> Batalkan
                             clearTimeout(window.bgLogoutTimer);
                             localStorage.removeItem('ozdigi_bg_timestamp');
                         }
