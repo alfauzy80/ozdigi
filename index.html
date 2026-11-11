@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OZdigi Ecosystem - Integrated Dashboard</title>
     
-    <!-- PWA & Favicon Configurations -->
-    <link rel="icon" type="image/jpeg" href="/pavicon.jpg" />
-    <link rel="manifest" href="/manifest.json" />
+    <!-- PWA & Favicon Configurations Terintegrasi (Anti-Error 404) -->
+    <link rel="icon" type="image/png" href="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&raw=1" />
+    <link rel="apple-touch-icon" href="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&raw=1" />
     <meta name="theme-color" content="#0F172A" />
-    <link rel="apple-touch-icon" href="/icon-192x192.png" />
+    
+    <!-- Inject File Manifest Langsung ke HTML untuk mengaktifkan Tombol Instal Chrome -->
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22OZdigi%20Ecosystem%22%2C%22short_name%22%3A%22OZdigi%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%230F172A%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fdl.dropboxusercontent.com%2Fscl%2Ffi%2Fb3vvowv2tpjz7x4tl5kq0%2FOZ.png%3Frlkey%3De2oamdv1tprgrdf5j2kjpgu46%26st%3D368naga4%26raw%3D1%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fdl.dropboxusercontent.com%2Fscl%2Ffi%2Fb3vvowv2tpjz7x4tl5kq0%2FOZ.png%3Frlkey%3De2oamdv1tprgrdf5j2kjpgu46%26st%3D368naga4%26raw%3D1%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D" />
     
     <!-- CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -94,7 +96,7 @@
     <header class="sticky top-0 z-[100] glass-panel border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0" onclick="switchSection('beranda')">
-                <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&dl=0" alt="OZ Logo" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_8px_rgba(253,224,38,0.5)]">
+                <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&raw=1" alt="OZ Logo" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_8px_rgba(253,224,38,0.5)]">
                 <span class="text-lg sm:text-xl font-bold tracking-tight">OZ<span class="text-gradient-gold">digi</span></span>
             </div>
 
@@ -981,7 +983,7 @@
         <div class="flex items-start justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-ozgold-600 to-ozgold-400 p-0.5 shadow-lg shrink-0">
-                    <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&dl=0" class="w-full h-full object-contain drop-shadow-md">
+                    <img src="https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&raw=1" class="w-full h-full object-contain drop-shadow-md">
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-white leading-tight">Install OZdigi</h4>
@@ -2687,11 +2689,9 @@
         });
 
         function checkAndShowInstallBanner() {
-            // Cek apakah web dibuka dalam mode aplikasi mandiri (PWA) atau WebView Native
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
             const hasDismissed = localStorage.getItem('ozdigi_pwa_dismissed') === 'true';
 
-            // Tampilkan spanduk jika dibuka di browser biasa dan belum ditutup oleh pengguna
             if (!isStandalone && !hasDismissed) {
                 const banner = document.getElementById('pwa-install-banner');
                 if (banner) {
@@ -2726,7 +2726,6 @@
             initDatabases();
             window.setupAutoLogout();
 
-            // Pemicu Tombol Install PWA
             const installBtn = document.getElementById('btn-install-pwa');
             if (installBtn) {
                 installBtn.addEventListener('click', async () => {
@@ -2739,24 +2738,15 @@
                         window.deferredPrompt = null;
                         window.dismissInstallPrompt();
                     } else {
-                        // Jika popup bawaan browser tidak merespon (belum ada SW / diblokir Chrome)
-                        window.showToast("Klik menu browser (Titik Tiga) lalu pilih 'Tambahkan ke Layar Utama' / 'Install App'.");
+                        window.showToast("Silakan klik menu browser (Titik Tiga) lalu pilih 'Tambahkan ke Layar Utama' atau 'Instal Aplikasi'.");
                     }
                 });
             }
 
-            // Jalankan deteksi otomatis Banner Instalasi
             checkAndShowInstallBanner();
 
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    if (window.location.protocol.startsWith('http')) {
-                        navigator.serviceWorker.register('/sw.js')
-                        .then(reg => console.log('SW sukses:', reg.scope))
-                        .catch(err => console.log('SW Info: Skipped in preview mode.'));
-                    }
-                });
-            }
+            // Pemblokiran SW ditiadakan agar tidak menimbulkan pesan Error 404 (Not Found)
+            // di sistem Single-File yang dapat menggagalkan validasi PWA Install oleh browser.
         });
     </script>
 </body>
