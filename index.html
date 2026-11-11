@@ -137,13 +137,6 @@
 
                 <!-- Auth Buttons -->
                 <div class="border-l border-white/20 pl-6 flex items-center gap-3">
-                    
-                    <!-- CART ICON DESKTOP -->
-                    <button type="button" onclick="window.openCart()" class="text-sm px-3 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors flex items-center gap-2 relative border border-white/10 mr-1">
-                        <i class="fa-solid fa-cart-shopping text-ozgold-400"></i>
-                        <span id="desktop-cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-lg">0</span>
-                    </button>
-
                     <button type="button" id="nav-login-btn" onclick="window.openAuthModal()" class="text-xs px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors flex items-center gap-2 relative z-[9999] cursor-pointer">
                         <i class="fa-solid fa-user-circle text-ozgold-400"></i> Masuk / Daftar
                     </button>
@@ -196,14 +189,8 @@
                 </button>
             </div>
 
-            <!-- Mobile Hamburger Toggle & Cart -->
+            <!-- Mobile Hamburger Toggle -->
             <div class="flex md:hidden shrink-0 items-center">
-                <!-- CART ICON MOBILE -->
-                <button type="button" onclick="window.openCart()" class="text-slate-300 hover:text-white text-base p-2 relative mr-2">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span id="mobile-cart-count" class="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-bold w-3.5 h-3.5 flex items-center justify-center rounded-full shadow-lg">0</span>
-                </button>
-                
                 <button type="button" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-white text-xl p-2 -mr-2">
                     <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
                 </button>
@@ -964,41 +951,16 @@
                 </div>
             </div>
 
-            <div class="p-4 border-t border-white/10 bg-gray-900/90 backdrop-blur-md shrink-0 rounded-b-3xl flex gap-2">
-                <button type="button" onclick="window.addDetailToCart()" class="w-14 shrink-0 bg-ozgold-600 hover:bg-ozgold-500 text-white rounded-xl shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all flex items-center justify-center" title="Masukkan ke Keranjang">
-                    <i class="fa-solid fa-cart-plus text-lg"></i>
-                </button>
-                <button id="pd-btn-action" onclick="window.applyPost()" class="flex-1 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.4)] transition-all flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> Ajukan
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Keranjang Belanja -->
-    <div id="cart-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[800] hidden-view flex flex-col items-center justify-end md:justify-center p-0 md:p-4 transition-transform">
-        <div class="glass-panel w-full max-w-md h-[85vh] md:h-auto md:max-h-[85vh] rounded-t-3xl md:rounded-3xl bg-gray-900 border-t md:border border-ozgold-500/20 shadow-2xl relative flex flex-col">
-            <div class="flex justify-between items-center p-5 border-b border-white/10 shrink-0">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-cart-shopping text-ozgold-400 mr-2"></i> Keranjang Saya</h3>
-                <button type="button" onclick="window.closeCart()" class="text-slate-400 hover:text-white bg-white/5 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-times"></i></button>
-            </div>
-            <div id="cart-items-container" class="flex-1 overflow-y-auto custom-scroll p-5 space-y-3">
-                <!-- Item Keranjang Masuk Ke Sini -->
-            </div>
-            <div class="p-5 border-t border-white/10 bg-gray-900/90 shrink-0 rounded-b-none md:rounded-b-3xl">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-slate-400">Total Belanja</span>
-                    <span id="cart-total-price" class="text-lg font-bold text-ozgold-400">Rp 0</span>
-                </div>
-                <button type="button" onclick="window.checkoutCart()" class="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.4)] transition-all flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> Checkout Pesanan
+            <div class="p-4 border-t border-white/10 bg-gray-900/90 backdrop-blur-md shrink-0 rounded-b-3xl">
+                <button id="pd-btn-action" onclick="window.applyPost()" class="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold py-3.5 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.4)] transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Ajukan Sekarang
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Notification Toast -->
-    <div id="toast-notif" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-ozgold-500/50 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none z-[9999]">Notifikasi</div>
+    <div id="toast-notif" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-ozgold-500/50 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none z-[600]">Notifikasi</div>
 
     <!-- Modal Konfirmasi Hapus -->
     <div id="confirm-action-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[750] hidden-view flex items-center justify-center p-4">
@@ -1068,29 +1030,1724 @@
     <script>
         const getBaseDomain = () => window.location.hostname.replace(/^www\./, '');
 
-        // --- SISTEM KERANJANG BELANJA ---
-        window.cartItems = JSON.parse(localStorage.getItem('ozdigi_cart') || '[]');
+        function switchSection(sectionId) {
+            window.currentSectionId = sectionId;
+            const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-oz-pinjam', 'section-oz-kredit', 'section-defozite-home', 'section-defozite-customers', 'section-defozite-saving', 'section-portfolio'];
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.add('hidden-section');
+            });
+            const target = document.getElementById('section-' + sectionId);
+            if(target) {
+                target.classList.remove('hidden-section');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
 
-        window.updateCartUI = () => {
-            const count = window.cartItems.length;
-            const dtCount = document.getElementById('desktop-cart-count');
-            const mbCount = document.getElementById('mobile-cart-count');
-            if(dtCount) dtCount.innerText = count;
-            if(mbCount) mbCount.innerText = count;
+        window.handleBottomNavData = () => {
+            if (!window.currentUser) {
+                window.openAuthModal();
+                window.showToast("Silakan login terlebih dahulu.");
+            } else if (window.isAdmin) {
+                switchSection('defozite-saving');
+                window.showToast("Menampilkan Panel Manajemen Nasabah");
+            } else {
+                switchSection('portfolio');
+            }
+        };
 
-            const container = document.getElementById('cart-items-container');
+        window.handleBottomNavProfile = () => {
+            if (!window.currentUser) {
+                window.openAuthModal();
+            } else {
+                window.openProfileModal();
+            }
+        };
+        
+        window.renderPortfolio = () => {
+            const container = document.getElementById('portfolio-container');
             if(!container) return;
-
-            if(count === 0) {
-                container.innerHTML = '<div class="h-full flex flex-col items-center justify-center text-center opacity-50"><i class="fa-solid fa-cart-arrow-down text-5xl mb-4 text-slate-500"></i><p class="text-xs text-slate-400">Keranjang masih kosong.</p></div>';
-                document.getElementById('cart-total-price').innerText = 'Rp 0';
+            
+            if(!window.currentUser || window.isAdmin) {
+                if(window.isAdmin) container.innerHTML = `<p class="text-center text-slate-500 text-xs py-10">Gunakan Panel Admin untuk melihat data.</p>`;
                 return;
             }
 
-            let total = 0;
-            container.innerHTML = window.cartItems.map((item, index) => {
-                const price = item.promoPrice > 0 ? item.promoPrice : (item.price || 0);
-                total += price;
-                let mediaHtml = item.mediaUrl ? (item.mediaType === 'video' ? `<video src="${item.mediaUrl}" class="w-16 h-16 object-cover rounded-lg"></video>` : `<img src="${item.mediaUrl}" class="w-16 h-16 object-cover rounded-lg">`) : `<div class="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center"><i class="fa-solid fa-box text-xl text-gray-600"></i></div>`;
+            const phone = window.currentUser.phone;
+            let html = '';
+
+            const defMatch = window.defData.find(c => String(c.phone) === String(phone));
+            if(defMatch) {
+                html += `
+                <div class="bg-gray-800/40 border border-emerald-500/30 p-5 rounded-xl shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full -z-10"></div>
+                    <h3 class="text-base font-bold text-emerald-400 mb-4"><i class="fa-solid fa-piggy-bank mr-2"></i> Tabungan Koperasi</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Saldo Tabungan</p>
+                            <p class="text-lg font-bold text-emerald-400">${window.formatRp(defMatch.savingsBalance || 0)}</p>
+                        </div>
+                        <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Sisa Pinjaman</p>
+                            <p class="text-lg font-bold text-red-400">${window.formatRp(defMatch.loanBalance || 0)}</p>
+                        </div>
+                    </div>
+                    <button onclick="switchSection('defozite-saving')" class="w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 py-2 rounded-lg text-xs font-bold border border-emerald-500/30 transition-colors">
+                        Lihat Riwayat Transaksi <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+                `;
+            }
+
+            const ozfMatches = window.ozfData.filter(d => String(d.wa) === String(phone));
+            if(ozfMatches.length > 0) {
+                let itemsHtml = ozfMatches.map(item => {
+                    const progress = (item.lunas / (item.totalBulan || 1)) * 100;
+                    const isLunas = progress >= 100;
+                    return `
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-ozgold-400 text-sm flex items-center gap-2"><i class="fa-solid fa-box-open"></i> ${item.item}</h4>
+                            <span class="text-[9px] font-bold px-2 py-1 rounded-full ${isLunas ? 'bg-green-500/20 text-green-400' : 'bg-ozgold-500/20 text-ozgold-400'} border ${isLunas ? 'border-green-500/30' : 'border-ozgold-500/30'}">${isLunas ? 'LUNAS' : item.lunas + ' dari ' + item.totalBulan + ' Bln'}</span>
+                        </div>
+                        <div class="flex justify-between text-xs mb-3">
+                            <span class="text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> Jatuh Tempo: Tgl ${item.jatuhTempo}</span>
+                            <span class="text-white font-bold">${window.formatRp(item.tagihan)} /bln</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                            <div class="h-full bg-gradient-to-r ${window.getProgressColor(progress)} rounded-full" style="width: ${progress > 100 ? 100 : progress}%"></div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+                html += `
+                <div class="bg-gray-800/40 border border-ozgold-500/30 p-5 rounded-xl shadow-lg relative overflow-hidden mt-4">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-ozgold-500/10 rounded-bl-full -z-10"></div>
+                    <h3 class="text-base font-bold text-ozgold-400 mb-4"><i class="fa-solid fa-wallet mr-2"></i> Tagihan OZ Finance</h3>
+                    <div class="space-y-3">
+                        ${itemsHtml}
+                    </div>
+                    <button onclick="switchSection('oz-finance-customers')" class="w-full mt-4 bg-ozgold-500/10 hover:bg-ozgold-500/20 text-ozgold-400 py-2 rounded-lg text-xs font-bold border border-ozgold-500/30 transition-colors">
+                        Lihat Detail Cicilan <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+                `;
+            }
+
+            if(!defMatch && ozfMatches.length === 0) {
+                html = `
+                <div class="p-8 text-center flex flex-col items-center justify-center border border-white/5 rounded-xl bg-black/20">
+                    <i class="fa-solid fa-folder-open text-4xl text-slate-600 mb-4"></i>
+                    <h3 class="text-sm font-bold text-white mb-2">Belum Ada Data</h3>
+                    <p class="text-xs text-slate-400 max-w-xs mx-auto">Anda belum memiliki riwayat tabungan Koperasi ataupun tagihan cicilan aktif saat ini.</p>
+                </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        };
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if(menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden'); icon.className = 'fa-solid fa-xmark';
+            } else {
+                menu.classList.add('hidden'); icon.className = 'fa-solid fa-bars';
+            }
+        }
+
+        window.formatRp = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+        window.showToast = (msg) => { 
+            const t = document.getElementById('toast-notif'); 
+            t.innerText = msg; t.classList.remove('opacity-0'); 
+            setTimeout(() => t.classList.add('opacity-0'), 3000); 
+        };
+
+        window.ozfData = [];
+        window.defData = [];
+        window.currentUser = null;
+        window.usersData = [];
+        window.postsData = [];
+        window.activePinjamTenor = 6;
+        window.isAdmin = false;
+        window.currentSectionId = 'beranda';
+        window.profileImageBase64 = null; 
+
+        window.exitConfirm = false;
+        
+        if (window.location.hash) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+
+        history.pushState({ page: 'trap' }, '', '');
+        history.pushState({ page: 'current' }, '', '');
+        
+        window.addEventListener('popstate', (e) => {
+            history.pushState({ page: 'current' }, '', '');
+            
+            if (window.currentSectionId !== 'beranda') {
+                switchSection('beranda');
+            } else {
+                if (!window.exitConfirm) {
+                    window.exitConfirm = true;
+                    window.showToast("Tekan sekali lagi untuk keluar dari aplikasi.");
+                    setTimeout(() => { window.exitConfirm = false; }, 2000);
+                } else {
+                    if (navigator.app && navigator.app.exitApp) { navigator.app.exitApp(); } 
+                    else if (window.Android && window.Android.exitApp) { window.Android.exitApp(); } 
+                    else { window.history.go(-2); }
+                }
+            }
+        });
+
+        window.openAuthModal = () => { 
+            document.getElementById('auth-modal').classList.remove('hidden-view'); 
+            window.switchAuthTab('login'); 
+        };
+        window.closeAuthModal = () => document.getElementById('auth-modal').classList.add('hidden-view');
+        
+        window.switchAuthTab = (tab) => {
+            const formLogin = document.getElementById('form-login');
+            const formReg = document.getElementById('form-register');
+            const formForgot = document.getElementById('form-forgot-pwd');
+            const tabs = document.getElementById('auth-tabs');
+            const title = document.getElementById('auth-modal-title');
+
+            formLogin.classList.add('hidden-view');
+            formReg.classList.add('hidden-view');
+            formForgot.classList.add('hidden-view');
+
+            if(tab === 'login') {
+                tabs.classList.remove('hidden-view');
+                document.getElementById('tab-login').className = 'flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all';
+                document.getElementById('tab-register').className = 'flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all';
+                formLogin.classList.remove('hidden-view');
+                title.innerHTML = '<i class="fa-solid fa-user-circle text-ozgold-400 mr-2"></i> Akses Sistem';
+            } else if (tab === 'register') {
+                tabs.classList.remove('hidden-view');
+                document.getElementById('tab-register').className = 'flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all';
+                document.getElementById('tab-login').className = 'flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all';
+                formReg.classList.remove('hidden-view');
+                title.innerHTML = '<i class="fa-solid fa-user-plus text-ozgold-400 mr-2"></i> Daftar Warga';
+            } else if (tab === 'forgot') {
+                tabs.classList.add('hidden-view');
+                formForgot.classList.remove('hidden-view');
+                title.innerHTML = '<i class="fa-solid fa-key text-ozgold-400 mr-2"></i> Lupa Password';
+            }
+        };
+
+        window.processRegister = async () => {
+            const name = document.getElementById('auth-reg-name').value.trim();
+            const email = document.getElementById('auth-reg-email').value.trim();
+            const wa = document.getElementById('auth-reg-wa').value.trim();
+            const pwd = document.getElementById('auth-reg-pwd').value || '1234';
+            
+            try {
+                const snapshot = await defDb.collection('users').where('email', '==', email).get();
+                if(!snapshot.empty) { alert("Email sudah terdaftar!"); return; }
                 
+                await defDb.collection('users').add({
+                    name, email, phone: wa, password: pwd, role: 'nasabah', status: 'aktif', createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                window.showToast("Pendaftaran Berhasil! Silakan Masuk.");
+                window.switchAuthTab('login');
+            } catch(e) { alert("Gagal mendaftar: " + e.message); }
+        };
+
+        window.processLogin = async () => {
+            const id = document.getElementById('auth-login-id').value.trim();
+            const passwordInput = document.getElementById('auth-login-pwd').value;
+            const savedEmail = localStorage.getItem('ozdigi_admin_email') || 'admin@oznet.com';
+            
+            if(id === savedEmail) {
+                if(passwordInput !== 'admin') { alert("Password Super Admin salah!"); return; }
+                window.currentUser = { id: 'admin-super', name: 'Super Admin', role: 'admin', status: 'aktif', phone: '000' };
+                localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                window.showToast("Berhasil login sebagai Super Admin!");
+                window.closeAuthModal(); window.updateUIAuth(); return;
+            }
+            
+            try {
+                if(!defDb) { alert("Sistem database belum siap. Tunggu sebentar."); return; }
                 
+                let snapshot = await defDb.collection('users').where('email', '==', id).get();
+                if(snapshot.empty) {
+                    snapshot = await defDb.collection('users').where('phone', '==', id).get();
+                }
+                
+                if(!snapshot.empty) {
+                    const userData = snapshot.docs[0].data();
+                    const userId = snapshot.docs[0].id;
+                    
+                    let isValidPassword = false;
+                    const dbPwd = userData.password ? String(userData.password).trim() : '';
+                    const userPhone = String(userData.phone).trim();
+                    
+                    if (dbPwd !== '' && dbPwd !== '1234' && dbPwd !== userPhone) {
+                        isValidPassword = (passwordInput === dbPwd);
+                    } else {
+                        isValidPassword = (passwordInput === dbPwd || passwordInput === '1234' || passwordInput === userPhone);
+                    }
+                    
+                    if(!isValidPassword) {
+                        alert("Password salah! Silakan periksa kembali atau klik 'Lupa Password' untuk mereset via WhatsApp.");
+                        return;
+                    }
+                    if(userData.status === 'blokir') { alert("Akun Anda telah dinonaktifkan oleh Admin."); return; }
+
+                    window.currentUser = { id: userId, ...userData };
+                    localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                    window.showToast(`Selamat datang, ${userData.name}!`);
+                    window.closeAuthModal(); window.updateUIAuth(); return;
+                }
+
+                let autoNasabah = null;
+                const defMatch = window.defData.find(c => c.phone === id);
+                if(defMatch) autoNasabah = { id: defMatch.id, name: defMatch.name, phone: defMatch.phone };
+                
+                if(!autoNasabah) {
+                    const ozfMatch = window.ozfData.find(c => c.wa === id);
+                    if(ozfMatch) autoNasabah = { id: ozfMatch.id, name: ozfMatch.name, phone: ozfMatch.wa };
+                }
+
+                if(autoNasabah) {
+                    if(passwordInput !== autoNasabah.phone && passwordInput !== '1234') {
+                        alert("Password salah! Gunakan No WhatsApp Anda sebagai password.");
+                        return;
+                    }
+                    window.currentUser = { id: autoNasabah.id, name: autoNasabah.name, phone: autoNasabah.phone, role: 'nasabah', status: 'aktif' };
+                    localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                    window.showToast(`Selamat datang, ${autoNasabah.name}!`);
+                    window.closeAuthModal(); window.updateUIAuth(); return;
+                }
+
+                alert("Akun tidak terdaftar. Silakan daftar terlebih dahulu.");
+                
+            } catch(e) { alert("Gagal masuk (Koneksi Error): " + e.message); }
+        };
+
+        window.registerFingerprint = async () => {
+            if (!window.currentUser) { alert("Anda harus login manual terlebih dahulu."); return; }
+            if (!window.PublicKeyCredential) { alert("Perangkat/Browser ini tidak mendukung fitur Sidik Jari."); return; }
+            
+            try {
+                const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                const userId = new Uint8Array(16); window.crypto.getRandomValues(userId);
+                
+                const cred = await navigator.credentials.create({
+                    publicKey: {
+                        challenge: challenge,
+                        rp: { name: "OZdigi Ecosystem", id: getBaseDomain() },
+                        user: {
+                            id: userId,
+                            name: window.currentUser.email || window.currentUser.phone || "user",
+                            displayName: window.currentUser.name || "User"
+                        },
+                        pubKeyCredParams: [
+                            { type: "public-key", alg: -7 },
+                            { type: "public-key", alg: -257 }
+                        ],
+                        authenticatorSelection: { 
+                            authenticatorAttachment: "platform", 
+                            userVerification: "required",
+                            residentKey: "required", 
+                            requireResidentKey: true 
+                        },
+                        timeout: 60000
+                    }
+                });
+                
+                const rawId = Array.from(new Uint8Array(cred.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
+                localStorage.setItem('ozdigi_passkey_' + rawId, JSON.stringify(window.currentUser));
+                window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
+                
+            } catch(e) {
+                console.error("WebAuthn Error:", e);
+                alert("Gagal mendaftarkan sidik jari. Sistem menolak akses keamanan.");
+            }
+        };
+
+        window.processFingerprintLogin = async () => {
+            if (!window.PublicKeyCredential) { alert("Perangkat / Browser ini tidak mendukung fitur Sidik Jari."); return; }
+            try {
+                const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                
+                const assertion = await navigator.credentials.get({
+                    publicKey: {
+                        challenge: challenge,
+                        rpId: getBaseDomain(),
+                        userVerification: "required",
+                        timeout: 60000
+                    }
+                });
+                
+                const rawId = Array.from(new Uint8Array(assertion.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
+                const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawId);
+                
+                if(savedUserStr) {
+                    const userData = JSON.parse(savedUserStr);
+                    window.currentUser = userData;
+                    localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                    window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${userData.name}`);
+                    window.closeAuthModal(); 
+                    window.updateUIAuth(); 
+                } else {
+                    alert("Sidik jari ini belum terdaftar untuk akun manapun di browser perangkat ini.");
+                }
+                
+            } catch(e) {
+                console.error("WebAuthn Auth Error:", e);
+                window.showToast("Autentikasi sidik jari dibatalkan / gagal dikenali.");
+            }
+        };
+
+        window.processForgotPwd = () => {
+            const idVal = document.getElementById('auth-login-id').value.trim() || 'Nasabah';
+            const waNumber = "628568080847";
+            const msg = `Halo Admin OZdigi, saya lupa password akun saya (ID/Email/WA: ${idVal}). Mohon bantuannya untuk mereset password saya. Terima kasih.`;
+            window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
+        window.logoutUser = () => {
+            window.currentUser = null;
+            localStorage.removeItem('ozdigi_user_session');
+            localStorage.removeItem('ozdigi_bg_timestamp');
+            if (window.bgLogoutTimer) clearTimeout(window.bgLogoutTimer);
+            window.showToast("Sesi berakhir. Silakan login kembali.");
+            window.updateUIAuth();
+            switchSection('beranda');
+            window.openAuthModal();
+        };
+
+        window.openProfileModal = () => {
+            if (!window.currentUser) return;
+            if (window.currentUser.id === 'admin-super') {
+                alert("Akun Super Admin tidak bisa diedit melalui menu ini.");
+                return;
+            }
+
+            window.profileImageBase64 = null;
+            
+            const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
+            document.getElementById('profile-photo-preview').src = avatarUrl;
+            
+            document.getElementById('profile-name').value = window.currentUser.name || '';
+            document.getElementById('profile-phone').value = window.currentUser.phone || '';
+            document.getElementById('profile-address').value = window.currentUser.address || '';
+            document.getElementById('profile-password').value = '';
+            
+            document.getElementById('profile-modal').classList.remove('hidden-view');
+        };
+
+        window.closeProfileModal = () => {
+            document.getElementById('profile-modal').classList.add('hidden-view');
+        };
+
+        window.handleProfileImageUpload = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 20 * 1024 * 1024) { 
+                    alert("Ukuran gambar terlalu besar. Maksimal 20MB.");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 400;
+                        const MAX_HEIGHT = 400;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        window.profileImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('profile-photo-preview').src = window.profileImageBase64;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.saveProfile = async () => {
+            if (!window.currentUser) return;
+            
+            const btn = document.getElementById('btn-save-profile');
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+
+            try {
+                const address = document.getElementById('profile-address').value.trim();
+                const password = document.getElementById('profile-password').value;
+                const phone = window.currentUser.phone;
+                
+                let updateData = { address: address };
+                if (password) {
+                    updateData.password = password;
+                }
+                if (window.profileImageBase64) {
+                    updateData.photo = window.profileImageBase64;
+                }
+
+                const snapshot = await defDb.collection('users').where('phone', '==', phone).get();
+                
+                if (!snapshot.empty) {
+                    const docId = snapshot.docs[0].id;
+                    await defDb.collection('users').doc(docId).update(updateData);
+                } else {
+                    await defDb.collection('users').add({
+                        name: window.currentUser.name,
+                        phone: phone,
+                        role: window.currentUser.role || 'nasabah',
+                        status: window.currentUser.status || 'aktif',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        ...updateData
+                    });
+                }
+
+                window.currentUser = { ...window.currentUser, ...updateData };
+                localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
+                
+                window.updateUIAuth();
+                window.showToast("Profil berhasil diperbarui!");
+                window.closeProfileModal();
+                
+                if (password) {
+                    setTimeout(() => {
+                        alert("Password Anda telah berhasil diubah. Silakan login kembali dengan password baru.");
+                        window.logoutUser();
+                        window.openAuthModal();
+                    }, 1000);
+                }
+            } catch (error) {
+                alert("Gagal menyimpan profil: " + error.message);
+            } finally {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            }
+        };
+
+        window.openAdminUsersModal = () => { document.getElementById('admin-users-modal').classList.remove('hidden-view'); };
+        window.closeAdminUsersModal = () => document.getElementById('admin-users-modal').classList.add('hidden-view');
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('admin-users-list');
+            if(!window.usersData.length) { tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center">Belum ada pengguna terdaftar.</td></tr>`; return; }
+            
+            tbody.innerHTML = window.usersData.map(u => `
+                <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                    <td class="py-3 pr-2 font-bold">${u.name}</td>
+                    <td class="py-3 pr-2">${u.email || '-'}</td>
+                    <td class="py-3 pr-2">${u.phone}</td>
+                    <td class="py-3 pr-2 uppercase text-[10px] ${u.role==='admin'?'text-ozgold-400':'text-emerald-400'}">${u.role}</td>
+                    <td class="py-3 flex gap-2">
+                        <button onclick="window.openUserFormModal('${u.id}')" class="px-2 py-1 rounded-md bg-white/10 hover:bg-ozgold-500 hover:text-black text-slate-300 transition-colors" title="Edit Akun">
+                            <i class="fa-solid fa-pen text-[10px]"></i>
+                        </button>
+                        <button onclick="window.toggleUserStatus('${u.id}', '${u.status}')" class="px-3 py-1 rounded-md text-[10px] font-bold text-white ${u.status==='aktif'?'bg-red-500/50 hover:bg-red-500':'bg-emerald-500/50 hover:bg-emerald-500'}" title="Ubah Status">
+                            ${u.status==='aktif'?'Blokir':'Aktifkan'}
+                        </button>
+                        <button onclick="window.deleteUser('${u.id}')" class="px-2 py-1 rounded-md bg-red-500/20 hover:bg-red-500 hover:text-white text-red-400 transition-colors" title="Hapus Akun Permanen">
+                            <i class="fa-solid fa-trash text-[10px]"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.openUserFormModal = (id = null) => {
+            document.getElementById('admin-user-form-modal').classList.remove('hidden-view');
+            document.getElementById('form-user-admin').reset();
+            document.getElementById('user-form-id').value = '';
+            document.getElementById('user-form-title').innerHTML = '<i class="fa-solid fa-user-plus text-ozgold-400 mr-2"></i> Tambah Akun Baru';
+            document.getElementById('user-form-pwd').required = true;
+            document.getElementById('user-form-pwd').placeholder = "Wajib diisi";
+
+            if(id) {
+                const user = window.usersData.find(u => u.id === id);
+                if(user) {
+                    document.getElementById('user-form-id').value = user.id;
+                    document.getElementById('user-form-name').value = user.name || '';
+                    document.getElementById('user-form-email').value = user.email || '';
+                    document.getElementById('user-form-wa').value = user.phone || '';
+                    document.getElementById('user-form-role').value = user.role || 'nasabah';
+                    document.getElementById('user-form-status').value = user.status || 'aktif';
+                    
+                    document.getElementById('user-form-pwd').required = false; 
+                    document.getElementById('user-form-pwd').placeholder = "Kosongkan jika tak diubah";
+                    document.getElementById('user-form-title').innerHTML = '<i class="fa-solid fa-user-pen text-ozgold-400 mr-2"></i> Edit Akun Nasabah';
+                }
+            }
+        };
+
+        window.closeUserFormModal = () => { document.getElementById('admin-user-form-modal').classList.add('hidden-view'); };
+
+        window.saveUserForm = async () => {
+            const id = document.getElementById('user-form-id').value;
+            const name = document.getElementById('user-form-name').value.trim();
+            const email = document.getElementById('user-form-email').value.trim();
+            const phone = document.getElementById('user-form-wa').value.trim();
+            const password = document.getElementById('user-form-pwd').value;
+            const role = document.getElementById('user-form-role').value;
+            const status = document.getElementById('user-form-status').value;
+
+            try {
+                if(id) {
+                    const emailCheck = await defDb.collection('users').where('phone', '==', phone).get();
+                    const isDuplicate = emailCheck.docs.some(doc => doc.id !== id);
+                    if(isDuplicate) { alert("Gagal: No WA sudah digunakan oleh akun lain!"); return; }
+
+                    const updateData = { name, email, phone, role, status };
+                    if(password) updateData.password = password; 
+
+                    await defDb.collection('users').doc(id).update(updateData);
+                    window.showToast("Data akun berhasil diperbarui!");
+                } else {
+                    const emailCheck = await defDb.collection('users').where('phone', '==', phone).get();
+                    if(!emailCheck.empty) { alert("Gagal: No WA sudah terdaftar!"); return; }
+
+                    await defDb.collection('users').add({
+                        name, email, phone, password, role, status, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    window.showToast("Akun nasabah baru berhasil ditambahkan!");
+                }
+                window.closeUserFormModal();
+            } catch(e) { alert("Terjadi kesalahan: " + e.message); }
+        };
+
+        window.toggleUserStatus = async (id, currentStatus) => {
+            if(window.currentUser.id === id) { window.showToast("Gagal: Anda tidak bisa memblokir akun sendiri."); return; }
+            const newStatus = currentStatus === 'aktif' ? 'blokir' : 'aktif';
+            try { await defDb.collection('users').doc(id).update({ status: newStatus }); window.showToast("Status pengguna diperbarui!"); } 
+            catch(e) { window.showToast("Gagal update status: " + e.message); }
+        };
+
+        window.deleteUser = (id) => {
+            if(window.currentUser && window.currentUser.id === id) { 
+                window.showToast("Gagal: Anda tidak dapat menghapus akun Anda sendiri!"); 
+                return; 
+            }
+            document.getElementById('confirm-action-id').value = id;
+            document.getElementById('confirm-action-type').value = 'user';
+            document.getElementById('confirm-action-title').innerText = 'Hapus Akun Permanen?';
+            document.getElementById('confirm-action-desc').innerText = 'Data nasabah atau admin yang dihapus tidak dapat dikembalikan lagi. Yakin ingin melanjutkan?';
+            
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4';
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Hapus';
+            btn.className = 'flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+            
+            document.getElementById('confirm-action-modal').classList.remove('hidden-view');
+        };
+
+        window.deleteOzfItem = (id) => {
+            document.getElementById('confirm-action-id').value = id;
+            document.getElementById('confirm-action-type').value = 'ozf';
+            document.getElementById('confirm-action-title').innerText = 'Hapus Data Cicilan?';
+            document.getElementById('confirm-action-desc').innerText = 'Data cicilan ini akan dihapus permanen. Yakin ingin melanjutkan?';
+            
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4';
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Hapus';
+            btn.className = 'flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+
+            document.getElementById('confirm-action-modal').classList.remove('hidden-view');
+        };
+
+        window.deleteDefCustomer = (id) => {
+            document.getElementById('confirm-action-id').value = id;
+            document.getElementById('confirm-action-type').value = 'def';
+            document.getElementById('confirm-action-title').innerText = 'Hapus Nasabah defOZite?';
+            document.getElementById('confirm-action-desc').innerText = 'Semua data tabungan dan riwayat transaksi nasabah ini akan hilang permanen. Yakin?';
+            
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4';
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Hapus';
+            btn.className = 'flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+
+            document.getElementById('confirm-action-modal').classList.remove('hidden-view');
+        };
+
+        window.executeAction = async () => {
+            const id = document.getElementById('confirm-action-id').value;
+            const type = document.getElementById('confirm-action-type').value;
+            document.getElementById('confirm-action-modal').classList.add('hidden-view');
+            
+            try {
+                if(type === 'user') {
+                    await defDb.collection('users').doc(id).delete();
+                    window.showToast("Akun berhasil dihapus secara permanen!");
+                } else if (type === 'ozf') {
+                    const newData = window.ozfData.filter(d => String(d.id) !== String(id));
+                    const dataObj = {}; newData.forEach(d => dataObj[d.id] = d);
+                    await ozDbRef.set(dataObj);
+                    window.showToast("Data OZ Finance berhasil dihapus!");
+                } else if (type === 'def') {
+                    await defDb.collection("customers").doc(id).delete();
+                    window.showToast("Nasabah defOZite berhasil dihapus!");
+                } else if (type.startsWith('trx-')) {
+                    const trxType = type.split('-')[1];
+                    const amount = parseInt(document.getElementById('confirm-action-amount').value) || 0;
+                    
+                    const c = window.defData.find(x => x.id === id);
+                    if(!c) throw new Error("Nasabah tidak ditemukan.");
+
+                    let currentBalance = parseInt(c.savingsBalance) || 0;
+                    const newBalance = trxType === 'setor' ? currentBalance + amount : currentBalance - amount;
+                    
+                    const newTrx = {
+                        id: Date.now().toString() + Math.floor(Math.random() * 1000),
+                        type: trxType,
+                        amount: amount,
+                        date: new Date().toISOString()
+                    };
+                    
+                    const trxHistory = Array.isArray(c.transactions) ? [...c.transactions] : [];
+                    trxHistory.push(newTrx);
+
+                    document.getElementById('sav-trx-detail-balance').innerText = "Menyimpan...";
+
+                    await defDb.collection("customers").doc(c.id).update({
+                        savingsBalance: newBalance,
+                        transactions: trxHistory
+                    });
+                    
+                    document.getElementById('sav-trx-amount').value = '';
+                    window.showToast(`Transaksi ${trxType.toUpperCase()} berhasil diproses!`);
+                    window.openSavTrxDetail(c.id);
+                }
+            } catch(e) {
+                window.showToast("Gagal memproses aksi: " + e.message);
+                if(type.startsWith('trx-') && window.activeSavCustId) {
+                    window.openSavTrxDetail(window.activeSavCustId); 
+                }
+            }
+        };
+
+        window.openAdminPostModal = (id = null) => {
+            document.getElementById('admin-post-modal').classList.remove('hidden-view');
+            document.getElementById('form-post').reset();
+            document.getElementById('post-id').value = '';
+            document.getElementById('post-media-type').value = 'image';
+            document.getElementById('post-price').value = '';
+            document.getElementById('post-promo-price').value = '';
+            document.getElementById('post-interest').value = '';
+            document.getElementById('post-fee').value = '';
+            document.getElementById('btn-del-post').classList.add('hidden-view');
+            document.getElementById('post-modal-title').innerHTML = '<i class="fa-solid fa-pen-nib text-ozgold-400 mr-2"></i> Buat Konten Baru';
+
+            if(id) {
+                const post = window.postsData.find(p => p.id === id);
+                if(post) {
+                    document.getElementById('post-id').value = post.id;
+                    document.getElementById('post-type').value = post.type;
+                    document.getElementById('post-title').value = post.title;
+                    document.getElementById('post-media').value = post.mediaUrl || '';
+                    document.getElementById('post-media-type').value = post.mediaType || 'image';
+                    document.getElementById('post-price').value = post.price || '';
+                    document.getElementById('post-promo-price').value = post.promoPrice || '';
+                    document.getElementById('post-interest').value = post.interest !== undefined ? post.interest : '';
+                    document.getElementById('post-fee').value = post.fee || '';
+                    document.getElementById('post-desc').value = post.description;
+                    document.getElementById('btn-del-post').classList.remove('hidden-view');
+                    document.getElementById('post-modal-title').innerHTML = '<i class="fa-solid fa-pen-nib text-ozgold-400 mr-2"></i> Edit Konten';
+                }
+            }
+        };
+        window.closeAdminPostModal = () => document.getElementById('admin-post-modal').classList.add('hidden-view');
+
+        window.savePost = async () => {
+            const id = document.getElementById('post-id').value;
+            const postData = {
+                type: document.getElementById('post-type').value,
+                title: document.getElementById('post-title').value.trim(),
+                mediaUrl: document.getElementById('post-media').value.trim(),
+                mediaType: document.getElementById('post-media-type').value,
+                price: parseInt(document.getElementById('post-price').value) || 0,
+                promoPrice: parseInt(document.getElementById('post-promo-price').value) || 0,
+                interest: parseFloat(document.getElementById('post-interest').value) || 4,
+                fee: parseInt(document.getElementById('post-fee').value) || 0,
+                description: document.getElementById('post-desc').value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                if(id) { await defDb.collection('posts').doc(id).update(postData); } 
+                else { postData.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await defDb.collection('posts').add(postData); }
+                window.showToast("Konten berhasil dipublikasikan!");
+                window.closeAdminPostModal();
+            } catch(e) { alert("Gagal menyimpan konten: " + e.message); }
+        };
+
+        window.deletePost = async () => {
+            const id = document.getElementById('post-id').value;
+            if(confirm("Yakin ingin menghapus postingan ini?")) {
+                try { await defDb.collection('posts').doc(id).delete(); window.showToast("Konten dihapus!"); window.closeAdminPostModal(); } 
+                catch(e) { alert(e.message); }
+            }
+        };
+
+        window.currentDetailPost = null;
+        window.openPostDetail = (id) => {
+            const post = window.postsData.find(p => p.id === id);
+            if(!post) return;
+            window.currentDetailPost = post;
+            
+            const mediaContainer = document.getElementById('pd-media-container');
+            if(post.mediaUrl) {
+                if(post.mediaType === 'video') mediaContainer.innerHTML = `<video src="${post.mediaUrl}" class="w-full h-full object-cover" autoplay loop muted playsinline></video>`;
+                else mediaContainer.innerHTML = `<img src="${post.mediaUrl}" class="w-full h-full object-cover">`;
+            } else mediaContainer.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-800"><i class="fa-solid fa-bullhorn text-5xl text-gray-600"></i></div>`;
+
+            document.getElementById('pd-title').innerText = post.title;
+            document.getElementById('pd-desc').innerText = post.description;
+            
+            const badge = document.getElementById('pd-badge');
+            if(post.type === 'kredit') { badge.className = 'inline-block px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-widest bg-ozgold-500/20 text-ozgold-400 border border-white/10'; badge.innerText = 'OZKredit'; }
+            else if(post.type === 'pinjam') { badge.className = 'inline-block px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-widest bg-blue-500/20 text-blue-400 border border-white/10'; badge.innerText = 'OZPinjam'; }
+            else { badge.className = 'inline-block px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-white/10'; badge.innerText = 'OZSaving'; }
+
+            const priceEl = document.getElementById('pd-price');
+            const installContainer = document.getElementById('pd-installment-container');
+            
+            if((post.type === 'kredit' || post.type === 'pinjam') && post.price) {
+                const hrgOriginal = parseInt(post.price) || 0;
+                const hrgPromo = parseInt(post.promoPrice) || 0;
+                const hrgFinal = hrgPromo > 0 ? hrgPromo : hrgOriginal;
+                const interest = post.interest !== undefined ? parseFloat(post.interest) : 4;
+                const fee = post.fee ? parseInt(post.fee) : 0;
+
+                if (hrgPromo > 0) {
+                    priceEl.innerHTML = `<span class="text-sm text-gray-500 line-through mr-2">${window.formatRp(hrgOriginal)}</span><span class="text-ozgold-400">${window.formatRp(hrgPromo)}</span>`;
+                } else {
+                    priceEl.innerText = window.formatRp(hrgOriginal);
+                }
+                priceEl.classList.remove('hidden-view');
+                
+                const cicil6 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 6)) / 6;
+                const cicil12 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 12)) / 12;
+                
+                document.getElementById('pd-cicil-6').innerText = window.formatRp(cicil6) + ' /bln';
+                document.getElementById('pd-cicil-12').innerText = window.formatRp(cicil12) + ' /bln';
+                installContainer.classList.remove('hidden-view');
+            } else {
+                priceEl.classList.add('hidden-view');
+                installContainer.classList.add('hidden-view');
+            }
+            document.getElementById('post-detail-modal').classList.remove('hidden-view');
+        };
+
+        window.closePostDetail = () => { document.getElementById('post-detail-modal').classList.add('hidden-view'); window.currentDetailPost = null; };
+
+        window.applyPost = () => {
+            if(!window.currentDetailPost) return;
+            const post = window.currentDetailPost;
+            let msg = `Halo admin OZdigi, saya tertarik dengan info: *${post.title}*.`;
+            if(post.type === 'kredit') msg = `Halo admin OZdigi, saya ingin mengajukan kredit produk: *${post.title}*.`;
+            else if(post.type === 'pinjam') msg = `Halo admin OZdigi, saya ingin mengajukan pencairan pinjaman: *${post.title}*.`;
+            window.open(`https://wa.me/628568080847?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
+        window.renderPosts = () => {
+            const isAdmin = window.currentUser && window.currentUser.role === 'admin';
+            let kreditPosts = window.postsData.filter(p => p.type === 'kredit');
+            const pinjamPosts = window.postsData.filter(p => p.type === 'pinjam');
+            const savingPosts = window.postsData.filter(p => p.type === 'saving');
+
+            const searchKreditInput = document.getElementById('kredit-search-input');
+            if(searchKreditInput && searchKreditInput.value) {
+                const query = searchKreditInput.value.toLowerCase();
+                kreditPosts = kreditPosts.filter(p => p.title.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query)));
+            }
+
+            const berandaContainer = document.getElementById('beranda-feed-grid');
+            if(berandaContainer) {
+                if(!window.postsData.length) { berandaContainer.innerHTML = '<p class="text-slate-500 text-xs col-span-full text-center py-10">Belum ada promo atau info terbaru.</p>'; } 
+                else {
+                    const recentPosts = window.postsData.slice(0, 6);
+                    berandaContainer.innerHTML = recentPosts.map(p => {
+                        let mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl">`) : `<div class="w-full aspect-square bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-bullhorn text-4xl text-gray-700"></i></div>`;
+                        let badgeColor = 'bg-blue-500/20 text-blue-400'; let badgeText = 'OZPinjam';
+                        if(p.type === 'kredit') { badgeColor = 'bg-ozgold-500/20 text-ozgold-400'; badgeText = 'OZKredit'; }
+                        if(p.type === 'saving') { badgeColor = 'bg-emerald-500/20 text-emerald-400'; badgeText = 'OZSaving'; }
+
+                        return `
+                        <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group cursor-pointer hover:border-ozgold-500/50 transition-all" onclick="window.openPostDetail('${p.id}')">
+                            ${isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-8 h-8 rounded-full z-10 flex items-center justify-center hover:text-ozgold-400"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
+                            <div class="relative">
+                                ${mediaHtml}
+                                <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-widest ${badgeColor} backdrop-blur-md shadow-lg border border-white/10">${badgeText}</span>
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h3 class="font-bold text-base text-white mb-1 line-clamp-1">${p.title}</h3>
+                                ${(p.type === 'kredit' || p.type === 'pinjam') && p.price ? 
+                                    (p.promoPrice > 0 
+                                        ? `<div class="mb-2"><span class="text-[10px] text-gray-500 line-through mr-1.5">${window.formatRp(p.price)}</span><span class="text-ozgold-400 font-bold text-sm">${window.formatRp(p.promoPrice)}</span></div>`
+                                        : `<p class="text-ozgold-400 font-bold text-sm mb-2">${window.formatRp(p.price)}</p>`) 
+                                : ''}
+                                <p class="text-[11px] text-gray-400 line-clamp-2">${p.description}</p>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
+            const krContainer = document.getElementById('kredit-catalog-grid');
+            if(krContainer) {
+                if(!kreditPosts.length) {
+                    krContainer.innerHTML = '<p class="text-slate-500 text-xs text-center py-10 w-full">Belum ada produk kredit.</p>';
+                } else {
+                    const groupedKredit = kreditPosts.reduce((acc, post) => {
+                        let brand = post.title.split(' ')[0].toUpperCase();
+                        if(brand === 'IPHONE' || brand === 'IPAD' || brand === 'MACBOOK' || brand === 'IMAC') brand = 'APPLE';
+                        else if(brand === 'SAMSUNG' || brand === 'GALAXY') brand = 'SAMSUNG';
+                        else if(brand === 'REDMI' || brand === 'XIAOMI' || brand === 'POCO') brand = 'XIAOMI';
+                        else if(brand === 'REALME') brand = 'REALME';
+                        else if(brand === 'VIVO' || brand === 'IQOO') brand = 'VIVO';
+                        else if(brand === 'OPPO') brand = 'OPPO';
+                        else if(brand === 'INFINIX') brand = 'INFINIX';
+                        else if(brand === 'ASUS' || brand === 'ROG' || brand === 'ZENFONE') brand = 'ASUS';
+                        else if(brand === 'ITEL' || brand === 'TECNO') brand = 'TRANSSION';
+                        
+                        if (!acc[brand]) acc[brand] = [];
+                        acc[brand].push(post);
+                        return acc;
+                    }, {});
+
+                    let htmlContent = '';
+                    const sortedBrands = Object.keys(groupedKredit).sort();
+
+                    for (const brand of sortedBrands) {
+                        const posts = groupedKredit[brand];
+                        
+                        htmlContent += `
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-1.5 h-6 bg-ozgold-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                                <h3 class="text-xl font-bold text-white tracking-widest">${brand}</h3>
+                                <div class="h-px bg-gradient-to-r from-white/20 to-transparent flex-1"></div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                ${posts.map(p => {
+                                    const hrgOriginal = parseInt(p.price) || 0; 
+                                    const hrgPromo = parseInt(p.promoPrice) || 0;
+                                    const hrgFinal = hrgPromo > 0 ? hrgPromo : hrgOriginal;
+                                    
+                                    const interest = p.interest !== undefined ? parseFloat(p.interest) : 4; const fee = p.fee ? parseInt(p.fee) : 0;
+                                    const cicil6 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 6)) / 6; const cicil12 = (hrgFinal + fee + (hrgFinal * (interest / 100) * 12)) / 12;
+                                    const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-t-xl">`) : `<div class="w-full aspect-square bg-gray-800 rounded-t-xl flex items-center justify-center"><i class="fa-solid fa-box text-4xl text-gray-700"></i></div>`;
+                                    
+                                    const priceHtml = hrgPromo > 0 
+                                        ? `<div class="mb-2"><span class="text-xs text-gray-500 line-through mr-2">${window.formatRp(hrgOriginal)}</span><span class="text-ozgold-400 font-bold text-lg">${window.formatRp(hrgPromo)}</span></div>`
+                                        : `<p class="text-ozgold-400 font-bold text-lg mb-2">${window.formatRp(hrgOriginal)}</p>`;
+                                    
+                                    return `
+                                    <div class="glass-card rounded-xl relative overflow-hidden flex flex-col group cursor-pointer hover:border-ozgold-500/50 transition-all shadow-lg" onclick="window.openPostDetail('${p.id}')">
+                                        ${isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.openAdminPostModal('${p.id}')" class="absolute top-2 right-2 bg-black/60 text-white w-8 h-8 rounded-full z-10 flex items-center justify-center hover:text-ozgold-400 backdrop-blur-sm transition-colors"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
+                                        ${mediaHtml}
+                                        <div class="p-4 flex-1 flex flex-col">
+                                            <h3 class="font-bold text-lg text-white line-clamp-1">${p.title}</h3>
+                                            ${priceHtml}
+                                            <p class="text-[11px] text-gray-400 line-clamp-2 mb-4 flex-1 leading-relaxed">${p.description}</p>
+                                            <div class="space-y-2 mt-auto pt-3 border-t border-white/10">
+                                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan</p>
+                                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 6 Bln</span><span class="font-bold text-white">${window.formatRp(cicil6)} /bln</span></div>
+                                                <div class="flex justify-between items-center bg-darkblue-900/50 p-2 rounded-lg text-xs"><span class="text-slate-300">Tenor 12 Bln</span><span class="font-bold text-white">${window.formatRp(cicil12)} /bln</span></div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                                }).join('')}
+                            </div>
+                        </div>`;
+                    }
+                    krContainer.innerHTML = htmlContent;
+                }
+            }
+
+            const renderPromo = (cId, posts) => {
+                const c = document.getElementById(cId); if(!c) return;
+                if(!posts.length) { c.innerHTML = '<p class="text-slate-500 text-xs">Belum ada info terbaru.</p>'; return; }
+                c.innerHTML = posts.map(p => {
+                    const mediaHtml = p.mediaUrl ? (p.mediaType === 'video' ? `<video src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-xl mb-3" autoplay loop muted playsinline></video>` : `<img src="${p.mediaUrl}" class="w-full aspect-square object-cover rounded-xl mb-3">`) : `<div class="w-full aspect-square bg-gray-800 rounded-xl mb-3 flex items-center justify-center"><i class="fa-solid fa-bullhorn text-3xl text-gray-700"></i></div>`;
+                    return `
+                    <div class="glass-card p-4 rounded-xl relative cursor-pointer hover:border-ozgold-500/50 transition-all flex flex-col" onclick="window.openPostDetail('${p.id}')">
+                        ${isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.openAdminPostModal('${p.id}')" class="absolute top-6 right-6 bg-black/60 text-white w-8 h-8 rounded-full z-10 flex items-center justify-center hover:text-ozgold-400"><i class="fa-solid fa-pen text-xs"></i></button>`:''}
+                        ${mediaHtml}
+                        <h4 class="font-bold text-sm text-ozgold-400 mb-1 line-clamp-1">${p.title}</h4>
+                        <p class="text-[11px] text-gray-400 line-clamp-2">${p.description}</p>
+                    </div>`;
+                }).join('');
+            };
+            
+            renderPromo('post-container-pinjam', pinjamPosts);
+            renderPromo('post-container-saving', savingPosts);
+        };
+
+        window.setPinjamTenor = (t) => {
+            window.activePinjamTenor = t;
+            [1, 2, 3, 6, 9, 12].forEach(n => {
+                const btn = document.getElementById(`btn-tenor-${n}`);
+                if(btn) {
+                    if(n === t) { btn.classList.add('border-ozgold-400', 'text-ozgold-400', 'bg-ozgold-500/10'); btn.classList.remove('border-white/10'); }
+                    else { btn.classList.remove('border-ozgold-400', 'text-ozgold-400', 'bg-ozgold-500/10'); btn.classList.add('border-white/10'); }
+                }
+            });
+            window.calcPinjam();
+        };
+
+        window.calcPinjam = () => {
+            const nomInput = document.getElementById('sim-pinjam-nominal');
+            const nom = nomInput ? parseInt(nomInput.value) || 0 : 0;
+            const t = window.activePinjamTenor || 6;
+            
+            let bungaRate = 0.04;
+            let adminFee = 0;
+            
+            if(window.siteConfig && window.siteConfig.pinjam) {
+                bungaRate = (parseFloat(window.siteConfig.pinjam[`bunga_${t}`]) !== undefined && !isNaN(window.siteConfig.pinjam[`bunga_${t}`])) ? parseFloat(window.siteConfig.pinjam[`bunga_${t}`]) / 100 : 0.04;
+                adminFee = parseInt(window.siteConfig.pinjam[`admin_${t}`]) || 0;
+            }
+
+            const subtitle = document.getElementById('sim-pinjam-subtitle');
+            if(subtitle) subtitle.innerText = `Bunga flat ${bungaRate * 100}% per bulan.`;
+
+            const cairEl = document.getElementById('sim-pinjam-cair');
+            const resultEl = document.getElementById('sim-pinjam-result');
+
+            if(nom > 0) {
+                const danaCair = nom - adminFee; 
+                const totalPokokBunga = nom + (nom * bungaRate * t);
+                const cicilPerBulan = totalPokokBunga / t;
+                
+                if(cairEl) cairEl.innerText = window.formatRp(danaCair > 0 ? danaCair : 0);
+                if(resultEl) resultEl.innerText = window.formatRp(cicilPerBulan > 0 ? cicilPerBulan : 0);
+            } else {
+                if(cairEl) cairEl.innerText = "Rp 0";
+                if(resultEl) resultEl.innerText = "Rp 0";
+            }
+        };
+
+        window.activeSavCustId = null;
+
+        window.renderSavTrxList = () => {
+            const listCtn = document.getElementById('sav-trx-customer-list');
+            if(!listCtn) return;
+            const q = document.getElementById('sav-trx-search') ? document.getElementById('sav-trx-search').value.toLowerCase() : "";
+            let data = window.defData || [];
+            if(q) data = data.filter(c => c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q)));
+
+            if(data.length === 0) { listCtn.innerHTML = '<p class="text-[10px] text-slate-500 text-center py-4">Nasabah tidak ditemukan.</p>'; return; }
+            listCtn.innerHTML = data.map(c => `
+                <div onclick="window.openSavTrxDetail('${c.id}')" class="bg-gray-800/50 hover:bg-gray-700/80 cursor-pointer p-3 rounded-xl border border-white/5 flex justify-between items-center transition-colors">
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-white truncate">${c.name}</p>
+                        <p class="text-[9px] text-slate-400 mt-0.5"><i class="fa-solid fa-phone mr-1"></i>${c.phone || '-'}</p>
+                    </div>
+                    <div class="text-right shrink-0 ml-2">
+                        <p class="text-xs font-bold text-emerald-400">${window.formatRp(c.savingsBalance || 0)}</p>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        window.openSavTrxDetail = (id) => {
+            window.activeSavCustId = id;
+            const c = window.defData.find(x => x.id === id);
+            if(!c) return;
+            
+            document.getElementById('sav-trx-list-mode').classList.add('hidden-view');
+            document.getElementById('sav-trx-guest-mode').classList.add('hidden-view');
+            document.getElementById('sav-trx-detail-mode').classList.remove('hidden-view');
+
+            document.getElementById('sav-trx-detail-name').innerText = c.name;
+            document.getElementById('sav-trx-detail-balance').innerText = window.formatRp(c.savingsBalance || 0);
+            
+            const histCtn = document.getElementById('sav-trx-history');
+            if(!Array.isArray(c.transactions) || c.transactions.length === 0) {
+                histCtn.innerHTML = '<p class="text-[10px] text-slate-500 text-center py-4">Belum ada riwayat transaksi.</p>';
+            } else {
+                const sorted = [...c.transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
+                histCtn.innerHTML = sorted.map(t => `
+                    <div class="bg-gray-900/50 p-2.5 rounded-lg border border-white/5 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full ${t.type === 'setor' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} flex items-center justify-center shrink-0">
+                                <i class="fa-solid ${t.type === 'setor' ? 'fa-arrow-down' : 'fa-arrow-up'} text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-white uppercase">${t.type === 'setor' ? 'Setor Tunai' : 'Tarik Tunai'}</p>
+                                <p class="text-[9px] text-slate-400">${new Date(t.date).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</p>
+                            </div>
+                        </div>
+                        <p class="text-xs font-bold ${t.type === 'setor' ? 'text-emerald-400' : 'text-red-400'}">${t.type === 'setor' ? '+' : '-'}${window.formatRp(t.amount)}</p>
+                    </div>
+                `).join('');
+            }
+        };
+
+        window.closeSavTrxDetail = () => {
+            window.activeSavCustId = null;
+            document.getElementById('sav-trx-amount').value = '';
+            document.getElementById('sav-trx-detail-mode').classList.add('hidden-view');
+            document.getElementById('sav-trx-list-mode').classList.remove('hidden-view');
+        };
+
+        window.processSavTrx = async (type) => {
+            if(!window.activeSavCustId) { window.showToast("Pilih nasabah terlebih dahulu."); return; }
+            
+            const amountInput = document.getElementById('sav-trx-amount');
+            if (!amountInput) return;
+            
+            const rawAmount = amountInput.value.replace(/[^0-9]/g, '');
+            const amount = parseInt(rawAmount);
+            
+            if(isNaN(amount) || amount <= 0) { window.showToast("Masukkan nominal transaksi yang valid."); return; }
+
+            const c = window.defData.find(x => x.id === window.activeSavCustId);
+            if(!c) { window.showToast("Data nasabah tidak ditemukan."); return; }
+
+            let currentBalance = parseInt(c.savingsBalance);
+            if (isNaN(currentBalance)) currentBalance = 0;
+            
+            if(type === 'tarik' && amount > currentBalance) { 
+                window.showToast(`Saldo tidak mencukupi! Saldo saat ini: ${window.formatRp(currentBalance)}`); 
+                return; 
+            }
+            
+            document.getElementById('confirm-action-id').value = c.id;
+            document.getElementById('confirm-action-type').value = 'trx-' + type;
+            document.getElementById('confirm-action-amount').value = amount;
+            
+            document.getElementById('confirm-action-title').innerText = 'Konfirmasi Transaksi';
+            document.getElementById('confirm-action-desc').innerText = `Anda akan memproses ${type.toUpperCase()} TUNAI sebesar ${window.formatRp(amount)} untuk nasabah ${c.name}?`;
+            document.getElementById('confirm-action-icon').className = 'fa-solid fa-money-bill-transfer text-4xl text-emerald-500 mb-4';
+            
+            const btn = document.getElementById('btn-confirm-action');
+            btn.innerText = 'Ya, Lanjutkan';
+            btn.className = 'flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-lg';
+            
+            document.getElementById('confirm-action-modal').classList.remove('hidden-view');
+        };
+
+        window.siteConfig = {
+            heroBadge: "Super App Koperasi Digital",
+            heroTitle: 'Masa Depan <br><span class="text-gradient-gold">Keuangan Anda</span>',
+            heroDesc: "OZdigi mengintegrasikan layanan pembiayaan, tabungan pintar, dan manajemen kredit dalam satu ekosistem aman dengan teknologi tinggi.",
+            heroBg: "https://www.dropbox.com/scl/fi/du87py64k3osivulg5psp/Screenshot_20261104_145214_Shopee.png?rlkey=ldqswhmpa9jzmvyycp3zjl2zv&st=qjs9go4c&dl=0",
+            heroMediaType: "image",
+            pinjam: {}
+        };
+
+        function loadSiteConfig() {
+            defDb.collection("config").doc("beranda").onSnapshot(doc => {
+                if(doc.exists) {
+                    window.siteConfig = { ...window.siteConfig, ...doc.data() };
+                    applySiteConfig();
+                    populatePinjamConfigAdmin();
+                    window.calcPinjam();
+                }
+            });
+        }
+
+        function applySiteConfig() {
+            const badge = document.getElementById('hero-badge');
+            const title = document.getElementById('hero-title');
+            const desc = document.getElementById('hero-desc');
+            const bgImg = document.getElementById('hero-bg-img');
+            const bgVid = document.getElementById('hero-bg-video');
+
+            if(badge) badge.innerText = window.siteConfig.heroBadge;
+            if(title) title.innerHTML = window.siteConfig.heroTitle;
+            if(desc) desc.innerText = window.siteConfig.heroDesc;
+            
+            let rawUrl = window.siteConfig.heroBg;
+            if(rawUrl && rawUrl.includes('dropbox.com')) rawUrl = rawUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+
+            if(window.siteConfig.heroMediaType === 'video') {
+                if(bgImg) bgImg.classList.add('hidden-view');
+                if(bgVid) { bgVid.classList.remove('hidden-view'); bgVid.style.opacity = 1; if(bgVid.src !== rawUrl) bgVid.src = rawUrl; }
+            } else {
+                if(bgVid) bgVid.classList.add('hidden-view');
+                if(bgImg) { bgImg.classList.remove('hidden-view'); bgImg.style.opacity = 1; if(bgImg.src !== rawUrl) bgImg.src = rawUrl; }
+            }
+        }
+
+        window.openEditBerandaModal = () => {
+            document.getElementById('edit-hero-badge').value = window.siteConfig.heroBadge;
+            document.getElementById('edit-hero-title').value = window.siteConfig.heroTitle;
+            document.getElementById('edit-hero-desc').value = window.siteConfig.heroDesc;
+            document.getElementById('edit-hero-bg').value = window.siteConfig.heroBg;
+            document.getElementById('edit-hero-media-type').value = window.siteConfig.heroMediaType || 'image';
+            document.getElementById('admin-edit-beranda-modal').classList.remove('hidden-view');
+        };
+
+        window.closeEditBerandaModal = () => { document.getElementById('admin-edit-beranda-modal').classList.add('hidden-view'); };
+
+        window.saveBerandaConfig = async () => {
+            const newConfig = {
+                heroBadge: document.getElementById('edit-hero-badge').value.trim(),
+                heroTitle: document.getElementById('edit-hero-title').value.trim(),
+                heroDesc: document.getElementById('edit-hero-desc').value.trim(),
+                heroBg: document.getElementById('edit-hero-bg').value.trim() || window.siteConfig.heroBg,
+                heroMediaType: document.getElementById('edit-hero-media-type').value
+            };
+            try {
+                await defDb.collection("config").doc("beranda").set(newConfig, {merge: true});
+                window.showToast("Tampilan Beranda berhasil diperbarui!");
+                window.closeEditBerandaModal();
+            } catch(e) { alert("Gagal memperbarui beranda: " + e.message); }
+        };
+
+        function populatePinjamConfigAdmin() {
+            if(!window.siteConfig.pinjam) return;
+            [1, 2, 3, 6, 9, 12].forEach(t => {
+                const b = document.getElementById(`config-bunga-${t}`);
+                const a = document.getElementById(`config-admin-${t}`);
+                if(b) b.value = window.siteConfig.pinjam[`bunga_${t}`] !== undefined ? window.siteConfig.pinjam[`bunga_${t}`] : 4;
+                if(a) a.value = window.siteConfig.pinjam[`admin_${t}`] || 0;
+            });
+        }
+
+        window.savePinjamConfig = async () => {
+            const pinjamConfig = {};
+            [1, 2, 3, 6, 9, 12].forEach(t => {
+                const b = parseFloat(document.getElementById(`config-bunga-${t}`).value);
+                const a = parseInt(document.getElementById(`config-admin-${t}`).value);
+                pinjamConfig[`bunga_${t}`] = isNaN(b) ? 4 : b;
+                pinjamConfig[`admin_${t}`] = isNaN(a) ? 0 : a;
+            });
+            try {
+                await defDb.collection("config").doc("beranda").set({ pinjam: pinjamConfig }, {merge: true});
+                window.showToast("Konfigurasi OZPinjam disimpan!");
+            } catch(e) { alert("Gagal menyimpan config pinjam: " + e.message); }
+        };
+
+        window.updateUIAuth = () => {
+            try {
+                window.isAdmin = window.currentUser && window.currentUser.role === 'admin';
+                
+                document.querySelectorAll('.admin-only-menu').forEach(el => {
+                    if(window.isAdmin) el.classList.remove('hidden-view'); else el.classList.add('hidden-view');
+                });
+
+                const guestMode = document.getElementById('sav-trx-guest-mode');
+                const listMode = document.getElementById('sav-trx-list-mode');
+                const detailMode = document.getElementById('sav-trx-detail-mode');
+                
+                if(window.isAdmin) {
+                    if(guestMode) guestMode.classList.add('hidden-view');
+                    if(listMode) listMode.classList.remove('hidden-view');
+                    if(detailMode) detailMode.classList.add('hidden-view');
+                    window.activeSavCustId = null;
+                    window.renderSavTrxList();
+                } else if (window.currentUser) {
+                    if(guestMode) guestMode.classList.add('hidden-view');
+                    if(listMode) listMode.classList.add('hidden-view');
+                    
+                    const myData = window.defData.find(c => c.phone === window.currentUser.phone);
+                    if(myData) {
+                        window.openSavTrxDetail(myData.id);
+                    } else {
+                        if(detailMode) detailMode.classList.add('hidden-view');
+                        if(guestMode) {
+                            guestMode.innerHTML = `<i class="fa-solid fa-piggy-bank text-3xl text-emerald-600 mb-3"></i><p class="text-xs text-slate-400">Akun Anda belum memiliki data tabungan Koperasi. Silakan hubungi Admin.</p>`;
+                            guestMode.classList.remove('hidden-view');
+                        }
+                    }
+                } else {
+                    if(guestMode) {
+                        guestMode.innerHTML = `<i class="fa-solid fa-lock text-3xl text-slate-600 mb-3"></i><p class="text-xs text-slate-400">Silakan login untuk melihat tabungan Anda.</p>`;
+                        guestMode.classList.remove('hidden-view');
+                    }
+                    if(listMode) listMode.classList.add('hidden-view');
+                    if(detailMode) detailMode.classList.add('hidden-view');
+                }
+
+                const ozfPanel = document.getElementById('ozf-data-panel');
+                const defPanel = document.getElementById('def-data-panel');
+                const ozfLock = document.getElementById('ozf-lock-message');
+                const defLock = document.getElementById('def-lock-message');
+
+                if(window.currentUser) {
+                    if(ozfPanel) ozfPanel.classList.remove('hidden-view');
+                    if(defPanel) defPanel.classList.remove('hidden-view');
+                    if(ozfLock) ozfLock.classList.add('hidden-view');
+                    if(defLock) defLock.classList.add('hidden-view');
+                } else {
+                    if(ozfPanel) ozfPanel.classList.add('hidden-view');
+                    if(defPanel) defPanel.classList.add('hidden-view');
+                    if(ozfLock) ozfLock.classList.remove('hidden-view');
+                    if(defLock) defLock.classList.remove('hidden-view');
+                }
+
+                const navLoginBtn = document.getElementById('nav-login-btn');
+                const navAdminMenu = document.getElementById('nav-admin-menu');
+                const navLogoutBtn = document.getElementById('nav-logout-nasabah-btn');
+                const navFingerBtn = document.getElementById('nav-fingerprint-btn');
+                const navProfileBtn = document.getElementById('nav-profile-btn');
+
+                const mobLoginBtn = document.getElementById('mobile-login-btn');
+                const mobAdminPanel = document.getElementById('mobile-admin-panel');
+                const mobLogoutBtn = document.getElementById('mobile-logout-btn');
+                const mobFingerBtn = document.getElementById('mobile-fingerprint-btn');
+                const mobProfileBtn = document.getElementById('mobile-profile-btn');
+
+                if(window.currentUser) {
+                    if(navLoginBtn) navLoginBtn.classList.add('hidden-view');
+                    if(mobLoginBtn) mobLoginBtn.classList.add('hidden-view');
+                    if(mobLogoutBtn) mobLogoutBtn.classList.remove('hidden-view');
+                    if(navFingerBtn) navFingerBtn.classList.remove('hidden-view');
+                    if(mobFingerBtn) mobFingerBtn.classList.remove('hidden-view');
+                    
+                    if(navProfileBtn) {
+                        navProfileBtn.classList.remove('hidden-view');
+                        const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
+                        navProfileBtn.innerHTML = `<img src="${avatarUrl}" class="w-5 h-5 rounded-full object-cover border border-ozgold-500/50"> <span class="hidden sm:inline">Profil</span>`;
+                    }
+                    if(mobProfileBtn) mobProfileBtn.classList.remove('hidden-view');
+                    
+                    const btmAvatar = document.getElementById('btm-nav-avatar');
+                    if (btmAvatar) {
+                        const avatarUrl = window.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(window.currentUser.name)}&background=fde047&color=000`;
+                        btmAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                        btmAvatar.classList.replace('border-slate-500', 'border-ozgold-500');
+                    }
+                    
+                    if(window.isAdmin) {
+                        if(navAdminMenu) navAdminMenu.classList.remove('hidden-view');
+                        if(mobAdminPanel) mobAdminPanel.classList.remove('hidden-view');
+                        if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view');
+                        if(navFingerBtn) navFingerBtn.classList.add('hidden-view'); 
+                    } else {
+                        if(navAdminMenu) navAdminMenu.classList.add('hidden-view'); 
+                        if(mobAdminPanel) mobAdminPanel.classList.add('hidden-view');
+                        if(navLogoutBtn) navLogoutBtn.classList.remove('hidden-view');
+                    }
+                } else {
+                    if(navLoginBtn) navLoginBtn.classList.remove('hidden-view');
+                    if(navAdminMenu) navAdminMenu.classList.add('hidden-view');
+                    if(mobLoginBtn) mobLoginBtn.classList.remove('hidden-view');
+                    if(mobLogoutBtn) mobLogoutBtn.classList.add('hidden-view');
+                    if(navLogoutBtn) navLogoutBtn.classList.add('hidden-view');
+                    if(navFingerBtn) navFingerBtn.classList.add('hidden-view');
+                    if(mobFingerBtn) mobFingerBtn.classList.add('hidden-view');
+                    if(navProfileBtn) navProfileBtn.classList.add('hidden-view');
+                    if(mobProfileBtn) mobProfileBtn.classList.add('hidden-view');
+
+                    const btmAvatar = document.getElementById('btm-nav-avatar');
+                    if (btmAvatar) {
+                        btmAvatar.innerHTML = `<i class="fa-solid fa-user text-[11px] text-slate-400"></i>`;
+                        btmAvatar.classList.replace('border-ozgold-500', 'border-slate-500');
+                    }
+                }
+                
+                if (document.getElementById('ozf-search-input')) window.ozfSearch();
+                if (document.getElementById('def-search-input')) window.defSearch();
+                window.renderPosts();
+                if (window.renderPortfolio) window.renderPortfolio();
+            } catch(e) {
+                console.error("UI Update Error: ", e);
+            }
+        };
+
+        window.renderSavingAdminLists = () => {
+            const defCtn = document.getElementById('sav-def-list');
+            const ozfCtn = document.getElementById('sav-ozf-list');
+            
+            if(defCtn) {
+                if(!window.defData.length) defCtn.innerHTML = '<p class="text-[10px] text-slate-500 py-2">Tidak ada nasabah defOZite</p>';
+                else defCtn.innerHTML = window.defData.map(c => `
+                    <div class="bg-gray-800/40 p-2 rounded-lg flex justify-between items-center border border-white/5">
+                        <div><p class="text-xs font-bold text-white">${c.name}</p><p class="text-[9px] text-slate-400">${c.phone}</p></div>
+                        <button onclick="window.defOpenEditModal('${c.id}')" class="text-[10px] text-slate-400 hover:text-emerald-400 p-1.5"><i class="fa-solid fa-pen"></i></button>
+                    </div>`).join('');
+            }
+
+            if(ozfCtn) {
+                if(!window.ozfData.length) ozfCtn.innerHTML = '<p class="text-[10px] text-slate-500 py-2">Tidak ada nasabah OZFinance</p>';
+                else {
+                    const uniqueOzf = Array.from(new Set(window.ozfData.map(a => a.name))).map(name => { return window.ozfData.find(a => a.name === name) });
+                    ozfCtn.innerHTML = uniqueOzf.map(c => `
+                    <div class="bg-gray-800/40 p-2 rounded-lg flex justify-between items-center border border-white/5">
+                        <div><p class="text-xs font-bold text-white">${c.name}</p><p class="text-[9px] text-slate-400">${c.wa || '-'}</p></div>
+                        <button onclick="switchSection('oz-finance-customers')" class="text-[10px] text-slate-400 hover:text-ozgold-400 p-1.5"><i class="fa-solid fa-arrow-right"></i></button>
+                    </div>`).join('');
+                }
+            }
+        };
+
+        const ozFinanceConfig = { apiKey: "AIzaSyBkHkY6dAYWppYWRFPRum2bwx2Dgnk8pV4", authDomain: "ozfinance-5fb9c.firebaseapp.com", databaseURL: "https://ozfinance-5fb9c-default-rtdb.asia-southeast1.firebasedatabase.app/", projectId: "ozfinance-5fb9c" };
+        const defoziteConfig = { apiKey: "AIzaSyA6JMLpQ88mpCB6MP9Ul1O_ULU76uhSbhc", authDomain: "defozite-75ac1.firebaseapp.com", projectId: "defozite-75ac1" };
+        let ozApp, ozDbRef, defApp, defDb;
+
+        function initDatabases() {
+            try {
+                ozApp = firebase.initializeApp(ozFinanceConfig, "OZFinanceApp");
+                ozDbRef = ozApp.database().ref('ozfinance_data');
+                defApp = firebase.initializeApp(defoziteConfig, "defOZiteApp");
+                defDb = defApp.firestore();
+
+                defDb.collection("users").where("email", "==", "admin@oznet.com").get().then(snap => {
+                    if(snap.empty) {
+                        defDb.collection("users").add({ name: "Admin Utama", email: "admin@oznet.com", phone: "000", password: "admin", role: "admin", status: "aktif", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    }
+                }).catch(e => console.log(e));
+
+                ozDbRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    window.ozfData = data ? Object.values(data) : [];
+                    if(document.getElementById('ozf-search-input')) window.ozfSearch();
+                    if(window.renderSavingAdminLists) window.renderSavingAdminLists();
+                    if(window.renderPortfolio) window.renderPortfolio();
+                });
+
+                defDb.collection("customers").orderBy("createdAt", "desc").onSnapshot(snap => {
+                    window.defData = []; let totS = 0, totL = 0;
+                    snap.forEach(doc => { const d = doc.data(); window.defData.push({ id: doc.id, ...d }); totS += (d.savingsBalance || 0); totL += (d.loanBalance || 0); });
+                    const ts = document.getElementById('def-total-savings'); if(ts) ts.innerText = window.formatRp(totS);
+                    const tl = document.getElementById('def-total-loans'); if(tl) tl.innerText = window.formatRp(totL);
+                    const tc = document.getElementById('def-total-customers'); if(tc) tc.innerText = `${window.defData.length} Orang`;
+                    if(document.getElementById('def-search-input')) window.defSearch();
+                    if(window.renderSavingAdminLists) window.renderSavingAdminLists();
+                    if(window.renderPortfolio) window.renderPortfolio();
+                    
+                    if(window.isAdmin && document.getElementById('sav-trx-list-mode') && !document.getElementById('sav-trx-list-mode').classList.contains('hidden-view')) {
+                        window.renderSavTrxList();
+                    }
+                    if(window.activeSavCustId) {
+                        window.openSavTrxDetail(window.activeSavCustId); 
+                    } else if (!window.isAdmin && window.currentUser) {
+                        const myData = window.defData.find(c => c.phone === window.currentUser.phone);
+                        if(myData) window.openSavTrxDetail(myData.id);
+                    }
+                });
+
+                defDb.collection("users").orderBy("createdAt", "desc").onSnapshot(snap => { window.usersData = []; snap.forEach(doc => window.usersData.push({ id: doc.id, ...doc.data() })); renderUsersTable(); });
+                defDb.collection("posts").orderBy("createdAt", "desc").onSnapshot(snap => { window.postsData = []; snap.forEach(doc => window.postsData.push({ id: doc.id, ...doc.data() })); window.renderPosts(); });
+
+                window.setPinjamTenor(6);
+                window.updateUIAuth();
+                loadSiteConfig(); 
+                
+                setTimeout(() => { const l = document.getElementById('loading-overlay'); if(l) l.classList.add('hidden-view'); }, 1200);
+
+            } catch (error) {
+                console.error("Firebase init error:", error);
+                const text = document.getElementById('loading-text');
+                if(text) text.innerText = "Koneksi ke server bermasalah.";
+                setTimeout(() => { const l = document.getElementById('loading-overlay'); if(l) l.classList.add('hidden-view'); }, 2000);
+            }
+        }
+
+        window.getProgressColor = (p) => p === 0 ? 'from-red-600 to-orange-500' : p < 50 ? 'from-orange-500 to-yellow-500' : p < 80 ? 'from-yellow-500 to-yellow-400' : p < 100 ? 'from-yellow-400 to-yellow-300' : 'from-green-500 to-green-400';
+        window.toggleDetails = function(id) { const el = document.getElementById(id); if (el) el.classList.toggle('hidden'); };
+        window.ozfSearch = () => renderOzfDashboard(document.getElementById('ozf-search-input') ? document.getElementById('ozf-search-input').value : "");
+        
+        function renderOzfDashboard(filterQuery = "") {
+            let filtered = window.ozfData || [];
+            
+            if(!window.isAdmin && window.currentUser) {
+                filtered = filtered.filter(d => String(d.wa) === String(window.currentUser.phone));
+            }
+
+            if(filterQuery) filtered = filtered.filter(d => (d.name && d.name.toLowerCase().includes(filterQuery.toLowerCase())) || (d.wa && String(d.wa).includes(filterQuery)));
+            const groupedData = filtered.reduce((acc, curr) => {
+                if(!curr || !curr.name) return acc;
+                let key = String(curr.name).trim().toUpperCase();
+                if(!acc[key]) acc[key] = { name: curr.name, customName: curr.customName || curr.name, items: [], photo: curr.photo };
+                acc[key].items.push(curr); return acc;
+            }, {});
+            const customers = Object.values(groupedData);
+            const tc = document.getElementById('ozf-total-nasabah'); if(tc) tc.textContent = `${customers.length} Orang`;
+            let htmlContent = '';
+            customers.forEach(c => {
+                let itemsHtml = ''; let totalTagihan = 0;
+                let avatarSrc = c.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.customName)}&background=fde047&color=000`;
+                
+                if (window.currentUser && window.currentUser.photo && String(c.items[0].wa) === String(window.currentUser.phone)) {
+                    avatarSrc = window.currentUser.photo;
+                }
+
+                c.items.forEach(item => {
+                    totalTagihan += parseInt(item.tagihan) || 0;
+                    const progress = (item.lunas / (item.totalBulan || 1)) * 100; const isLunas = progress >= 100;
+                    itemsHtml += `
+                    <div class="bg-gray-900/50 rounded-xl p-3 border border-white/5 relative group/item transition-colors hover:bg-gray-800/80 cursor-pointer w-full" onclick="window.toggleDetails('ozf-det-${item.id}')">
+                        ${window.isAdmin ? `
+                        <div class="absolute top-3 right-3 flex gap-2 z-10">
+                            <button type="button" onclick="event.stopPropagation(); window.ozfOpenEditModal('${item.id}')" class="text-gray-500 hover:text-ozgold-400"><i class="fa-solid fa-pen-to-square text-sm"></i></button>
+                            <button type="button" onclick="event.stopPropagation(); window.deleteOzfItem('${item.id}')" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-trash text-sm"></i></button>
+                        </div>` : ''}
+                        <div class="pr-12 mb-2"><h3 class="text-ozgold-400 text-sm font-bold flex items-center gap-1.5"><i class="fa-solid ${isLunas ? 'fa-check-circle text-green-500' : 'fa-box-open'}"></i> ${item.item || '-'}</h3></div>
+                        <div class="flex justify-between text-xs mb-2"><span class="text-gray-400"><i class="fa-regular fa-calendar mr-1"></i> Tgl ${item.jatuhTempo || '-'}</span><span class="text-white font-medium">${window.formatRp(item.tagihan)}/bln</span></div>
+                        <div class="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden shadow-inner"><div class="h-full bg-gradient-to-r ${window.getProgressColor(progress)} rounded-full" style="width: ${progress > 100 ? 100 : progress}%"></div></div>
+                        <div id="ozf-det-${item.id}" class="hidden mt-3 pt-3 border-t border-white/10 space-y-1.5 text-xs text-left">
+                            <div class="flex justify-between text-gray-300"><span>Status:</span><span class="${isLunas ? 'text-green-500' : 'text-ozgold-400'} font-bold">${isLunas ? 'LUNAS' : item.lunas + '/' + item.totalBulan + ' BLN'}</span></div>
+                            <div class="mt-2 p-2 bg-black/40 rounded border border-white/5 text-[10px] text-gray-400 whitespace-pre-line leading-relaxed"><div class="font-bold text-gray-300 mb-1">Riwayat Pembayaran:</div>${item.history ? item.history : '-'}</div>
+                        </div>
+                    </div>`;
+                });
+                htmlContent += `
+                <div class="glass-card rounded-2xl flex flex-col relative overflow-hidden w-full md:w-[350px] flex-shrink-0 snap-center">
+                    <div class="p-4 border-b border-ozgold-500/20 bg-black/20 flex items-center gap-3">
+                        <img src="${avatarSrc}" class="w-10 h-10 rounded-full object-cover border border-ozgold-500/30">
+                        <div><h2 class="text-base font-bold text-white leading-tight">${c.customName}</h2><p class="text-xs text-gray-400">${c.items.length} Item</p></div>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col gap-3 custom-scroll max-h-[50vh] overflow-y-auto">${itemsHtml}</div>
+                    <div class="p-4 border-t border-white/5 bg-gray-900/60 flex justify-between items-center mt-auto"><span class="text-xs text-gray-400 font-medium">Tagihan/Bln</span><span class="text-sm font-bold text-ozgold-400">${window.formatRp(totalTagihan)}</span></div>
+                </div>`;
+            });
+            if(customers.length === 0) htmlContent = `<div class="w-full text-center py-10 text-gray-500">${!window.isAdmin ? 'Anda belum memiliki riwayat tagihan/cicilan.' : 'Tidak ada data nasabah.'}</div>`;
+            const grid = document.getElementById('ozf-dashboard-grid');
+            if(grid) grid.innerHTML = htmlContent;
+        }
+
+        window.ozfOpenAddModal = () => {
+            document.getElementById('ozf-modal-title').innerHTML = '<i class="fa-solid fa-user-plus text-ozgold-400 mr-2"></i> Tambah Nasabah OZ Finance';
+            document.getElementById('ozf-data-form').reset(); document.getElementById('ozf-form-id').value = '';
+            document.getElementById('ozf-form-lunas').value = '0';
+            document.getElementById('ozf-form-modal').classList.remove('hidden-view');
+        };
+        window.ozfOpenEditModal = (id) => {
+            const item = window.ozfData.find(d => String(d.id) === String(id));
+            if(!item) return;
+            document.getElementById('ozf-modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-ozgold-400 mr-2"></i> Edit Data OZ Finance';
+            document.getElementById('ozf-form-id').value = item.id; document.getElementById('ozf-form-name').value = item.name;
+            document.getElementById('ozf-form-item').value = item.item; document.getElementById('ozf-form-tagihan').value = item.tagihan;
+            document.getElementById('ozf-form-jatuh-tempo').value = item.jatuhTempo; document.getElementById('ozf-form-total-bulan').value = item.totalBulan;
+            document.getElementById('ozf-form-lunas').value = item.lunas; document.getElementById('ozf-form-wa').value = item.wa || '';
+            document.getElementById('ozf-form-history').value = item.history || '';
+            document.getElementById('ozf-form-modal').classList.remove('hidden-view');
+        };
+        window.ozfCloseModal = () => document.getElementById('ozf-form-modal').classList.add('hidden-view');
+
+        window.ozfSubmitData = () => {
+            const idVal = document.getElementById('ozf-form-id').value;
+            const name = document.getElementById('ozf-form-name').value.trim(); const wa = document.getElementById('ozf-form-wa').value.trim();
+            const item = document.getElementById('ozf-form-item').value.trim(); const tagihan = parseInt(document.getElementById('ozf-form-tagihan').value) || 0;
+            const jatuhTempo = document.getElementById('ozf-form-jatuh-tempo').value.trim(); const totalBulan = parseInt(document.getElementById('ozf-form-total-bulan').value) || 1;
+            const lunas = parseInt(document.getElementById('ozf-form-lunas').value) || 0; const history = document.getElementById('ozf-form-history').value.trim();
+
+            let newData = [...window.ozfData];
+            if (idVal) {
+                const idx = newData.findIndex(d => String(d.id) === String(idVal));
+                if(idx !== -1) newData[idx] = { ...newData[idx], name, wa, item, tagihan, jatuhTempo, totalBulan, lunas, history };
+            } else { newData.push({ id: Date.now(), name, wa, item, tagihan, totalBulan, lunas, jatuhTempo, history }); }
+
+            const dataObj = {}; newData.forEach(d => dataObj[d.id] = d);
+            ozDbRef.set(dataObj).then(() => { window.showToast("Data OZ Finance Tersimpan!"); window.ozfCloseModal(); }).catch(e => alert(e.message));
+        };
+
+        window.defSearch = () => renderDefCustomerList(document.getElementById('def-search-input') ? document.getElementById('def-search-input').value : "");
+        function renderDefCustomerList(query="") {
+            let custs = window.defData || [];
+            
+            if(!window.isAdmin && window.currentUser) {
+                custs = custs.filter(c => String(c.phone) === String(window.currentUser.phone));
+            }
+
+            if(query) custs = custs.filter(c => c.name.toLowerCase().includes(query.toLowerCase()) || (c.phone && c.phone.includes(query)));
+            
+            let list = document.getElementById('def-customer-list');
+            if(!list) return;
+            if(!custs.length) { list.innerHTML = `<p class="text-center text-slate-500 text-xs py-4">${!window.isAdmin ? 'Anda belum terdaftar sebagai anggota tabungan.' : 'Belum ada anggota defOZite.'}</p>`; return; }
+            
+            list.innerHTML = custs.map(c => {
+                let userPhotoHtml = '';
+                if(window.usersData && window.usersData.length) {
+                    const matchUser = window.usersData.find(u => u.phone === c.phone && u.photo);
+                    if(matchUser) userPhotoHtml = `<img src="${matchUser.photo}" class="w-8 h-8 rounded-full object-cover shrink-0">`;
+                }
+
+                return `
+                <div class="glass-card p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-ozgold-500/30 relative">
+                    <div class="flex flex-1 pr-16 md:pr-0 gap-3 items-center">
+                        ${userPhotoHtml}
+                        <div>
+                            <p class="font-bold text-white flex items-center gap-2">${c.name} <span class="text-[9px] px-2 py-0.5 rounded-full ${c.isActive !== false ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">${c.isActive !== false ? 'Aktif' : 'Nonaktif'}</span></p>
+                            <p class="text-[11px] text-slate-400 mt-1"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> ${c.phone||'-'}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 w-full md:w-auto border-t md:border-t-0 border-white/10 pt-3 md:pt-0">
+                        <div class="flex-1 md:text-right">
+                            <span class="text-[10px] text-slate-400">Tabungan</span>
+                            <p class="font-bold text-emerald-400 text-sm">${window.formatRp(c.savingsBalance||0)}</p>
+                        </div>
+                        <div class="flex-1 md:text-right">
+                            <span class="text-[10px] text-slate-400">Pinjaman</span>
+                            <p class="font-bold text-red-400 text-sm">${window.formatRp(c.loanBalance||0)}</p>
+                        </div>
+                    </div>
+                    ${window.isAdmin ? `
+                    <div class="flex gap-2 shrink-0 self-end md:self-center absolute top-4 right-4 md:relative md:top-0 md:right-0">
+                        <button type="button" onclick="window.defOpenEditModal('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-ozgold-500 text-slate-400 hover:text-gray-900 transition-colors flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+                        <button type="button" onclick="window.deleteDefCustomer('${c.id}')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-red-500 text-slate-400 hover:text-white transition-colors flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+                    </div>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        window.defOpenAddModal = () => {
+            document.getElementById('def-modal-title').innerText = 'Tambah Anggota defOZite';
+            document.getElementById('def-c-id').value = ''; document.getElementById('def-c-name').value = ''; 
+            document.getElementById('def-c-phone').value = ''; document.getElementById('def-c-address').value = '';
+            document.getElementById('def-form-modal').classList.remove('hidden-view');
+        };
+        window.defOpenEditModal = (id) => {
+            const c = window.defData.find(x => x.id === id); if(!c) return;
+            document.getElementById('def-modal-title').innerText = 'Edit Anggota defOZite';
+            document.getElementById('def-c-id').value = c.id; document.getElementById('def-c-name').value = c.name || '';
+            document.getElementById('def-c-phone').value = c.phone || ''; document.getElementById('def-c-address').value = c.address || '';
+            document.getElementById('def-c-status').value = c.isActive !== false ? 'true' : 'false';
+            document.getElementById('def-form-modal').classList.remove('hidden-view');
+        };
+        window.defCloseModal = () => document.getElementById('def-form-modal').classList.add('hidden-view');
+
+        window.defSubmitData = async () => {
+            const id = document.getElementById('def-c-id').value; const name = document.getElementById('def-c-name').value.trim();
+            const phone = document.getElementById('def-c-phone').value.trim(); const address = document.getElementById('def-c-address').value.trim();
+            const isActive = document.getElementById('def-c-status').value === 'true';
+            if(!name || !phone) return alert("Nama dan WhatsApp wajib diisi!");
+            try {
+                if(id) { await defDb.collection("customers").doc(id).update({ name, phone, address, isActive }); } 
+                else { await defDb.collection("customers").add({ name, phone, address, savingsBalance: 0, loanBalance: 0, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); }
+                window.showToast("Data defOZite Tersimpan!"); window.defCloseModal();
+            } catch(e) { alert("Gagal menyimpan ke Firestore: " + e.message); }
+        };
+
+        // --- 11. SISTEM AUTO LOGOUT (20 MENIT DI BACKGROUND) ---
+        window.BACKGROUND_LIMIT = 20 * 60 * 1000;
+        window.bgLogoutTimer = null;
+
+        window.setupAutoLogout = () => {
+            document.addEventListener('visibilitychange', () => {
+                if (!window.currentUser) return;
+
+                if (document.visibilityState === 'hidden') {
+                    localStorage.setItem('ozdigi_bg_timestamp', Date.now());
+                    window.bgLogoutTimer = setTimeout(() => {
+                        window.logoutUser();
+                        window.showToast("Sesi berakhir otomatis (20 menit di background).");
+                    }, window.BACKGROUND_LIMIT);
+                } else if (document.visibilityState === 'visible') {
+                    const bgTimestamp = localStorage.getItem('ozdigi_bg_timestamp');
+                    if (bgTimestamp) {
+                        const timeElapsed = Date.now() - parseInt(bgTimestamp);
+                        if (timeElapsed >= window.BACKGROUND_LIMIT) {
+                            window.logoutUser();
+                            window.showToast("Sesi berakhir karena aplikasi berada di background lebih dari 20 menit.");
+                        } else {
+                            clearTimeout(window.bgLogoutTimer);
+                            localStorage.removeItem('ozdigi_bg_timestamp');
+                        }
+                    }
+                }
+            });
+        };
+
+        // --- 12. PWA INSTALL PROMPT LOGIC ---
+        window.deferredPrompt = null;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            window.deferredPrompt = e;
+        });
+
+        window.dismissInstallPrompt = () => {
+            localStorage.setItem('ozdigi_pwa_dismissed', 'true');
+            const banner = document.getElementById('pwa-install-banner');
+            if(banner) {
+                banner.classList.add('translate-y-48');
+                setTimeout(() => banner.classList.add('hidden-view'), 500);
+            }
+        };
+
+        window.addEventListener('appinstalled', () => {
+            window.dismissInstallPrompt();
+            window.deferredPrompt = null;
+            console.log('OZdigi PWA berhasil diinstal oleh pengguna');
+        });
+
+        function checkAndShowInstallBanner() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+            const hasDismissed = localStorage.getItem('ozdigi_pwa_dismissed') === 'true';
+
+            if (!isStandalone && !hasDismissed) {
+                const banner = document.getElementById('pwa-install-banner');
+                if (banner) {
+                    banner.classList.remove('hidden-view');
+                    setTimeout(() => {
+                        banner.classList.remove('translate-y-48');
+                    }, 1000); 
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedSession = localStorage.getItem('ozdigi_user_session');
+            if(savedSession) {
+                try {
+                    window.currentUser = JSON.parse(savedSession);
+                    const bgTimestamp = localStorage.getItem('ozdigi_bg_timestamp');
+                    if (bgTimestamp) {
+                        if (Date.now() - parseInt(bgTimestamp) >= window.BACKGROUND_LIMIT) {
+                            localStorage.removeItem('ozdigi_user_session');
+                            localStorage.removeItem('ozdigi_bg_timestamp');
+                            window.currentUser = null;
+                        } else {
+                            localStorage.removeItem('ozdigi_bg_timestamp');
+                        }
+                    }
+                } catch(e) {
+                    localStorage.removeItem('ozdigi_user_session');
+                }
+            }
+            
+            initDatabases();
+            window.setupAutoLogout();
+
+            const installBtn = document.getElementById('btn-install-pwa');
+            if (installBtn) {
+                installBtn.addEventListener('click', async () => {
+                    if (window.deferredPrompt) {
+                        window.deferredPrompt.prompt();
+                        const { outcome } = await window.deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            console.log('User accepted the install prompt');
+                        }
+                        window.deferredPrompt = null;
+                        window.dismissInstallPrompt();
+                    } else {
+                        window.showToast("Silakan klik menu browser (Titik Tiga) lalu pilih 'Tambahkan ke Layar Utama' atau 'Instal Aplikasi'.");
+                    }
+                });
+            }
+
+            checkAndShowInstallBanner();
+
+            // Pemblokiran SW ditiadakan agar tidak menimbulkan pesan Error 404 (Not Found)
+            // di sistem Single-File yang dapat menggagalkan validasi PWA Install oleh browser.
+        });
+    </script>
+</body>
+</html>
