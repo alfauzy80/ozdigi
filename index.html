@@ -79,7 +79,7 @@
     </style>
 </head>
 <body class="flex flex-col min-h-screen pb-20 md:pb-0">
-    <!-- Floating WA Button (Disembunyikan di HP karena sudah ada di Navigasi Bawah) -->
+    <!-- Floating WA Button -->
     <a href="https://wa.me/628568080847" target="_blank" class="hidden md:flex fixed bottom-6 right-6 z-[200] bg-green-500 text-white w-14 h-14 rounded-full items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-transform floating-wa">
         <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
@@ -177,7 +177,7 @@
                 </div>
             </nav>
 
-            <!-- Mobile Quick Links (Presisi di Tengah) -->
+            <!-- Mobile Quick Links -->
             <div class="flex md:hidden flex-1 items-center justify-center gap-2 px-2">
                 <button onclick="switchSection('oz-pinjam'); document.getElementById('mobile-menu').classList.add('hidden'); document.getElementById('mobile-menu-icon').className = 'fa-solid fa-bars';" class="text-[10px] font-bold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-2.5 py-1.5 rounded-lg border border-blue-500/30 shadow-sm transition-colors flex items-center gap-1.5">
                     <i class="fa-solid fa-hand-holding-dollar"></i> Pinjam
@@ -187,7 +187,7 @@
                 </button>
             </div>
 
-            <!-- Mobile Hamburger Toggle (Nempel Kanan) -->
+            <!-- Mobile Hamburger Toggle -->
             <div class="flex md:hidden shrink-0 items-center">
                 <button type="button" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-white text-xl p-2 -mr-2">
                     <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
@@ -306,7 +306,6 @@
         </section>
 
         <section id="section-oz-finance-customers" class="hidden-section space-y-6">
-            <!-- Pesan Pengunci untuk Non-Admin -->
             <div id="ozf-lock-message" class="glass-panel p-10 rounded-2xl text-center flex flex-col items-center justify-center">
                 <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4">
                     <i class="fa-solid fa-lock text-2xl text-slate-400"></i>
@@ -367,7 +366,6 @@
         </section>
 
         <section id="section-defozite-customers" class="hidden-section space-y-6">
-            <!-- Pesan Pengunci untuk Non-Admin -->
             <div id="def-lock-message" class="glass-panel p-10 rounded-2xl text-center flex flex-col items-center justify-center">
                 <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4">
                     <i class="fa-solid fa-lock text-2xl text-slate-400"></i>
@@ -402,12 +400,10 @@
         <!-- MODUL OZPINJAM -->
         <section id="section-oz-pinjam" class="hidden-section space-y-6">
             <div class="flex flex-col md:flex-row gap-6">
-                <!-- Simulasi Pinjaman -->
                 <div class="w-full md:w-1/3 glass-panel p-6 rounded-2xl space-y-4">
                     <h2 class="text-xl font-bold"><i class="fa-solid fa-calculator text-ozgold-400 mr-2"></i> Simulasi OZPinjam</h2>
                     <p class="text-xs text-slate-400 admin-only-menu hidden-view" id="sim-pinjam-subtitle">Bunga flat 4% per bulan.</p>
                     
-                    <!-- Panel Konfigurasi Admin -->
                     <div id="admin-pinjam-settings" class="admin-only-menu hidden-view bg-gray-800/80 rounded-xl p-4 border border-ozgold-500/30 mb-4">
                         <p class="text-[10px] text-ozgold-400 uppercase font-bold tracking-widest mb-2 flex justify-between items-center">
                             <span><i class="fa-solid fa-gear"></i> Config Simulasi Admin</span>
@@ -473,7 +469,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Konten Postingan OZPinjam -->
                 <div class="w-full md:w-2/3 glass-panel p-6 rounded-2xl">
                     <h2 class="text-xl font-bold mb-4"><i class="fa-solid fa-bullhorn text-ozgold-400 mr-2"></i> Info & Promo OZPinjam</h2>
                     <div id="post-container-pinjam" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -506,7 +501,6 @@
 
         <!-- MODUL OZSAVING -->
         <section id="section-defozite-saving" class="hidden-section space-y-6">
-            <!-- Admin Management Panel for OZSaving -->
             <div class="admin-only-menu hidden-view glass-panel p-6 rounded-2xl w-full mb-2">
                 <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
                     <div>
@@ -516,7 +510,6 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- defOZite List -->
                     <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-vault mr-1"></i> Data defOZite</h3>
@@ -525,7 +518,6 @@
                         <div id="sav-def-list" class="space-y-2 max-h-60 overflow-y-auto custom-scroll pr-1"></div>
                     </div>
 
-                    <!-- OZFinance List -->
                     <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="text-sm font-bold text-ozgold-400"><i class="fa-solid fa-wallet mr-1"></i> Data OZFinance</h3>
@@ -537,17 +529,14 @@
             </div>
 
             <div class="flex flex-col md:flex-row gap-6">
-                <!-- Transaksi OZSaving -->
                 <div class="w-full md:w-1/3 glass-panel p-6 rounded-2xl flex flex-col max-h-[80vh]">
                     <h2 class="text-xl font-bold mb-4"><i class="fa-solid fa-money-bill-transfer text-emerald-400 mr-2"></i> Transaksi OZSaving</h2>
                     
-                    <!-- Mode Guest (Belum Login) -->
                     <div id="sav-trx-guest-mode" class="flex-1 flex flex-col items-center justify-center text-center py-8">
                         <i class="fa-solid fa-lock text-3xl text-slate-600 mb-3"></i>
                         <p class="text-xs text-slate-400">Silakan login untuk melihat tabungan Anda.</p>
                     </div>
 
-                    <!-- Mode List (Hanya Admin) -->
                     <div id="sav-trx-list-mode" class="flex-1 flex flex-col min-h-0 admin-only-menu hidden-view">
                         <p class="text-xs text-slate-400 mb-3">Pilih nasabah untuk setor/tarik tunai.</p>
                         <div class="relative mb-3 shrink-0">
@@ -555,7 +544,6 @@
                             <input type="text" id="sav-trx-search" placeholder="Cari nama nasabah..." class="w-full glass-input rounded-xl py-2 pl-8 pr-3 text-xs" onkeyup="window.renderSavTrxList()">
                         </div>
                         <div id="sav-trx-customer-list" class="flex-1 overflow-y-auto custom-scroll space-y-2 mb-3">
-                            <!-- List nasabah akan dirender di sini -->
                         </div>
                         <div class="shrink-0 border-t border-white/10 pt-3 mt-auto">
                             <button type="button" onclick="window.defOpenAddModal()" class="w-full bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/30 px-3 py-2.5 rounded-xl text-xs font-bold transition-colors">
@@ -564,7 +552,6 @@
                         </div>
                     </div>
 
-                    <!-- Mode Detail & Transaksi -->
                     <div id="sav-trx-detail-mode" class="flex-1 flex flex-col min-h-0 hidden-view">
                         <div class="flex items-center gap-2 mb-3 admin-only-menu shrink-0">
                             <button onclick="window.closeSavTrxDetail()" class="text-slate-400 hover:text-white bg-white/5 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i class="fa-solid fa-arrow-left text-xs"></i></button>
@@ -586,12 +573,9 @@
 
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 shrink-0"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Riwayat Transaksi</p>
                         <div id="sav-trx-history" class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1 pb-2">
-                            <!-- Riwayat transaksi akan dirender di sini -->
                         </div>
                     </div>
                 </div>
-
-                <!-- Konten Postingan OZSaving -->
                 <div class="w-full md:w-2/3 glass-panel p-6 rounded-2xl">
                     <h2 class="text-xl font-bold mb-4"><i class="fa-solid fa-bullhorn text-ozgold-400 mr-2"></i> Info & Promo OZSaving</h2>
                     <div id="post-container-saving" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -673,7 +657,6 @@
             
             <form id="form-profile" onsubmit="event.preventDefault(); window.saveProfile(); return false;" class="space-y-4">
                 
-                <!-- Photo Upload -->
                 <div class="flex flex-col items-center justify-center mb-2">
                     <div class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-ozgold-500/50 mb-2 group cursor-pointer shadow-lg" onclick="document.getElementById('profile-photo-input').click()">
                         <img id="profile-photo-preview" src="" class="w-full h-full object-cover" alt="Profile">
@@ -714,7 +697,7 @@
         </div>
     </div>
 
-    <!-- Modal Auth (Masuk / Daftar / Lupa Password) -->
+    <!-- Modal Auth -->
     <div id="auth-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[600] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[610]">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
@@ -722,13 +705,11 @@
                 <button type="button" onclick="window.closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times"></i></button>
             </div>
             
-            <!-- Tabs -->
             <div id="auth-tabs" class="flex p-1 bg-gray-900/80 rounded-lg mb-4 border border-gray-700">
                 <button type="button" id="tab-login" onclick="window.switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-md bg-ozgold-600 text-white shadow transition-all">Masuk</button>
                 <button type="button" id="tab-register" onclick="window.switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold rounded-md text-slate-400 hover:text-white transition-all">Daftar Warga</button>
             </div>
 
-            <!-- Form Login -->
             <form id="form-login" onsubmit="event.preventDefault(); window.processLogin(); return false;" class="space-y-4">
                 <div>
                     <label class="block text-[11px] text-slate-400 mb-1">Email / No W.A</label>
@@ -743,20 +724,17 @@
                 </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Masuk</button>
                 
-                <!-- Divider -->
                 <div class="relative flex py-3 items-center">
                     <div class="flex-grow border-t border-white/10"></div>
                     <span class="flex-shrink-0 mx-3 text-[10px] text-slate-500 uppercase tracking-widest">Atau</span>
                     <div class="flex-grow border-t border-white/10"></div>
                 </div>
                 
-                <!-- Tombol Fingerprint -->
                 <button type="button" onclick="window.processFingerprintLogin()" class="w-full bg-gray-800 hover:bg-gray-700 border border-white/10 text-white font-bold py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-colors">
                     <i class="fa-solid fa-fingerprint text-ozgold-400 text-lg"></i> Masuk dengan Sidik Jari
                 </button>
             </form>
 
-            <!-- Form Register -->
             <form id="form-register" onsubmit="event.preventDefault(); window.processRegister(); return false;" class="space-y-3 hidden-view">
                 <div><label class="block text-[11px] text-slate-400 mb-1">Nama Lengkap</label><input type="text" id="auth-reg-name" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
                 <div><label class="block text-[11px] text-slate-400 mb-1">Email Aktif</label><input type="email" id="auth-reg-email" class="w-full glass-input rounded-xl py-2 px-3 text-xs" required></div>
@@ -765,7 +743,6 @@
                 <button type="submit" class="w-full bg-gradient-to-r from-ozgold-600 to-ozgold-500 text-white font-bold py-2.5 rounded-xl shadow-lg mt-2">Daftar Akun</button>
             </form>
 
-            <!-- Form Forgot Password -->
             <form id="form-forgot-pwd" onsubmit="event.preventDefault(); window.processForgotPwd(); return false;" class="space-y-4 hidden-view">
                 <p class="text-[11px] text-slate-400 leading-relaxed">Klik tombol di bawah untuk terhubung langsung ke WhatsApp Admin guna mereset sandi Anda.</p>
                 <div class="flex gap-2 mt-2">
@@ -776,7 +753,7 @@
         </div>
     </div>
 
-    <!-- Modal Kelola Pengguna (Admin) -->
+    <!-- Modal Kelola Pengguna -->
     <div id="admin-users-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-2xl p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 relative z-[510] max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3 shrink-0">
@@ -807,7 +784,7 @@
         </div>
     </div>
     
-    <!-- Modal Form Tambah/Edit Akun (Admin) -->
+    <!-- Modal Form Tambah/Edit Akun -->
     <div id="admin-user-form-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[650] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 relative z-[660] max-h-[95vh] overflow-y-auto custom-scroll">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3 shrink-0">
@@ -844,7 +821,7 @@
         </div>
     </div>
 
-    <!-- Modal Kelola Postingan (Admin CMS) -->
+    <!-- Modal Kelola Postingan -->
     <div id="admin-post-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[500] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-md p-6 rounded-2xl bg-gray-900 border border-ozgold-500/20 relative z-[510] max-h-[95vh] overflow-y-auto custom-scroll">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
@@ -893,9 +870,7 @@
         </div>
     </div>
 
-    <!-- ==============================================
-         MODALS UNTUK OZ FINANCE & DEFOZITE (CRUD DATA)
-         ============================================== -->
+    <!-- MODALS CRUD DATA -->
     <div id="ozf-form-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center hidden-view p-4">
         <div class="glass-panel w-full max-w-md rounded-2xl p-6 bg-gray-900 custom-scroll max-h-[95vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3 sticky top-0 bg-gray-900 z-10">
@@ -950,14 +925,13 @@
         </div>
     </div>
 
-    <!-- Modal Detail Postingan (Saat Diklik) -->
+    <!-- Modal Detail Postingan -->
     <div id="post-detail-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[600] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-md rounded-3xl bg-gray-900 border border-ozgold-500/20 shadow-2xl relative z-[610] flex flex-col max-h-[95vh]">
             <button type="button" onclick="window.closePostDetail()" class="absolute top-4 right-4 z-50 bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center hover:text-ozgold-400 backdrop-blur-sm transition-colors"><i class="fa-solid fa-times"></i></button>
             
             <div class="overflow-y-auto custom-scroll flex-1 w-full rounded-t-3xl">
                 <div id="pd-media-container" class="w-full aspect-square bg-gray-800 relative shrink-0">
-                    <!-- Media akan dirender di sini via JS -->
                 </div>
                 <div class="p-6 space-y-3">
                     <div><span id="pd-badge" class="inline-block px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-widest bg-ozgold-500/20 text-ozgold-400 border border-white/10">Kategori</span></div>
@@ -967,7 +941,6 @@
                         <p id="pd-desc" class="text-sm text-gray-300 whitespace-pre-line leading-relaxed">Deskripsi lengkap postingan...</p>
                     </div>
                     
-                    <!-- Estimasi Cicilan Section -->
                     <div id="pd-installment-container" class="hidden-view space-y-2 mt-2 pt-4 border-t border-white/10">
                         <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Estimasi Cicilan</p>
                         <div class="flex justify-between items-center bg-darkblue-900/50 p-3 rounded-xl text-xs"><span class="text-slate-300">Tenor 6 Bln</span><span id="pd-cicil-6" class="font-bold text-white">Rp 0 /bln</span></div>
@@ -987,7 +960,7 @@
     <!-- Notification Toast -->
     <div id="toast-notif" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-ozgold-500/50 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none z-[600]">Notifikasi</div>
 
-    <!-- Modal Konfirmasi Hapus (Global) -->
+    <!-- Modal Konfirmasi Hapus -->
     <div id="confirm-action-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[750] hidden-view flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 rounded-2xl bg-gray-900 border border-red-500/50 relative text-center shadow-2xl">
             <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4" id="confirm-action-icon"></i>
@@ -1003,7 +976,7 @@
         </div>
     </div>
 
-    <!-- PWA Install Banner (Muncul otomatis jika aplikasi belum diinstal) -->
+    <!-- PWA Install Banner -->
     <div id="pwa-install-banner" class="fixed bottom-20 md:bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-sm glass-panel bg-gray-900/95 border border-ozgold-500/50 p-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-[400] flex flex-col gap-3 transition-transform duration-500 translate-y-48 hidden-view">
         <div class="flex items-start justify-between">
             <div class="flex items-center gap-3">
@@ -1029,7 +1002,7 @@
         <p>&copy; 2026 <span class="text-ozgold-400 font-semibold">OZdigi Ecosystem</span>. All rights reserved.</p>
     </footer>
 
-    <!-- BOTTOM NAVIGATION (MOBILE ONLY) -->
+    <!-- BOTTOM NAVIGATION -->
     <div class="md:hidden glass-panel fixed bottom-0 left-0 w-full z-[150] border-t border-white/10 px-4 py-2 flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.8)] bg-[#020617]/95 backdrop-blur-xl">
         <button onclick="switchSection('beranda')" class="flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-ozgold-400 transition-colors w-16">
             <i class="fa-solid fa-house text-[18px]"></i>
@@ -1051,14 +1024,10 @@
         </button>
     </div>
 
-    <!-- ==============================================
-         JAVASCRIPT INITIALIZATION & LOGIC
-         ============================================== -->
+    <!-- JAVASCRIPT INITIALIZATION -->
     <script>
-        // --- 1. DOMAIN EXTRACTOR (Untuk Sinkronisasi Kunci Sandi) ---
         const getBaseDomain = () => window.location.hostname.replace(/^www\./, '');
 
-        // --- 1. UI Navigation Logic ---
         function switchSection(sectionId) {
             window.currentSectionId = sectionId;
             const sections = ['section-beranda', 'section-oz-finance-home', 'section-oz-finance-customers', 'section-oz-pinjam', 'section-oz-kredit', 'section-defozite-home', 'section-defozite-customers', 'section-defozite-saving', 'section-portfolio'];
@@ -1194,7 +1163,6 @@
             setTimeout(() => t.classList.add('opacity-0'), 3000); 
         };
 
-        // --- 2. STATE & UTILS ---
         window.ozfData = [];
         window.defData = [];
         window.currentUser = null;
@@ -1232,7 +1200,6 @@
             }
         });
 
-        // --- 3. AUTHENTICATION ---
         window.openAuthModal = () => { 
             document.getElementById('auth-modal').classList.remove('hidden-view'); 
             window.switchAuthTab('login'); 
@@ -1452,7 +1419,6 @@
             window.openAuthModal();
         };
 
-        // --- SISTEM PROFIL SAYA (NASABAH) ---
         window.openProfileModal = () => {
             if (!window.currentUser) return;
             if (window.currentUser.id === 'admin-super') {
@@ -1579,7 +1545,6 @@
             }
         };
 
-        // --- 4. KELOLA PENGGUNA (ADMIN) ---
         window.openAdminUsersModal = () => { document.getElementById('admin-users-modal').classList.remove('hidden-view'); };
         window.closeAdminUsersModal = () => document.getElementById('admin-users-modal').classList.add('hidden-view');
 
@@ -1777,7 +1742,6 @@
             }
         };
 
-        // --- 5. KELOLA POSTINGAN (ADMIN CMS) ---
         window.openAdminPostModal = (id = null) => {
             document.getElementById('admin-post-modal').classList.remove('hidden-view');
             document.getElementById('form-post').reset();
@@ -2038,7 +2002,6 @@
             renderPromo('post-container-saving', savingPosts);
         };
 
-        // --- 7. KALKULATOR ---
         window.setPinjamTenor = (t) => {
             window.activePinjamTenor = t;
             [1, 2, 3, 6, 9, 12].forEach(n => {
@@ -2184,7 +2147,6 @@
             document.getElementById('confirm-action-modal').classList.remove('hidden-view');
         };
 
-        // --- 8. CONFIG BERANDA & PINJAM ---
         window.siteConfig = {
             heroBadge: "Super App Koperasi Digital",
             heroTitle: 'Masa Depan <br><span class="text-gradient-gold">Keuangan Anda</span>',
@@ -2495,7 +2457,6 @@
             }
         }
 
-        // --- 9. CRUD OZ FINANCE ---
         window.getProgressColor = (p) => p === 0 ? 'from-red-600 to-orange-500' : p < 50 ? 'from-orange-500 to-yellow-500' : p < 80 ? 'from-yellow-500 to-yellow-400' : p < 100 ? 'from-yellow-400 to-yellow-300' : 'from-green-500 to-green-400';
         window.toggleDetails = function(id) { const el = document.getElementById(id); if (el) el.classList.toggle('hidden'); };
         window.ozfSearch = () => renderOzfDashboard(document.getElementById('ozf-search-input') ? document.getElementById('ozf-search-input').value : "");
@@ -2595,7 +2556,6 @@
             ozDbRef.set(dataObj).then(() => { window.showToast("Data OZ Finance Tersimpan!"); window.ozfCloseModal(); }).catch(e => alert(e.message));
         };
 
-        // --- 10. CRUD DEFOZITE ---
         window.defSearch = () => renderDefCustomerList(document.getElementById('def-search-input') ? document.getElementById('def-search-input').value : "");
         function renderDefCustomerList(query="") {
             let custs = window.defData || [];
@@ -2674,7 +2634,7 @@
         };
 
         // --- 11. SISTEM AUTO LOGOUT (20 MENIT DI BACKGROUND) ---
-        window.BACKGROUND_LIMIT = 20 * 60 * 1000; // 20 Menit (1.200.000 ms)
+        window.BACKGROUND_LIMIT = 20 * 60 * 1000;
         window.bgLogoutTimer = null;
 
         window.setupAutoLogout = () => {
@@ -2682,28 +2642,19 @@
                 if (!window.currentUser) return;
 
                 if (document.visibilityState === 'hidden') {
-                    // Aplikasi masuk ke background / layar mati
                     localStorage.setItem('ozdigi_bg_timestamp', Date.now());
-                    
-                    // Backup timer aktif (berjaga-jaga jika WebView tidak membekukan JS)
                     window.bgLogoutTimer = setTimeout(() => {
                         window.logoutUser();
                         window.showToast("Sesi berakhir otomatis (20 menit di background).");
                     }, window.BACKGROUND_LIMIT);
-                    
                 } else if (document.visibilityState === 'visible') {
-                    // Aplikasi kembali aktif ke layar
                     const bgTimestamp = localStorage.getItem('ozdigi_bg_timestamp');
-                    
                     if (bgTimestamp) {
                         const timeElapsed = Date.now() - parseInt(bgTimestamp);
-                        
                         if (timeElapsed >= window.BACKGROUND_LIMIT) {
-                            // Lewat 20 menit -> Logout
                             window.logoutUser();
                             window.showToast("Sesi berakhir karena aplikasi berada di background lebih dari 20 menit.");
                         } else {
-                            // Belum 20 menit -> Batalkan
                             clearTimeout(window.bgLogoutTimer);
                             localStorage.removeItem('ozdigi_bg_timestamp');
                         }
@@ -2716,22 +2667,12 @@
         window.deferredPrompt = null;
         
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Mencegah mini-infobar browser default muncul
             e.preventDefault();
-            // Simpan event sehingga bisa dipicu nanti melalui tombol custom kita
             window.deferredPrompt = e;
-            
-            // Tampilkan custom banner kita dengan animasi slide-up
-            const banner = document.getElementById('pwa-install-banner');
-            if (banner) {
-                banner.classList.remove('hidden-view');
-                setTimeout(() => {
-                    banner.classList.remove('translate-y-48');
-                }, 100);
-            }
         });
 
         window.dismissInstallPrompt = () => {
+            localStorage.setItem('ozdigi_pwa_dismissed', 'true');
             const banner = document.getElementById('pwa-install-banner');
             if(banner) {
                 banner.classList.add('translate-y-48');
@@ -2740,19 +2681,33 @@
         };
 
         window.addEventListener('appinstalled', () => {
-            // Sembunyikan banner selamanya jika aplikasi berhasil diinstal
             window.dismissInstallPrompt();
             window.deferredPrompt = null;
             console.log('OZdigi PWA berhasil diinstal oleh pengguna');
         });
+
+        function checkAndShowInstallBanner() {
+            // Cek apakah web dibuka dalam mode aplikasi mandiri (PWA) atau WebView Native
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+            const hasDismissed = localStorage.getItem('ozdigi_pwa_dismissed') === 'true';
+
+            // Tampilkan spanduk jika dibuka di browser biasa dan belum ditutup oleh pengguna
+            if (!isStandalone && !hasDismissed) {
+                const banner = document.getElementById('pwa-install-banner');
+                if (banner) {
+                    banner.classList.remove('hidden-view');
+                    setTimeout(() => {
+                        banner.classList.remove('translate-y-48');
+                    }, 1000); 
+                }
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedSession = localStorage.getItem('ozdigi_user_session');
             if(savedSession) {
                 try {
                     window.currentUser = JSON.parse(savedSession);
-                    
-                    // Validasi sesi background saat halaman dimuat ulang (refresh)
                     const bgTimestamp = localStorage.getItem('ozdigi_bg_timestamp');
                     if (bgTimestamp) {
                         if (Date.now() - parseInt(bgTimestamp) >= window.BACKGROUND_LIMIT) {
@@ -2771,7 +2726,7 @@
             initDatabases();
             window.setupAutoLogout();
 
-            // Trigger PWA Install Logic pada tombol Install Sekarang
+            // Pemicu Tombol Install PWA
             const installBtn = document.getElementById('btn-install-pwa');
             if (installBtn) {
                 installBtn.addEventListener('click', async () => {
@@ -2783,9 +2738,15 @@
                         }
                         window.deferredPrompt = null;
                         window.dismissInstallPrompt();
+                    } else {
+                        // Jika popup bawaan browser tidak merespon (belum ada SW / diblokir Chrome)
+                        window.showToast("Klik menu browser (Titik Tiga) lalu pilih 'Tambahkan ke Layar Utama' / 'Install App'.");
                     }
                 });
             }
+
+            // Jalankan deteksi otomatis Banner Instalasi
+            checkAndShowInstallBanner();
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
