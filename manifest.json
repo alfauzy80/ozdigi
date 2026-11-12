@@ -1,22 +1,30 @@
 {
+  "id": "/",
+  "scope": "/",
   "short_name": "OZdigi",
   "name": "OZdigi Super App",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&raw=1",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&raw=1",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://dl.dropboxusercontent.com/scl/fi/b3vvowv2tpjz7x4tl5kq0/OZ.png?rlkey=e2oamdv1tprgrdf5j2kjpgu46&st=368naga4&raw=1",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#0F172A",
-  "background_color": "#0F172A"
+  "background_color": "#020617"
 }
