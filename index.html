@@ -1327,15 +1327,14 @@
                 
             } catch(e) { alert("Gagal masuk (Koneksi Error): " + e.message); }
         };
-                       window.registerFingerprint = async () => {
+                       
+         window.registerFingerprint = async () => {
             if (!window.currentUser) { alert("Anda harus login manual terlebih dahulu."); return; }
             if (!window.PublicKeyCredential) { alert("Perangkat/Browser ini tidak mendukung fitur Sidik Jari."); return; }
             
             try {
                 const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
                 const userId = new Uint8Array(16); window.crypto.getRandomValues(userId);
-                
-                // Gunakan getBaseDomain() agar stabil di www maupun non-www
                 const domainUtama = window.location.hostname.replace(/^www\./, '');
                 
                 const cred = await navigator.credentials.create({
@@ -1359,9 +1358,11 @@
                     }
                 });
                 
-                // Gunakan Base64 murni tanpa karakter aneh
-                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId))).replace(/[^a-zA-Z0-9]/g, '');
-                localStorage.setItem('ozdigi_passkey_' + rawId, JSON.stringify(window.currentUser));
+                // Gunakan Hexadecimal encoding yang 100% konsisten
+                const rawIdArray = Array.from(new Uint8Array(cred.rawId));
+                const rawIdHex = rawIdArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                localStorage.setItem('ozdigi_passkey_' + rawIdHex, JSON.stringify(window.currentUser));
                 window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
                 
             } catch(e) {
@@ -1385,9 +1386,11 @@
                     }
                 });
                 
-                // Gunakan Base64 murni tanpa karakter aneh
-                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(assertion.rawId))).replace(/[^a-zA-Z0-9]/g, '');
-                const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawId);
+                // Gunakan Hexadecimal encoding yang 100% konsisten
+                const rawIdArray = Array.from(new Uint8Array(assertion.rawId));
+                const rawIdHex = rawIdArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawIdHex);
                 
                 if(savedUserStr) {
                     window.currentUser = JSON.parse(savedUserStr);
@@ -1404,7 +1407,7 @@
                 window.showToast("Autentikasi sidik jari dibatalkan / gagal dikenali.");
             }
         };
-
+                     
         window.processForgotPwd = () => {
             const idVal = document.getElementById('auth-login-id').value.trim() || 'Nasabah';
             const waNumber = "628568080847";
