@@ -1328,7 +1328,7 @@
             } catch(e) { alert("Gagal masuk (Koneksi Error): " + e.message); }
         };
 
-        window.registerFingerprint = async () => {
+                window.registerFingerprint = async () => {
             if (!window.currentUser) { alert("Anda harus login manual terlebih dahulu."); return; }
             if (!window.PublicKeyCredential) { alert("Perangkat/Browser ini tidak mendukung fitur Sidik Jari."); return; }
             
@@ -1339,10 +1339,10 @@
                 const cred = await navigator.credentials.create({
                     publicKey: {
                         challenge: challenge,
-                        rp: { name: "OZdigi Ecosystem", id: getBaseDomain() },
+                        rp: { name: "OZdigi Ecosystem", id: window.location.hostname },
                         user: {
                             id: userId,
-                            name: window.currentUser.email || window.currentUser.phone || "user",
+                            name: window.currentUser.phone || "user",
                             displayName: window.currentUser.name || "User"
                         },
                         pubKeyCredParams: [
@@ -1351,15 +1351,14 @@
                         ],
                         authenticatorSelection: { 
                             authenticatorAttachment: "platform", 
-                            userVerification: "required",
-                            residentKey: "required", 
-                            requireResidentKey: true 
+                            userVerification: "required"
                         },
                         timeout: 60000
                     }
                 });
                 
-                const rawId = Array.from(new Uint8Array(cred.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
+                // Konversi ID Kunci ke format Base64 agar stabil di semua browser
+                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
                 localStorage.setItem('ozdigi_passkey_' + rawId, JSON.stringify(window.currentUser));
                 window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
                 
@@ -1377,20 +1376,19 @@
                 const assertion = await navigator.credentials.get({
                     publicKey: {
                         challenge: challenge,
-                        rpId: getBaseDomain(),
+                        rpId: window.location.hostname,
                         userVerification: "required",
                         timeout: 60000
                     }
                 });
                 
-                const rawId = Array.from(new Uint8Array(assertion.rawId)).map(b => b.toString(16).padStart(2, '0')).join('');
+                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(assertion.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
                 const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawId);
                 
                 if(savedUserStr) {
-                    const userData = JSON.parse(savedUserStr);
-                    window.currentUser = userData;
+                    window.currentUser = JSON.parse(savedUserStr);
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
-                    window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${userData.name}`);
+                    window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${window.currentUser.name}`);
                     window.closeAuthModal(); 
                     window.updateUIAuth(); 
                 } else {
