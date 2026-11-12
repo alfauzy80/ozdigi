@@ -1328,7 +1328,7 @@
             } catch(e) { alert("Gagal masuk (Koneksi Error): " + e.message); }
         };
                        
-         window.registerFingerprint = async () => {
+          window.registerFingerprint = async () => {
             if (!window.currentUser) { alert("Anda harus login manual terlebih dahulu."); return; }
             if (!window.PublicKeyCredential) { alert("Perangkat/Browser ini tidak mendukung fitur Sidik Jari."); return; }
             
@@ -1352,45 +1352,72 @@
                         ],
                         authenticatorSelection: { 
                             authenticatorAttachment: "platform", 
-                            userVerification: "required"
+                            userVerification: "required",
+                            residentKey: "required", 
+                            requireResidentKey: true
                         },
                         timeout: 60000
                     }
                 });
                 
-                // Gunakan Hexadecimal encoding yang 100% konsisten
                 const rawIdArray = Array.from(new Uint8Array(cred.rawId));
-                const rawIdHex = rawIdArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                const rawIdBase64 = btoa(String.fromCharCode.apply(null, rawIdArray));
                 
-                localStorage.setItem('ozdigi_passkey_' + rawIdHex, JSON.stringify(window.currentUser));
+                localStorage.setItem('ozdigi_passkey_id_' + window.currentUser.id, rawIdBase64);
+                localStorage.setItem('ozdigi_passkey_data_' + rawIdBase64, JSON.stringify(window.currentUser));
+                
                 window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
                 
             } catch(e) {
-                console.error("WebAuthn Error:", e);
+                console.error("WebAuthn Registration Error:", e);
                 alert("Gagal mendaftarkan sidik jari. Sistem menolak akses keamanan.");
             }
         };
 
         window.processFingerprintLogin = async () => {
             if (!window.PublicKeyCredential) { alert("Perangkat / Browser ini tidak mendukung fitur Sidik Jari."); return; }
+            
             try {
                 const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
                 const domainUtama = window.location.hostname.replace(/^www\./, '');
                 
-                const assertion = await navigator.credentials.get({
+                let getOptions = {
                     publicKey: {
                         challenge: challenge,
                         rpId: domainUtama,
                         userVerification: "required",
                         timeout: 60000
                     }
-                });
+                };
+
+                let specificCredId = null;
+                for(let i=0; i<localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if(key.startsWith('ozdigi_passkey_id_')) {
+                        specificCredId = localStorage.getItem(key);
+                        break; 
+                    }
+                }
+
+                if (specificCredId) {
+                    const binaryString = atob(specificCredId);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {
+                        bytes[i] = binaryString.charCodeAt(i);
+                    }
+                    
+                    getOptions.publicKey.allowCredentials = [{
+                        type: "public-key",
+                        id: bytes.buffer
+                    }];
+                }
+
+                const assertion = await navigator.credentials.get(getOptions);
                 
-                // Gunakan Hexadecimal encoding yang 100% konsisten
                 const rawIdArray = Array.from(new Uint8Array(assertion.rawId));
-                const rawIdHex = rawIdArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                const rawIdBase64 = btoa(String.fromCharCode.apply(null, rawIdArray));
                 
-                const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawIdHex);
+                const savedUserStr = localStorage.getItem('ozdigi_passkey_data_' + rawIdBase64);
                 
                 if(savedUserStr) {
                     window.currentUser = JSON.parse(savedUserStr);
