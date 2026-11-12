@@ -1327,8 +1327,7 @@
                 
             } catch(e) { alert("Gagal masuk (Koneksi Error): " + e.message); }
         };
-
-                window.registerFingerprint = async () => {
+                       window.registerFingerprint = async () => {
             if (!window.currentUser) { alert("Anda harus login manual terlebih dahulu."); return; }
             if (!window.PublicKeyCredential) { alert("Perangkat/Browser ini tidak mendukung fitur Sidik Jari."); return; }
             
@@ -1336,10 +1335,13 @@
                 const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
                 const userId = new Uint8Array(16); window.crypto.getRandomValues(userId);
                 
+                // Gunakan getBaseDomain() agar stabil di www maupun non-www
+                const domainUtama = window.location.hostname.replace(/^www\./, '');
+                
                 const cred = await navigator.credentials.create({
                     publicKey: {
                         challenge: challenge,
-                        rp: { name: "OZdigi Ecosystem", id: window.location.hostname },
+                        rp: { name: "OZdigi Ecosystem", id: domainUtama },
                         user: {
                             id: userId,
                             name: window.currentUser.phone || "user",
@@ -1357,8 +1359,8 @@
                     }
                 });
                 
-                // Konversi ID Kunci ke format Base64 agar stabil di semua browser
-                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+                // Gunakan Base64 murni tanpa karakter aneh
+                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(cred.rawId))).replace(/[^a-zA-Z0-9]/g, '');
                 localStorage.setItem('ozdigi_passkey_' + rawId, JSON.stringify(window.currentUser));
                 window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
                 
@@ -1372,17 +1374,19 @@
             if (!window.PublicKeyCredential) { alert("Perangkat / Browser ini tidak mendukung fitur Sidik Jari."); return; }
             try {
                 const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
+                const domainUtama = window.location.hostname.replace(/^www\./, '');
                 
                 const assertion = await navigator.credentials.get({
                     publicKey: {
                         challenge: challenge,
-                        rpId: window.location.hostname,
+                        rpId: domainUtama,
                         userVerification: "required",
                         timeout: 60000
                     }
                 });
                 
-                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(assertion.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+                // Gunakan Base64 murni tanpa karakter aneh
+                const rawId = btoa(String.fromCharCode.apply(null, new Uint8Array(assertion.rawId))).replace(/[^a-zA-Z0-9]/g, '');
                 const savedUserStr = localStorage.getItem('ozdigi_passkey_' + rawId);
                 
                 if(savedUserStr) {
