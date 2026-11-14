@@ -1330,6 +1330,7 @@
                        
           window.registerFingerprint = async () => {
             if (!window.currentUser) { alert("Anda harus login manual terlebih dahulu."); return; }
+            if (window.currentUser.id === 'admin-super') { alert("Super Admin tidak menggunakan fitur sidik jari database."); return; }
             if (!window.PublicKeyCredential) { alert("Perangkat/Browser ini tidak mendukung fitur Sidik Jari."); return; }
             
             try {
@@ -1343,7 +1344,7 @@
                         rp: { name: "OZdigi Ecosystem", id: domainUtama },
                         user: {
                             id: userId,
-                            name: window.currentUser.phone || "user",
+                            name: window.currentUser.phone || window.currentUser.email || "user",
                             displayName: window.currentUser.name || "User"
                         },
                         pubKeyCredParams: [
@@ -1360,17 +1361,33 @@
                     }
                 });
                 
+                // Ubah data kunci ke format aman (Base64)
                 const rawIdArray = Array.from(new Uint8Array(cred.rawId));
                 const rawIdBase64 = btoa(String.fromCharCode.apply(null, rawIdArray));
                 
-                localStorage.setItem('ozdigi_passkey_id_' + window.currentUser.id, rawIdBase64);
-                localStorage.setItem('ozdigi_passkey_data_' + rawIdBase64, JSON.stringify(window.currentUser));
+                window.showToast("Menyimpan sidik jari ke server database...");
                 
-                window.showToast("Sidik Jari berhasil didaftarkan di perangkat ini!");
+                // PROSES SIMPAN KE FIREBASE
+                const userRef = defDb.collection('users').doc(window.currentUser.id);
+                const docSnap = await userRef.get();
+                if (docSnap.exists) {
+                    await userRef.update({ passkeyId: rawIdBase64 });
+                } else {
+                    await userRef.set({
+                        name: window.currentUser.name,
+                        phone: window.currentUser.phone,
+                        role: window.currentUser.role || 'nasabah',
+                        status: 'aktif',
+                        passkeyId: rawIdBase64,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                
+                window.showToast("Sidik Jari berhasil disimpan permanen di Database!");
                 
             } catch(e) {
                 console.error("WebAuthn Registration Error:", e);
-                alert("Gagal mendaftarkan sidik jari. Sistem menolak akses keamanan.");
+                alert("Gagal mendaftarkan sidik jari. Sistem menolak atau dibatalkan.");
             }
         };
 
@@ -1381,52 +1398,34 @@
                 const challenge = new Uint8Array(32); window.crypto.getRandomValues(challenge);
                 const domainUtama = window.location.hostname.replace(/^www\./, '');
                 
-                let getOptions = {
+                const assertion = await navigator.credentials.get({
                     publicKey: {
                         challenge: challenge,
                         rpId: domainUtama,
                         userVerification: "required",
                         timeout: 60000
                     }
-                };
-
-                let specificCredId = null;
-                for(let i=0; i<localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if(key.startsWith('ozdigi_passkey_id_')) {
-                        specificCredId = localStorage.getItem(key);
-                        break; 
-                    }
-                }
-
-                if (specificCredId) {
-                    const binaryString = atob(specificCredId);
-                    const bytes = new Uint8Array(binaryString.length);
-                    for (let i = 0; i < binaryString.length; i++) {
-                        bytes[i] = binaryString.charCodeAt(i);
-                    }
-                    
-                    getOptions.publicKey.allowCredentials = [{
-                        type: "public-key",
-                        id: bytes.buffer
-                    }];
-                }
-
-                const assertion = await navigator.credentials.get(getOptions);
+                });
                 
                 const rawIdArray = Array.from(new Uint8Array(assertion.rawId));
                 const rawIdBase64 = btoa(String.fromCharCode.apply(null, rawIdArray));
                 
-                const savedUserStr = localStorage.getItem('ozdigi_passkey_data_' + rawIdBase64);
+                window.showToast("Mencocokkan sidik jari dengan database...");
                 
-                if(savedUserStr) {
-                    window.currentUser = JSON.parse(savedUserStr);
+                // PROSES PENCARIAN DI FIREBASE BERDASARKAN SIDIK JARI
+                const snapshot = await defDb.collection('users').where('passkeyId', '==', rawIdBase64).get();
+                
+                if (!snapshot.empty) {
+                    const userData = snapshot.docs[0].data();
+                    // Kembalikan sesi user secara utuh
+                    window.currentUser = { id: snapshot.docs[0].id, ...userData };
                     localStorage.setItem('ozdigi_user_session', JSON.stringify(window.currentUser));
-                    window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${window.currentUser.name}`);
+                    
+                    window.showToast(`Sidik Jari Dikenali! Selamat datang kembali, ${userData.name}`);
                     window.closeAuthModal(); 
                     window.updateUIAuth(); 
                 } else {
-                    alert("Sidik jari ini belum terdaftar untuk akun manapun di browser perangkat ini.");
+                    alert("Sidik jari valid di HP ini, tapi tidak ditemukan di database OZdigi.");
                 }
                 
             } catch(e) {
